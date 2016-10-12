@@ -1,4 +1,4 @@
-package com.docgenerici.iviewerlus;
+package com.docgenerici.selfbox;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

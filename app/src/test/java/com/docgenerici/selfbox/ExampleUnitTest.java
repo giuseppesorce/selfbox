@@ -1,4 +1,4 @@
-package com.docgenerici.iviewerlus;
+package com.docgenerici.selfbox;
 
 import org.junit.Test;
 

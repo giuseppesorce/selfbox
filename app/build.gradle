@@ -1,10 +1,31 @@
+buildscript {
+    repositories {
+        repositories {
+            maven { url "https://jitpack.io" }
+            maven { url 'https://maven.fabric.io/public' }
+        }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+}
+
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
     defaultConfig {
-        applicationId "com.docgenerici.iviewerlus"
+        applicationId "com.docgenerici.selfbox"
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
@@ -14,16 +35,64 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
         }
     }
 }
 
 dependencies {
+
+    String okHttpVersion = '3.2.0'
+    String supportVersion = '24.1.1'
+    String retrofitVersion = '2.1.0'
+    String butterknifeVersion = '8.0.1'
+    String daggerVersion = '2.4'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+
+    //SUPPORT
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:percent:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
+    compile "com.android.support:support-annotations:$supportVersion"
+    //RX
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    //RETROFIT
+    compile "com.squareup.okhttp3:okhttp:3.2.0"
+    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    //PICASSO
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton.timber:timber:4.1.2'
+    compile "com.jakewharton:butterknife:$butterknifeVersion"
+    apt "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    //DAGGER
+    compile "com.google.dagger:dagger:$daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$daggerVersion"
+    provided 'javax.annotation:javax.annotation-api:1.2'
+    // otto: bus
+    compile 'com.squareup:otto:1.3.8'
+    //HAWK
+    compile 'com.github.orhanobut:hawk:1.23'
 }

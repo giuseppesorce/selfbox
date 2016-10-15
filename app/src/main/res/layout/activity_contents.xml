@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_contents"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.docgenerici.selfbox.android.contents.ContentsActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_toolbar_home"
+        android:background="@color/green">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/logo_docgenerici_white" />
+
+
+        <Button
+            android:id="@+id/btHelp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+
+            android:background="@drawable/ic_help_contents" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_marginTop="35dp">
+
+        <com.docgenerici.selfbox.android.custom.buttons.CButton
+            android:id="@+id/btContent"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:padding="20dp"
+            android:text="Contenuti"
+            android:textAllCaps="false"
+            android:textColor="@color/color_text_tab_button"
+            android:textSize="27sp"
+            anytext:font="medium" />
+
+        <com.docgenerici.selfbox.android.custom.buttons.CButton
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="260dp"
+            android:id="@+id/btProducts"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/btContent"
+            android:padding="20dp"
+            android:text="Catalogo prodotti"
+            android:textAllCaps="false"
+            android:textColor="@color/green"
+            android:textSize="27sp"
+            anytext:font="medium" />
+
+        <View
+            android:layout_width="200dp"
+            android:id="@+id/vLine"
+            android:layout_height="3dp"
+            android:layout_below="@id/btContent"
+            android:background="@color/color_text_tab_button" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlButtons"
+        android:id="@+id/rmContainer"
+         />
+</RelativeLayout>

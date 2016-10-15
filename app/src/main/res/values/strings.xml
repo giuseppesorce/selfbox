@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Iviewerplus</string>
+    <string name="app_name">SelfBox</string>
+    <string name="assets_fonts_folder">fonts/</string>
+    <string name="hom_medico">MEDICO</string>
+    <string name="home_farmacista">FARMACISTA</string>
+    <string name="home_isf">ISF</string>
 </resources>

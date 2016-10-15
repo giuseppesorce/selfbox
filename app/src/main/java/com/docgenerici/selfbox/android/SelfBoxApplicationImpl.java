@@ -15,11 +15,11 @@ import io.realm.RealmConfiguration;
 /**
  * @author Giuseppe Sorce @copyright
  */
-public class BoxApplicationImpl extends Application implements SMApplication {
+public class SelfBoxApplicationImpl extends Application implements SMApplication {
 
 
   public static AppComponent appComponent;
-  public static BoxApplicationImpl instannce;
+  public static SelfBoxApplicationImpl instannce;
 
 
   @Override

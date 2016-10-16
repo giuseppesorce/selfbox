@@ -8,5 +8,6 @@
     <color name="color_text_home">#777777</color>
     <color name="green">#97ca00</color>
     <color name="color_text_tab_button">#525353</color>
+    <color name="grey_filter">#b8b8b8</color>
 
 </resources>

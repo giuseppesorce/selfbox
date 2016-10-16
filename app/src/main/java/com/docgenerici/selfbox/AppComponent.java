@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import com.docgenerici.selfbox.android.AppModule;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.contents.MaintContentModule;
+import com.docgenerici.selfbox.android.contents.contentslist.ContentListModule;
+import com.docgenerici.selfbox.android.contents.contentslist.ContentListPresenter;
 import com.docgenerici.selfbox.android.home.HomeModule;
 import com.docgenerici.selfbox.android.home.HomePresenter;
 import com.docgenerici.selfbox.android.start.StartModule;
@@ -21,7 +23,7 @@ import io.realm.Realm;
  * @author Giuseppe Sorce
  */
 @Singleton
-@Component(modules = {AppModule.class, RetrofitModule.class, StartModule.class, HomeModule.class, MaintContentModule.class
+@Component(modules = {AppModule.class, RetrofitModule.class, StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class
 })
 public interface AppComponent {
 
@@ -36,4 +38,6 @@ public interface AppComponent {
     HomePresenter homePresenter();
 
     MainContentPresenter mainContentPresenter();
+
+    ContentListPresenter contentListPresenter();
 }

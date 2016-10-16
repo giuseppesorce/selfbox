@@ -118,12 +118,10 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                 btProducts.setTextColor(greenColor);
                 break;
             case NAVIGATION_PRODUCTS:
-
                 RelativeLayout.LayoutParams paramsP = (RelativeLayout.LayoutParams) btProducts.getLayoutParams();
                 //  ViewCompat.animate(vLine).scaleX(presenter.getScale(vLine.getWidth(), btProducts.getWidth())).x(btProducts.getLeft()+paramsP.leftMargin);
                 RelativeLayout.LayoutParams paramsViewL = (RelativeLayout.LayoutParams) vLine.getLayoutParams();
                 paramsViewL.leftMargin = btProducts.getLeft();
-
                 paramsViewL.width = paramsP.width;
                 vLine.setLayoutParams(paramsViewL);
                 btContent.setTextColor(greenColor);

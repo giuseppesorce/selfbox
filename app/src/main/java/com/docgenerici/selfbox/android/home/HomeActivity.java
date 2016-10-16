@@ -29,7 +29,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-      // presenter.onSelectISF();
+        presenter.onSelectISF();
     }
 
     @OnClick(R.id.rlISF)

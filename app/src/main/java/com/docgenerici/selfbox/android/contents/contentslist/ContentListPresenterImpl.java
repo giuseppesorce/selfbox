@@ -30,4 +30,9 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         FILTER_NOW= FILTER_BY_DATE;
         view.showSelectDate();
     }
+
+    @Override
+    public void onSelecteFilter() {
+        view.openFilterDialog();
+    }
 }

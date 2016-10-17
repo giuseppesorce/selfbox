@@ -24,12 +24,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+//        View decorView = getWindow().getDecorView();
+//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
 
-        presenter.onSelectISF();
+
     }
 
     @OnClick(R.id.rlISF)

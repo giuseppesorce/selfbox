@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rlHeaderFunc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp">
@@ -39,6 +40,7 @@
             android:background="@drawable/ic_filter_green" />
 
         <EditText
+            android:id="@+id/etSearch"
             android:layout_width="250dp"
             android:layout_height="@dimen/btn_height"
             android:layout_centerVertical="true"
@@ -47,7 +49,6 @@
             android:background="@drawable/back_rounded_search"
             android:drawableRight="@drawable/ic_search"
             android:maxLines="1"
-            android:id="@+id/etSearch"
             android:paddingLeft="20dp"
             android:paddingRight="20dp" />
 
@@ -60,7 +61,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-        <ImageView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_az" />
@@ -83,5 +84,14 @@
                 android:src="@drawable/ic_date" />
         </LinearLayout>
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvGallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlHeaderFunc"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="30dp" />
 
 </RelativeLayout>

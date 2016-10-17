@@ -60,7 +60,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     }
 
     @OnClick(R.id.btProducts)
-    void onSelectCProoducts() {
+    void onSelectProoducts() {
         setNavigation(NAVIGATION_PRODUCTS);
         presenter.onSelectProducts();
     }

@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rlHeaderFunc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp">
@@ -16,8 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
-
-            android:text="Prodotti"
+            android:text="Catalogo prodotti"
             android:textColor="#4e4e4e"
             android:textSize="30sp" />
 
@@ -30,6 +30,148 @@
 
             android:background="@drawable/ic_share_green" />
 
+        <Button
+            android:id="@+id/btFilter"
+            android:layout_width="45dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/ic_filter_green" />
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="250dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/llAZ"
+            android:background="@drawable/back_rounded_search"
+            android:drawableRight="@drawable/ic_search"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
+
+        <LinearLayout
+            android:id="@+id/llAZ"
+            android:layout_width="@dimen/filter_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_toLeftOf="@+id/llDate"
+            android:background="@drawable/back_rounded_right"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_az" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llDate"
+            android:layout_width="@dimen/filter_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/btFilter"
+            android:background="@drawable/back_rounded_left"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_terapeuta" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btLegenda"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/btn_height"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/etSearch"
+            android:background="@drawable/back_rounded_search"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="LEGENDA"
+            android:textSize="20sp" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlHeaderFunc"
+
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="5dp"
+        android:weightSum="100">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="37"
+            android:textSize="20sp"
+            android:text="Nome"
+            android:paddingLeft="20dp"
+            android:textColor="#999898" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="Classe"
+
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="#999898" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"
+            android:gravity="center"
+
+           
+            android:text="Non contiene"
+            android:textColor="#999898" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="0dp"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:gravity="center"
+
+
+            android:text="Codice a barre"
+            android:textColor="#999898" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="0dp"
+            android:textSize="15sp"
+           
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:text=""
+            android:textColor="#999898" />
+
+    </LinearLayout>
+    <View
+        android:layout_below="@+id/llheader"
+        android:layout_width="match_parent"
+        android:background="#ff929292"
+        android:layout_height="1dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvProduct"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/llheader"
+
+        android:layout_marginTop="30dp" />
 
 </RelativeLayout>

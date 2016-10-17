@@ -17,7 +17,27 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
 
+    <style name="detail" >
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@android:color/transparent</item>
+
+        <item name="android:windowTitleStyle">@style/MyOwnDialogTitle</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+
+    </style>
+
+    <style name="MyOwnDialogTitle">
+        <item name="android:textAppearance">@android:style/TextAppearance.DialogWindowTitle</item>
     </style>
 
 </resources>

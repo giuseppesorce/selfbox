@@ -14,10 +14,14 @@ public interface ContentListPresenter extends Presenter {
 
     void selectDate();
 
+    void onSelecteFilter();
+
     interface ContentView extends BaseView {
 
         void showSelectAz();
 
         void showSelectDate();
+
+        void openFilterDialog();
     }
 }

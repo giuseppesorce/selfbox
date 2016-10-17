@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_height="290dp">
+<ImageView
+    android:layout_width="match_parent"
+    android:background="@drawable/bk_item_grid"
+    android:layout_height="match_parent" />
+
+
+    <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ivCover"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="15dp"
+
+
+        app:riv_corner_radius="13dp"
+        app:riv_mutate_background="true"
+        android:src="@drawable/sample2"
+        app:riv_oval="false" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:background="@drawable/back_infoitem"
+        android:layout_alignParentBottom="true"
+        android:layout_height="70dp" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/ivType"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="15dp"
+
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/ivShare"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/ic_share_grey"
+        android:layout_height="wrap_content" />
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:layout_width="match_parent"
+        android:text="Listino prezzi 05/10/2016"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_toRightOf="@+id/ivType"
+        android:id="@+id/tvTitle"
+        android:layout_toLeftOf="@id/ivShare"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:layout_height="35dp" />
+
+
+
+</RelativeLayout>

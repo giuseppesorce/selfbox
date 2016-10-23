@@ -24,7 +24,7 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
     @Override
     public float getScale(int width, int width1) {
-        return (float)(float)width1/(float)(width);
+        return (float)width1 /(float)(width);
     }
 
     @Override
@@ -35,5 +35,10 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     @Override
     public void onSelectProducts() {
         view.showProducts();
+    }
+
+    @Override
+    public void onSelectShare() {
+        view.showShareContents();
     }
 }

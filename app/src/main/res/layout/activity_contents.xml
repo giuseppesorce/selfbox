@@ -55,9 +55,9 @@
             anytext:font="medium" />
 
         <com.docgenerici.selfbox.android.custom.buttons.CButton
+            android:id="@+id/btProducts"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="260dp"
-            android:id="@+id/btProducts"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@+id/btContent"
@@ -69,18 +69,38 @@
             anytext:font="medium" />
 
         <View
-            android:layout_width="200dp"
             android:id="@+id/vLine"
+            android:layout_width="200dp"
             android:layout_height="3dp"
             android:layout_below="@id/btContent"
             android:background="@color/color_text_tab_button" />
 
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/back_rounded_share"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/tvShare"
+            android:paddingTop="5dp"
+            android:text="1 CONDIVIDI CONTENUTI"
+            android:textColor="@color/white"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            anytext:font="robotobold" />
+
+
     </RelativeLayout>
 
+
     <FrameLayout
+        android:id="@+id/rmContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rlButtons"
-        android:id="@+id/rmContainer"
-         />
+        android:layout_below="@+id/rlButtons" />
 </RelativeLayout>

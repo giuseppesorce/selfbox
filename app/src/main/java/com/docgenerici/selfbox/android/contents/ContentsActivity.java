@@ -16,7 +16,9 @@ import android.widget.RelativeLayout;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
+import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
+import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
 import com.docgenerici.selfbox.debug.Dbg;
 
 import butterknife.BindColor;
@@ -41,6 +43,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     int colorButtonSelect;
     private ContentsListFragment contentsList;
     private ProductListFragment productsListFragment;
+    private ShareContentsDialogFragment shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,15 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         showFragment(productsListFragment, "productsListFragment", R.id.rmContainer);
     }
 
+    @Override
+    public void showShareContents() {
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        shareDialog = ShareContentsDialogFragment.createInstance();
+
+        shareDialog.show(ft, "shareDialog");
+    }
+
     private void setNavigation(int nav) {
 
         switch (nav) {
@@ -136,5 +148,10 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         ft.replace(container, frag, tag);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
+    }
+
+    @OnClick(R.id.tvShare)
+    void onTapShareButton(){
+        presenter.onSelectShare();
     }
 }

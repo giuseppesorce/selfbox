@@ -14,8 +14,8 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.ProductsAdapter;
-import com.docgenerici.selfbox.android.adapters.SimpleDividerItemDecoration;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
+import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
 import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
@@ -37,6 +37,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     private ProductsListPresenter presenter;
     private ProductsAdapter adapter;
     private FilterDialog filtersDialog;
+    private LegendaDialogFragment legendaFragment;
 
     @Nullable
     @Override
@@ -79,7 +80,6 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "NIMESULIDE", "100 mg compresse", "A84", "FCD"));
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SILDENAFIL", "50 mc compresse masticabili", "A84", "FCD"));
         adapter = new ProductsAdapter(getActivity().getApplicationContext(), productDocArrayList, this);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvProduct.setLayoutManager(linearLayoutManager);
        // rvProduct.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.margin_divider_decotator)));
@@ -92,12 +92,24 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
         filtersDialog = FilterDialog.createInstance();
-
         filtersDialog.show(ft, "filtersDialog");
+    }
+
+    @Override
+    public void showLegenda() {
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        legendaFragment = LegendaDialogFragment.createInstance();
+        legendaFragment.show(ft, "legendaFragment");
     }
 
     @Override
     public void onItemClick(View view, int position) {
 
+    }
+
+    @OnClick(R.id.btLegenda)
+    void onTapLegenda(){
+        presenter.onSelectLegenda();
     }
 }

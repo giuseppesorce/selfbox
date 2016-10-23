@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_toolbar_home"
+        android:background="@color/grey_toolbar">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/logo_docgenerici" />
+
+    </RelativeLayout>
+
+
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:id="@+id/btSend"
+        android:layout_width="150dp"
+        android:layout_height="43dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/back_rounded_green"
+        android:gravity="center"
+
+        android:text="INVIA"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        anytext:font="robotobold" />
+
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:id="@+id/btCancel"
+        android:layout_width="150dp"
+
+        android:layout_height="43dp"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:layout_toLeftOf="@+id/btSend"
+        android:background="@drawable/back_rounded_search"
+        android:gravity="center"
+        android:text="ANNULLA"
+        android:textColor="#545454"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        anytext:font="robotobold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btCancel"
+        android:layout_marginTop="30dp"
+        android:background="#f3f3f3">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:text="Sincronizzazione"
+            android:textColor="#4e4e4e"
+            android:textSize="25sp"
+            android:id="@+id/tvTitle"
+            anytext:font="helveticaltpro" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_below="@+id/tvTitle"
+            android:id="@+id/rvGrid"
+            android:layout_margin="25dp"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -4,4 +4,24 @@
     <string name="hom_medico">MEDICO</string>
     <string name="home_farmacista">FARMACISTA</string>
     <string name="home_isf">ISF</string>
+    <string name="help1"><![CDATA[<b>SelfB@x</b> ti aiuterà a gestire al meglio il tuo appuntamento con il <b>Medico</b> o con il <b>Farmacista</b>.<br><br>
+  Nella prima schermata puoi selezionare il profilo per il quale visualizzare i contenuti: METTEREMO UNA PAGINA WEB
+
+
+
+
+
+
+
+
+  ]]></string>
+    <string name="catalogo_prodotti">Catalogo prodotti</string>
+    <string name="legenda">LEGENDA</string>
+    <string name="legenda_no_inside"><![CDATA[
+    <b>F= </b>possano interferire con la fenilchetonuria<br><br>
+     <b>C= </b>possano interferire con la celiachia<br><br>
+    <b>D= </b>possano interferire con la patologia diabetica<br><br>
+     <b>L= </b>abbiano lattosio<br><br>
+ ]]></string>
+
 </resources>

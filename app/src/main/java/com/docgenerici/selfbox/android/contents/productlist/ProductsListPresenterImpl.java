@@ -26,4 +26,9 @@ public class ProductsListPresenterImpl implements ProductsListPresenter {
     public void onSelectFilter() {
         view.openFilterDialog();
     }
+
+    @Override
+    public void onSelectLegenda() {
+        view.showLegenda();
+    }
 }

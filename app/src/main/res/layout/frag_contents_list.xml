@@ -21,14 +21,6 @@
             android:textColor="#4e4e4e"
             android:textSize="30sp" />
 
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/tvTitle"
-
-            android:background="@drawable/ic_share_green" />
 
         <Button
             android:id="@+id/btFilter"

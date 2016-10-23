@@ -18,6 +18,8 @@ public interface MainContentPresenter extends Presenter {
 
     void onSelectProducts();
 
+    void onSelectShare();
+
     interface MainContentView extends BaseView {
 
         void setupView();
@@ -25,5 +27,7 @@ public interface MainContentPresenter extends Presenter {
         void showContents();
 
         void showProducts();
+
+        void showShareContents();
     }
 }

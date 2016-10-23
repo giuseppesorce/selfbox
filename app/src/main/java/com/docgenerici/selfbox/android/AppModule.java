@@ -83,7 +83,7 @@ public class AppModule {
     @Provides
     @Singleton
     ContentResolver provideContentResolver() {
-        return (ContentResolver) context.getContentResolver();
+        return context.getContentResolver();
     }
 
     @Provides

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9b000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="1000dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvHelp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#64c095"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="CONDIVIDI"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            anytext:font="robotobold" />
+
+        <Button
+            android:id="@+id/btClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_closex_w1" />
+
+
+        <LinearLayout
+            android:id="@+id/llContent"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_below="@+id/tvHelp"
+
+            android:background="@color/white"
+            android:minHeight="500dp"
+
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvLabelFrom"
+                    android:layout_width="50dp"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+
+                    android:text="Da:"
+                    android:textColor="#7b7b7b"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_toRightOf="@+id/tvLabelFrom"
+                    android:gravity="center_vertical"
+                    android:text="Nome Farmacista"
+                    android:textColor="#7b7b7b"
+                    android:textSize="20sp" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvLabelto"
+                    android:layout_width="50dp"
+                    android:layout_height="45dp"
+                    android:layout_below="@+id/tvLabelFrom"
+                    android:gravity="center_vertical"
+                    android:text="A:"
+                    android:textColor="#7b7b7b"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_below="@+id/tvLabelFrom"
+                    android:layout_toRightOf="@+id/tvLabelto"
+                    android:gravity="center_vertical"
+                    android:hint="inserisci l' email"
+                    android:textSize="20sp" />
+
+                <View
+                    android:id="@+id/vLine2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/etEmail"
+                    android:layout_toRightOf="@+id/tvLabelto"
+                    android:background="@color/color_text_home" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_below="@+id/vLine2"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/back_square_share_insertmessage" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="500dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvSelectLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Contenuti selezionati"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    anytext:font="robotoitalic" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
+                    android:layout_above="@+id/tvSendAfter"
+                    android:layout_below="@+id/tvSelectLabel" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvSendAfter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/llPickers"
+                    android:text="Invio differito"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    anytext:font="robotoitalic" />
+
+                <LinearLayout
+                    android:id="@+id/llPickers"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="160dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <NumberPicker
+                        android:id="@+id/npDay"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10">
+
+                    </NumberPicker>
+
+                    <NumberPicker
+                        android:id="@+id/npMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25">
+
+                    </NumberPicker>
+
+                    <NumberPicker
+                        android:id="@+id/npYear"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25">
+
+                    </NumberPicker>
+
+                    <NumberPicker
+                        android:id="@+id/npHour"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20">
+
+                    </NumberPicker>
+
+                    <NumberPicker
+                        android:id="@+id/npMinutes"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20">
+
+                    </NumberPicker>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="1000dp"
+            android:layout_height="90dp"
+            android:layout_below="@+id/llContent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btCancel"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_rounded_left_white"
+                android:text="chiudi"
+                android:textColor="#545454"
+
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btSend"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_rounded_right_green"
+                android:text="procedi"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

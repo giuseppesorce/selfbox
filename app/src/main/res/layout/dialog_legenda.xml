@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9b000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvHelp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#64c095"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="LEGENDA"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            anytext:font="robotobold" />
+
+        <Button
+            android:id="@+id/btClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_closex_w1" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvHelp"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="vertical">
+
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tableLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp">
+
+
+                    <TableRow
+                        android:id="@+id/tableRow1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#fff05c">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Antiinfettivi"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#152073">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Neurologici"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#a77c40">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Antineoplastici"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#008f76">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Organi di senso"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow3"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#be0f0f">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Cardiovascolari"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#ac308b">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+
+                            android:text="Preparatori ormonali "
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+
+
+                    <TableRow
+                        android:id="@+id/tableRow4"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#ada5d0">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Dermatologici"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#71b1e1">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Respiratori"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow5"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#f8ab01">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Ematologici"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#03a5b0">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+
+                            android:text="Sistema Muscolo-scheletrico"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow6"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="2dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#67ba8d">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Gastoenterici e metabolici"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="2"
+                            android:background="#f37111">
+
+                        </View>
+
+                        <com.docgenerici.selfbox.android.custom.texts.CTextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="48"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Genito-urinari"
+                            android:textSize="20sp"
+                            anytext:font="roboto" />
+                    </TableRow>
+                </TableLayout>
+
+
+                <View
+                    android:id="@+id/vLine1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tableLayout1"
+                    android:layout_margin="15dp"
+                    android:background="@color/color_text_home" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvLegendaTitleBottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vLine1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Il prodotto non contiene nella formulazione componenti che:"
+                    android:textColor="#000000"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvLegendaNoInside"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_below="@+id/tvLegendaTitleBottom"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    anytext:font="roboto" />
+
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

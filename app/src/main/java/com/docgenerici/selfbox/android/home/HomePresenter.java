@@ -29,5 +29,9 @@ public interface HomePresenter extends Presenter {
         void showMedico();
 
         void showPharma();
+
+        void showHelp();
+
+        void gotoSync();
     }
 }

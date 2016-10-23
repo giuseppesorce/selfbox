@@ -73,11 +73,32 @@ public class CTextView extends TextView {
         }
         switch (font) {
 
-            case "helveticalt":
+            case "helveticaltpro":
                 UtilFont.setTypeface(this, "HelveticaNeueLTPro-Lt.otf");
+                break;
+            case "helveticalt":
+                UtilFont.setTypeface(this, "HelveticaNeueLTStd-Lt");
+                break;
+            case "helveticaltcn":
+                UtilFont.setTypeface(this, "HelveticaNeueLTStd-LtCn.otf");
+                break;
+            case "helveticaltcnroman":
+                UtilFont.setTypeface(this, "HelveticaNeueLTStd-Roman.otf");
+                break;
+            case "helveticaltst":
+                UtilFont.setTypeface(this, "HelveticaNeueLTStd-LtIt.otf");
                 break;
             case "medium":
                 UtilFont.setTypeface(this, "Roboto-Medium.ttf");
+                break;
+            case "robotobold":
+                UtilFont.setTypeface(this, "Roboto-Bold.ttf");
+                break;
+            case "robotoitalic":
+                UtilFont.setTypeface(this, "Roboto-Italic.ttf");
+                break;
+            case "roboto":
+                UtilFont.setTypeface(this, "Roboto-Regular.ttf");
                 break;
 
         }

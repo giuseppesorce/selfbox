@@ -69,6 +69,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
         }
         createGalleryContentsItems();
+        presenter.selectAZ();
         return view;
     }
 

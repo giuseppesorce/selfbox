@@ -1,5 +1,6 @@
 package com.docgenerici.selfbox.android.home;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,9 @@ import android.view.View;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.ContentsActivity;
+import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
+import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
+import com.docgenerici.selfbox.android.sync.SyncActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,10 +28,11 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
-//        View decorView = getWindow().getDecorView();
-//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
 
     }
@@ -64,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void showISF() {
+
         startActivity(new Intent(this, ContentsActivity.class));
     }
 
@@ -75,5 +81,21 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     @Override
     public void showPharma() {
         startActivity(new Intent(this, ContentsActivity.class));
+    }
+
+    @Override
+    public void showHelp() {
+
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        HelpDialogFragment helpDialog = HelpDialogFragment.createInstance();
+        helpDialog.show(ft, "helpDialog");
+
+
+    }
+
+    @Override
+    public void gotoSync() {
+        startActivity(new Intent(this, SyncActivity.class));
     }
 }

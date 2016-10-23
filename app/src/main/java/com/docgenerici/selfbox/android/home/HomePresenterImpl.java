@@ -34,12 +34,12 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void onSelectSync() {
-
+        view.gotoSync();
     }
 
     @Override
     public void onSelectHelp() {
-
+        view.showHelp();
     }
 
     @Override

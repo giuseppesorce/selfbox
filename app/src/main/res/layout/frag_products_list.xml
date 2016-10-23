@@ -17,18 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
-            android:text="Catalogo prodotti"
+            android:text="@string/catalogo_prodotti"
             android:textColor="#4e4e4e"
             android:textSize="30sp" />
 
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/tvTitle"
 
-            android:background="@drawable/ic_share_green" />
 
         <Button
             android:id="@+id/btFilter"
@@ -92,9 +85,9 @@
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/etSearch"
             android:background="@drawable/back_rounded_search"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="LEGENDA"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/legenda"
             android:textSize="20sp" />
     </RelativeLayout>
 

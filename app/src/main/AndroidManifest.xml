@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".android.home.HomeActivity" />
-        <activity android:name=".android.contents.ContentsActivity"></activity>
+        <activity android:name=".android.contents.ContentsActivity" />
+        <activity android:name=".android.sync.SyncActivity"></activity>
     </application>
 
 </manifest>

@@ -14,10 +14,14 @@ public interface ProductsListPresenter extends Presenter {
 
     void onSelectFilter();
 
+    void onSelectLegenda();
+
     interface PListView extends BaseView {
 
         void setup();
 
         void openFilterDialog();
+
+        void showLegenda();
     }
 }

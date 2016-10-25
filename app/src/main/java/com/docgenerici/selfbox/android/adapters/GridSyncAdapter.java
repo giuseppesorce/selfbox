@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.SyncContent;
 
@@ -47,7 +48,10 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         SyncContent syncContent= syncContents.get(position);
 
         ((MyItemHolder) holder).tvLabel.setText(syncContent.getTitle());
-        ((MyItemHolder) holder).vRectPercentage.setScaleX(syncContent.getPercentage());
+        ((MyItemHolder) holder).tvPercentage.setText(syncContent.getPercentage()+"%");
+        float percentage= (float) ((float)syncContent.getPercentage()/100.0f);
+        Dbg.p("percentege; "+percentage);
+        ((MyItemHolder) holder).vRectPercentage.setScaleX(percentage);
         ((MyItemHolder) holder).vRectPercentage.setPivotX(0);
 
     }
@@ -61,6 +65,7 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         private View vRectPercentage;
         TextView tvLabel;
+        TextView tvPercentage;
 
         public MyItemHolder(View itemView) {
             super(itemView);
@@ -68,6 +73,7 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             tvLabel= (TextView) itemView.findViewById(R.id.tvLabel);
             vRectPercentage=  itemView.findViewById(R.id.vRectPercentage);
+            tvPercentage=  (TextView) itemView.findViewById(R.id.tvPercentage);
         }
 
 

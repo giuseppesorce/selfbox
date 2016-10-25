@@ -11,6 +11,7 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.ContentsActivity;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
+import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
 
 import butterknife.ButterKnife;
@@ -29,10 +30,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+
 
 
     }
@@ -97,5 +95,14 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     @Override
     public void gotoSync() {
         startActivity(new Intent(this, SyncActivity.class));
+    }
+
+    @Override
+    public void showInfo() {
+
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        InfoDialogFragment infoDialogFragment = InfoDialogFragment.createInstance();
+        infoDialogFragment.show(ft, "infoDialogFragment");
     }
 }

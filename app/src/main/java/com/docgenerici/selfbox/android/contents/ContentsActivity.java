@@ -4,14 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Build;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v13.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -20,23 +24,33 @@ import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.ContentDoc;
+
+import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContentsActivity extends AppCompatActivity implements MainContentPresenter.MainContentView {
+public class ContentsActivity extends AppCompatActivity implements MainContentPresenter.MainContentView, ViewPager.OnPageChangeListener, ContentActivityInterface {
 
     @BindView(R.id.btContent)
     Button btContent;
+    @BindView(R.id.tvShare)
+    TextView tvShare;
+
+
     @BindView(R.id.btProducts)
     Button btProducts;
     @BindView(R.id.vLine)
     View vLine;
+    @BindView(R.id.vPager)
+    ViewPager vPager;
+
     private MainContentPresenter presenter;
-    private final int NAVIGATION_CONTENT = 1;
-    private final int NAVIGATION_PRODUCTS = 2;
+    private final int NAVIGATION_CONTENT = 0;
+    private final int NAVIGATION_PRODUCTS = 1;
     @BindColor(R.color.green)
     int greenColor;
     @BindColor(R.color.color_text_tab_button)
@@ -44,6 +58,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     private ContentsListFragment contentsList;
     private ProductListFragment productsListFragment;
     private ShareContentsDialogFragment shareDialog;
+    private ArrayList<ContentDoc> contentsShared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +68,14 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
         presenter.setView(this);
         presenter.setup();
+        vPager.setAdapter(new CustomAdapter(getFragmentManager()));
+        vPager.addOnPageChangeListener(this);
 
+    }
+
+    @OnClick(R.id.ivLogo)
+    void onTapLogo(){
+        finish();
     }
 
     @OnClick(R.id.btContent)
@@ -88,23 +110,17 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                 }
             }
         });
-        onSelectContents();
+        vPager.setCurrentItem(0);
     }
 
     @Override
     public void showContents() {
-        if(contentsList ==null) {
-            contentsList = new ContentsListFragment();
-        }
-        showFragment(contentsList, "contentList", R.id.rmContainer);
+        vPager.setCurrentItem(NAVIGATION_CONTENT);
     }
 
     @Override
     public void showProducts() {
-        if(productsListFragment ==null) {
-            productsListFragment = new ProductListFragment();
-        }
-        showFragment(productsListFragment, "productsListFragment", R.id.rmContainer);
+        vPager.setCurrentItem(NAVIGATION_PRODUCTS);
     }
 
     @Override
@@ -142,16 +158,72 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         }
     }
 
-    private void showFragment(Fragment frag, String tag, int container) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(container, frag, tag);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        setNavigation(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void setShared(ArrayList<ContentDoc> contentsShared) {
+        this.contentsShared= contentsShared;
+        tvShare.setVisibility(contentsShared.size() > 0 ? View.VISIBLE : View.GONE);
+        tvShare.setText("CONDIVIDI "+contentsShared.size()+" CONTENUTI");
+
+    }
+
+    private class CustomAdapter extends FragmentStatePagerAdapter {
+
+
+        public CustomAdapter(FragmentManager supportFragmentManager) {
+            super(supportFragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return ContentsListFragment.createInstance();
+                case 1:
+                    return ProductListFragment.createInstance();
+
+                default:
+                    return new Fragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "";
+        }
     }
 
     @OnClick(R.id.tvShare)
-    void onTapShareButton(){
+    void onTapShareButton() {
         presenter.onSelectShare();
+    }
+
+    @Override
+    public void onBackPressed() {
+      if(vPager.getCurrentItem() ==1){
+          vPager.setCurrentItem(0);
+      }else{
+          finish();
+      }
     }
 }

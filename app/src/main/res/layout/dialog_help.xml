@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="900dp"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
@@ -34,33 +34,38 @@
             android:id="@+id/btClose"
             android:layout_marginTop="25dp"
             android:background="@drawable/ic_closex_w1" />
-
-        <ScrollView
+        <WebView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/tvHelp"
-            android:background="@color/white">
+            android:id="@+id/webView"
+            android:layout_height="match_parent"></WebView>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-             >
+        <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@+id/tvHelp"-->
+            <!--android:background="@color/white">-->
 
-                <com.docgenerici.selfbox.android.custom.texts.CTextView
-                    android:id="@+id/tvHelp1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/help1"
-                    android:textSize="18sp"
-                    anytext:font="roboto" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_above="@+id/tvHelp1"
-                    android:layout_height="1dp"/>
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_margin="10dp"-->
+             <!--&gt;-->
 
-            </RelativeLayout>
-        </ScrollView>
+                <!--<com.docgenerici.selfbox.android.custom.texts.CTextView-->
+                    <!--android:id="@+id/tvHelp1"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/help1"-->
+                    <!--android:textSize="18sp"-->
+                <!--<View-->
+        <!--anytext:font="roboto" />-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_above="@+id/tvHelp1"-->
+                    <!--android:layout_height="1dp"/>-->
+
+            <!--</RelativeLayout>-->
+        <!--</ScrollView>-->
 
     </RelativeLayout>
 

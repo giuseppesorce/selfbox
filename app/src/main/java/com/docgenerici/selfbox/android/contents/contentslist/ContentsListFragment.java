@@ -2,6 +2,7 @@ package com.docgenerici.selfbox.android.contents.contentslist;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.GalleryAdapter;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
+import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
+import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
@@ -35,7 +38,7 @@ import butterknife.OnClick;
  * @author Giuseppe Sorce
  */
 
-public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemClickListener {
+public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener {
 
     @BindView(R.id.etSearch)
     EditText etSearch;
@@ -57,34 +60,31 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private GalleryAdapter galleryAdapter;
     private FilterDialog filtersDialog;
 
+    private ArrayList<ContentDoc> contents;private ContentActivityInterface activityInterface;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=  inflater.inflate(R.layout.frag_contents_list,container,false);
+        View view = inflater.inflate(R.layout.frag_contents_list, container, false);
         ButterKnife.bind(this, view);
-        presenter= SelfBoxApplicationImpl.appComponent.contentListPresenter();
+        presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
+        presenter.setup(sample1, sample2, sample3);
         presenter.setView(this);
-        if(getArguments() !=null){
+        if (getArguments() != null) {
 
         }
         createGalleryContentsItems();
         presenter.selectAZ();
+        etSearch.clearFocus();
         return view;
     }
 
     private void createGalleryContentsItems() {
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 3);
         rvGallery.setLayoutManager(gridLayout);
-        ArrayList<ContentDoc> contents= new ArrayList<>();
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino prezzi 05/10/2016", sample1));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino medico settembre 2015",sample2));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Programmi Eventi 2016", sample1));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Congressi 2016",sample2));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.VISUAL, "Presentazione nuovi prodotti", sample3));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure OMEGA 3", sample2));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure 2016", sample1));
-        galleryAdapter = new GalleryAdapter(getActivity(), contents, this);
+
+        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(), this);
         int spanCount = 3; // 3 columns
         int spacing = 50; // 50px
         boolean includeEdge = false;
@@ -93,18 +93,18 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     }
 
     @OnClick(R.id.llAZ)
-    void onSelectAZ(){
-     presenter.selectAZ();
+    void onSelectAZ() {
+        presenter.selectAZ();
     }
 
     @OnClick(R.id.llDate)
-    void onSelectDate(){
+    void onSelectDate() {
         presenter.selectDate();
     }
 
     @OnClick(R.id.btFilter)
-    void onSelectFilter(){
-       presenter.onSelecteFilter();
+    void onSelectFilter() {
+        presenter.onSelecteFilter();
     }
 
     @Override
@@ -121,15 +121,42 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     @Override
     public void openFilterDialog() {
-        FragmentTransaction ft = getFragmentManager()
-                .beginTransaction();
-        filtersDialog = FilterDialog.createInstance();
 
-        filtersDialog.show(ft, "filtersDialog");
     }
 
     @Override
+    public void refreshContents() {
+        galleryAdapter.notifyDataSetChanged();
+        if(activityInterface !=null){
+            activityInterface.setShared(presenter.getContentsShared());
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() != null) {
+            activityInterface = (ContentActivityInterface) getActivity();
+        }
+    }
+
+
+
+    @Override
     public void onItemClick(View view, int position) {
+
+    }
+
+    public static ContentsListFragment createInstance() {
+        ContentsListFragment frag = new ContentsListFragment();
+        Bundle init = new Bundle();
+        frag.setArguments(init);
+        return frag;
+    }
+
+    @Override
+    public void onSelectShare(int position) {
+        presenter.setShare(position);
 
     }
 }

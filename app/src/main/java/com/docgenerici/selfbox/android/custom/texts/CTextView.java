@@ -77,7 +77,7 @@ public class CTextView extends TextView {
                 UtilFont.setTypeface(this, "HelveticaNeueLTPro-Lt.otf");
                 break;
             case "helveticalt":
-                UtilFont.setTypeface(this, "HelveticaNeueLTStd-Lt");
+                UtilFont.setTypeface(this, "HelveticaNeueLTStd-Lt.otf");
                 break;
             case "helveticaltcn":
                 UtilFont.setTypeface(this, "HelveticaNeueLTStd-LtCn.otf");

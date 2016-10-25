@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private OnItemClickListener onClickListener;
+    private OnItemContentClickListener onClickListener;
     Context context;
     List<ContentDoc> contentDocs = new ArrayList<>();
 
-    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, OnItemClickListener listener) {
+    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, OnItemContentClickListener listener) {
         this.context = context;
         this.contentDocs = contentDocList;
         this.onClickListener= listener;
@@ -44,7 +44,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
        ContentDoc contentDoc= contentDocs.get(position);
 
         switch (contentDoc.getType()){
@@ -58,6 +58,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((MyItemHolder)holder).ivType.setImageResource(R.drawable.ic_type_folder);
                 break;
         }
+        if(contentDoc.isShared()){
+            ((MyItemHolder)holder).ivShare.setImageResource(R.drawable.ic_share_red);
+        }else{
+            ((MyItemHolder)holder).ivShare.setImageResource(R.drawable.ic_share_grey);
+        }
+        ((MyItemHolder)holder).ivShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onClickListener!=null){
+                    onClickListener.onSelectShare(position);
+                }
+            }
+        });
         ((MyItemHolder)holder).tvTitle.setText(contentDoc.getTitle());
         ((MyItemHolder)holder).ivCover.setImageDrawable(contentDoc.getImage());
 //        Picasso.with(context).load(photo.path).resize(200,200).centerCrop().into(((MyItemHolder)holder).mImg);
@@ -76,12 +89,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public  class MyItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivCover;
+        ImageView ivShare;
         ImageView ivType;
         TextView tvTitle;
 
         public MyItemHolder(View itemView) {
             super(itemView);
 
+            ivShare= (ImageView) itemView.findViewById(R.id.ivShare);
             ivCover= (ImageView) itemView.findViewById(R.id.ivCover);
             ivType= (ImageView) itemView.findViewById(R.id.ivType);
             tvTitle= (TextView) itemView.findViewById(R.id.tvTitle);

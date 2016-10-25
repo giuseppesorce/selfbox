@@ -1,6 +1,13 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
+import android.graphics.drawable.Drawable;
+
 import com.docgenerici.selfbox.BaseView;
+import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.SelfBoxConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 22/09/16.
@@ -11,6 +18,8 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     private final int FILTER_BY_DATE= 1;
     private final int FILTER_BY_AZ= 2;
     private  int FILTER_NOW= FILTER_BY_AZ;
+    private ArrayList<ContentDoc> contents;
+
     @Override
     public void setView(BaseView view) {
         if (!(view instanceof ContentView)) {
@@ -35,4 +44,41 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     public void onSelecteFilter() {
         view.openFilterDialog();
     }
+
+    @Override
+    public void setup(Drawable sample1, Drawable sample2, Drawable sample3) {
+        contents = new ArrayList<>();
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino prezzi 05/10/2016", sample1));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino medico settembre 2015", sample2));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Programmi Eventi 2016", sample1));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Congressi 2016", sample2));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.VISUAL, "Presentazione nuovi prodotti", sample3));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure OMEGA 3", sample2));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure 2016", sample1));
+    }
+
+    @Override
+    public List<ContentDoc> getContents() {
+        return contents;
+    }
+
+    @Override
+    public void setShare(int position) {
+        contents.get(position).setShared(!contents.get(position).isShared());
+        view.refreshContents();
+    }
+
+    @Override
+    public ArrayList<ContentDoc> getContentsShared() {
+        ArrayList<ContentDoc> contentsShared= new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            if(contents.get(i).isShared()){
+                contentsShared.add(contents.get(i));
+            }
+        }
+        return contentsShared;
+
+    }
+
+
 }

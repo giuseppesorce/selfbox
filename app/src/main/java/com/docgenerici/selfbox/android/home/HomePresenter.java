@@ -33,5 +33,7 @@ public interface HomePresenter extends Presenter {
         void showHelp();
 
         void gotoSync();
+
+        void showInfo();
     }
 }

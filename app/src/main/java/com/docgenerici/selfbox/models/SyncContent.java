@@ -7,9 +7,9 @@ package com.docgenerici.selfbox.models;
 public class SyncContent {
 
     private String title;
-    private float percentage;
+    private int percentage;
 
-    public SyncContent(String title, float percentage) {
+    public SyncContent(String title, int percentage) {
         this.title = title;
         this.percentage = percentage;
     }
@@ -22,11 +22,11 @@ public class SyncContent {
         this.title = title;
     }
 
-    public float getPercentage() {
+    public int getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(float percentage) {
+    public void setPercentage(int percentage) {
         this.percentage = percentage;
     }
 }

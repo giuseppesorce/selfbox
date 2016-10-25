@@ -1,0 +1,38 @@
+*{margin:0; padding: 0; font-family: "Roboto Regular", Helvetica, Arial, sans-serif; font-size: 18px;}
+
+strong{font-weight: normal; font-family: "Roboto Bold", Helvetica, Arial, sans-serif;}
+p{padding-bottom: 22px;}
+
+.container{padding: 26px 42px;}
+
+p.icon{padding:25px 0 30px 205px;}
+
+p.icon span.sublevel_icons{display: block; margin-top: 25px; padding: 25px 0 25px 120px;}
+p.small_bottom{padding-bottom: 0;}
+
+.ico_new_doc{background: url('ico_new_doc.png') 34px center no-repeat;}
+.ico_farmacia_green{background: url('ico_farmacia_green.png') 34px center no-repeat;}
+.ico_farmacia_gray{background: url('ico_farmacia_gray.png') 34px center no-repeat;}
+.ico_medico_blue{background: url('ico_medico_blue.png') 34px center no-repeat;}
+.ico_medico_gray{background: url('ico_medico_gray.png') 34px center no-repeat;}
+.ico_presentazione{background: url('ico_presentazione.png') 34px center no-repeat;}
+.ico_play{background: url('ico_play.png') 34px center no-repeat;}
+.ico_file{background: url('ico_file.png') 34px center no-repeat;}
+.ico_folder{background: url('ico_folder.png') 34px center no-repeat;}
+.ico_new{background: url('ico_new.png') 34px center no-repeat;}
+.ico_share_plus_gray{background: url('ico_share_plus_gray.png') 34px center no-repeat;}
+.ico_share_plus_red{background: url('ico_share_plus_red.png') 34px center no-repeat;}
+.ico_punto_esclamativo{background: url('ico_punto_esclamativo.png') 34px center no-repeat;}
+.ico_lens{background: url('ico_lens.png') 34px center no-repeat;}
+.ico_filter{background: url('ico_filter.png') 34px center no-repeat;}
+.ico_share_green{background: url('ico_share_green.png') 34px center no-repeat;}
+.ico_one_red{background: url('ico_one_red.png') 34px center no-repeat;}
+.ico_transfer_red{background: url('ico_transfer_red.png') 34px center no-repeat;}
+.ico_transfer_gray{background: url('ico_transfer_gray.png') 34px center no-repeat;}
+.ico_doc{background: url('ico_doc.png') 38px center no-repeat;}
+
+.ico_rcp{background: url('ico_rcp.png') 34px center no-repeat;}
+.ico_doc_green{background: url('ico_doc_green.png') 34px center no-repeat;}
+.ico_foto_green{background: url('ico_foto_green.png') 34px center no-repeat;}
+
+.icons_share{background: url('ico_share_plus_small.png') 27px center no-repeat;}

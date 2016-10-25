@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9b000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="900dp"
+        android:layout_height="500dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvHelp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#64c095"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="INFO"
+            android:textColor="@color/white"
+            android:textSize="27sp"
+            anytext:font="roboto" />
+
+        <Button
+            android:id="@+id/btClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ic_closex_w1" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvHelp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Codice di registrazione"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="rept1"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ISF"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="REP Test DEMO"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Server remoto"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="repportal.docgenerici.it"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Versione"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="2.0"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Data ultimo aggiornamento"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Lunedi 24 Ottobre 2016"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spazio disponibile"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="48880,00 MB"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Help Desk riservato agli ISF"
+                    android:textSize="18sp"
+                    anytext:font="roboto" />
+
+                <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="089 30 61 447"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    anytext:font="robotobold" />
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

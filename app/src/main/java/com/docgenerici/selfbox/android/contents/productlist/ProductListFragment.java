@@ -14,6 +14,7 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.ProductsAdapter;
+import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
 import com.docgenerici.selfbox.models.ProductDoc;
@@ -111,5 +112,12 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     @OnClick(R.id.btLegenda)
     void onTapLegenda(){
         presenter.onSelectLegenda();
+    }
+
+    public static ProductListFragment createInstance() {
+        ProductListFragment frag = new ProductListFragment();
+        Bundle init = new Bundle();
+        frag.setArguments(init);
+        return frag;
     }
 }

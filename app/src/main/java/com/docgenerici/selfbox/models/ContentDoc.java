@@ -12,10 +12,9 @@ public class ContentDoc {
     private int type;
     private String title;
     private Drawable image;
+    private boolean shared;
 
-    public ContentDoc() {
 
-    }
     public ContentDoc(int type, String title, Drawable image) {
         this.type= type;
         this.title= title;
@@ -44,5 +43,13 @@ public class ContentDoc {
 
     public void setImage(Drawable image) {
         this.image = image;
+    }
+
+    public boolean isShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 }

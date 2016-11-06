@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="40dp"
-            android:background="@drawable/ic_filter_green" />
+            android:background="@drawable/ic_filter_orange" />
 
         <EditText
             android:id="@+id/etSearch"
@@ -41,7 +41,7 @@
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/llAZ"
             android:background="@drawable/back_rounded_search"
-            android:drawableRight="@drawable/ic_search"
+            android:drawableRight="@drawable/ic_search_orange"
             android:maxLines="1"
             android:paddingLeft="20dp"
             android:paddingRight="20dp" />

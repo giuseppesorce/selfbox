@@ -3,9 +3,11 @@ package com.docgenerici.selfbox.android.contents.contentslist;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +25,12 @@ import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
 import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
+import com.docgenerici.selfbox.android.pdf.PdfActivity;
+import com.docgenerici.selfbox.android.pdf.PdfFragment;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindColor;
@@ -59,8 +64,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private ContentListPresenter presenter;
     private GalleryAdapter galleryAdapter;
     private FilterDialog filtersDialog;
-
-    private ArrayList<ContentDoc> contents;private ContentActivityInterface activityInterface;
+    private ContentActivityInterface activityInterface;
 
 
     @Nullable
@@ -69,7 +73,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         View view = inflater.inflate(R.layout.frag_contents_list, container, false);
         ButterKnife.bind(this, view);
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
-        presenter.setup(sample1, sample2, sample3);
+        presenter.setup(R.drawable.sample1, R.drawable.sample2, R.drawable.sample3);
         presenter.setView(this);
         if (getArguments() != null) {
 
@@ -83,7 +87,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private void createGalleryContentsItems() {
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 3);
         rvGallery.setLayoutManager(gridLayout);
-
         galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(), this);
         int spanCount = 3; // 3 columns
         int spacing = 50; // 50px
@@ -140,11 +143,10 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
     }
 
-
-
     @Override
     public void onItemClick(View view, int position) {
 
+      startActivity(new Intent(getActivity(), PdfActivity.class));
     }
 
     public static ContentsListFragment createInstance() {

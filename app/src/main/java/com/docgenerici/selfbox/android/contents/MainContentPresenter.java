@@ -3,6 +3,9 @@ package com.docgenerici.selfbox.android.contents;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
+import com.docgenerici.selfbox.models.ContentDoc;
+
+import java.util.ArrayList;
 
 /**
  * @author Giuseppe Sorce
@@ -20,6 +23,10 @@ public interface MainContentPresenter extends Presenter {
 
     void onSelectShare();
 
+    void setShareContents(ArrayList<ContentDoc> contentsShared);
+
+    ArrayList<ContentDoc> getContentsShared();
+
     interface MainContentView extends BaseView {
 
         void setupView();
@@ -28,6 +35,6 @@ public interface MainContentPresenter extends Presenter {
 
         void showProducts();
 
-        void showShareContents();
+        void showShareContents(ArrayList<ContentDoc> contentsShared);
     }
 }

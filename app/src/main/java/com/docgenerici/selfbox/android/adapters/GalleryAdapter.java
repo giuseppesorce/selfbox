@@ -31,7 +31,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.onClickListener= listener;
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
@@ -47,7 +46,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
        ContentDoc contentDoc= contentDocs.get(position);
 
-        switch (contentDoc.getType()){
+        switch (contentDoc.type){
             case SelfBoxConstants.TypeContent.PDF:
                 ((MyItemHolder)holder).ivType.setImageResource(R.drawable.ic_type_pdf);
                 break;
@@ -58,7 +57,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((MyItemHolder)holder).ivType.setImageResource(R.drawable.ic_type_folder);
                 break;
         }
-        if(contentDoc.isShared()){
+        if(contentDoc.shared){
             ((MyItemHolder)holder).ivShare.setImageResource(R.drawable.ic_share_red);
         }else{
             ((MyItemHolder)holder).ivShare.setImageResource(R.drawable.ic_share_grey);
@@ -71,15 +70,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         });
-        ((MyItemHolder)holder).tvTitle.setText(contentDoc.getTitle());
-        ((MyItemHolder)holder).ivCover.setImageDrawable(contentDoc.getImage());
-//        Picasso.with(context).load(photo.path).resize(200,200).centerCrop().into(((MyItemHolder)holder).mImg);
-//        if(photo.selectedgalley){
-//            ((MyItemHolder)holder).ivSelectPhoto.setVisibility(View.VISIBLE);
-//        }else{
-//            ((MyItemHolder)holder).ivSelectPhoto.setVisibility(View.GONE);
-//        }
-
+        ((MyItemHolder)holder).tvTitle.setText(contentDoc.title);
+        ((MyItemHolder)holder).ivCover.setImageResource(contentDoc.image);
+        if(position % 2 ==0){
+            ((MyItemHolder)holder).vNew.setVisibility(View.VISIBLE);
+            ((MyItemHolder)holder).tvNew.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -88,18 +84,22 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public  class MyItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        View vNew;
         ImageView ivCover;
         ImageView ivShare;
         ImageView ivType;
         TextView tvTitle;
+        TextView tvNew;
 
         public MyItemHolder(View itemView) {
             super(itemView);
 
+            vNew= (View) itemView.findViewById(R.id.vNew);
             ivShare= (ImageView) itemView.findViewById(R.id.ivShare);
             ivCover= (ImageView) itemView.findViewById(R.id.ivCover);
             ivType= (ImageView) itemView.findViewById(R.id.ivType);
             tvTitle= (TextView) itemView.findViewById(R.id.tvTitle);
+            tvNew= (TextView) itemView.findViewById(R.id.tvNew);
             itemView.setOnClickListener(this);
         }
 

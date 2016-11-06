@@ -22,7 +22,7 @@ public interface ContentListPresenter extends Presenter {
 
     void onSelecteFilter();
 
-    void setup(Drawable sample1, Drawable sample2, Drawable sample3);
+    void setup(int sample1, int sample2, int sample3);
 
     List<ContentDoc> getContents();
 

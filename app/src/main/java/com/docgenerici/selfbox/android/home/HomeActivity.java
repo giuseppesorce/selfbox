@@ -1,26 +1,34 @@
 package com.docgenerici.selfbox.android.home;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.ContentsActivity;
-import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
 
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView {
 
 
+    private static final int WRITE_PERMISSION =124 ;
     private HomePresenter presenter;
+    @BindColor(R.color.grey_filter)
+    int grey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +37,9 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
-
-
-
-
+        changeStatusBar(grey);
+        checkWritePermission();
+        presenter.onSelectISF();
     }
 
     @OnClick(R.id.rlISF)
@@ -104,5 +111,27 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
                 .beginTransaction();
         InfoDialogFragment infoDialogFragment = InfoDialogFragment.createInstance();
         infoDialogFragment.show(ft, "infoDialogFragment");
+    }
+
+
+    private void changeStatusBar(int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
+    }
+
+    public void checkWritePermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        WRITE_PERMISSION);
+
+            }
+        }
+
     }
 }

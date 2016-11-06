@@ -1,55 +1,63 @@
 package com.docgenerici.selfbox.models;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 16/10/16.
  */
 
-public class ContentDoc {
+public class ContentDoc implements Parcelable {
 
   //this model is temporaney
-    private int type;
-    private String title;
-    private Drawable image;
-    private boolean shared;
+    public int type;
+    public String title;
+    public int image;
+    public boolean shared;
+    public String content;
+    public boolean  isnew= false;
 
 
-    public ContentDoc(int type, String title, Drawable image) {
+    public ContentDoc(int type, String title, int image, String content) {
         this.type= type;
         this.title= title;
         this.image= image;
+        this.content= content;
     }
 
-    public int getType() {
-        return type;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.type);
+        dest.writeString(this.title);
+        dest.writeInt(this.image);
+        dest.writeByte(this.shared ? (byte) 1 : (byte) 0);
+        dest.writeString(this.content);
     }
 
-    public String getTitle() {
-        return title;
+    protected ContentDoc(Parcel in) {
+        this.type = in.readInt();
+        this.title = in.readString();
+        this.image = in.readInt();
+        this.shared = in.readByte() != 0;
+        this.content = in.readString();
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public static final Parcelable.Creator<ContentDoc> CREATOR = new Parcelable.Creator<ContentDoc>() {
+        @Override
+        public ContentDoc createFromParcel(Parcel source) {
+            return new ContentDoc(source);
+        }
 
-    public Drawable getImage() {
-        return image;
-    }
-
-    public void setImage(Drawable image) {
-        this.image = image;
-    }
-
-    public boolean isShared() {
-        return shared;
-    }
-
-    public void setShared(boolean shared) {
-        this.shared = shared;
-    }
+        @Override
+        public ContentDoc[] newArray(int size) {
+            return new ContentDoc[size];
+        }
+    };
 }

@@ -110,6 +110,8 @@
                     android:layout_height="400dp"
                     android:layout_below="@+id/vLine2"
                     android:layout_marginTop="20dp"
+                    android:gravity="top"
+                    android:padding="5dp"
                     android:background="@drawable/back_square_share_insertmessage" />
 
             </RelativeLayout>
@@ -133,6 +135,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="270dp"
+                    android:id="@+id/rvList"
                     android:layout_above="@+id/tvSendAfter"
                     android:layout_below="@+id/tvSelectLabel" />
 

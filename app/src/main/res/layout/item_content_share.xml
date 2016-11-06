@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="50dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<com.docgenerici.selfbox.android.custom.texts.CTextView
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:padding="5dp"
+    android:textSize="20sp"
+    android:id="@+id/tvShareTitle"
+    android:layout_height="50dp">
+
+</com.docgenerici.selfbox.android.custom.texts.CTextView>
+    <ImageView
+        android:layout_width="15dp"
+        android:src="@drawable/ic_closex_w1"
+        android:tint="@color/grey_filter"
+        android:id="@+id/ivClose"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_height="15dp" />
+
+</RelativeLayout>

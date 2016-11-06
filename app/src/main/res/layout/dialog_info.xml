@@ -23,7 +23,7 @@
             android:paddingRight="20dp"
             android:text="INFO"
             android:textColor="@color/white"
-            android:textSize="27sp"
+            android:textSize="24sp"
             anytext:font="roboto" />
 
         <Button

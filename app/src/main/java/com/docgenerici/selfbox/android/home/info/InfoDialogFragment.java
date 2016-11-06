@@ -14,12 +14,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * @author Giuseppe Sorce #@copyright xx 18/10/16.
- */
+ * @author Giuseppe Sorce
+ * */
 
 public class InfoDialogFragment extends DialogFragment {
-
-
 
 
     public static InfoDialogFragment createInstance() {
@@ -35,7 +33,6 @@ public class InfoDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.detail);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,10 +41,7 @@ public class InfoDialogFragment extends DialogFragment {
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
 
-
-
-
-        return root;
+       return root;
     }
 
     @OnClick(R.id.btClose)

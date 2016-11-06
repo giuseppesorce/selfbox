@@ -4,15 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Build;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v13.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,10 +20,8 @@ import android.widget.TextView;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
-import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
-import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 
 import java.util.ArrayList;
@@ -35,12 +33,14 @@ import butterknife.OnClick;
 
 public class ContentsActivity extends AppCompatActivity implements MainContentPresenter.MainContentView, ViewPager.OnPageChangeListener, ContentActivityInterface {
 
+    @BindColor(R.color.orange)
+    int orange;
+    @BindColor(R.color.orange_dark)
+    int orange_dark;
     @BindView(R.id.btContent)
     Button btContent;
     @BindView(R.id.tvShare)
     TextView tvShare;
-
-
     @BindView(R.id.btProducts)
     Button btProducts;
     @BindView(R.id.vLine)
@@ -51,14 +51,13 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     private MainContentPresenter presenter;
     private final int NAVIGATION_CONTENT = 0;
     private final int NAVIGATION_PRODUCTS = 1;
-    @BindColor(R.color.green)
-    int greenColor;
+    @BindColor(R.color.orange)
+    int orangeColor;
     @BindColor(R.color.color_text_tab_button)
     int colorButtonSelect;
     private ContentsListFragment contentsList;
     private ProductListFragment productsListFragment;
     private ShareContentsDialogFragment shareDialog;
-    private ArrayList<ContentDoc> contentsShared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +89,14 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         presenter.onSelectProducts();
     }
 
+    @OnClick(R.id.tvShare)
+    void onTapShareButton() {
+        presenter.onSelectShare();
+    }
+
     @Override
     public void setupView() {
-
+        changeStatusBar(orange_dark);
         btContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("NewApi")
             @SuppressWarnings("deprecation")
@@ -124,10 +128,10 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     }
 
     @Override
-    public void showShareContents() {
+    public void showShareContents(ArrayList<ContentDoc> contentsShared) {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        shareDialog = ShareContentsDialogFragment.createInstance();
+        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared);
 
         shareDialog.show(ft, "shareDialog");
     }
@@ -143,7 +147,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                 paramsView.width = params.width;
                 vLine.setLayoutParams(paramsView);
                 btContent.setTextColor(colorButtonSelect);
-                btProducts.setTextColor(greenColor);
+                btProducts.setTextColor(orangeColor);
                 break;
             case NAVIGATION_PRODUCTS:
                 RelativeLayout.LayoutParams paramsP = (RelativeLayout.LayoutParams) btProducts.getLayoutParams();
@@ -152,7 +156,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                 paramsViewL.leftMargin = btProducts.getLeft();
                 paramsViewL.width = paramsP.width;
                 vLine.setLayoutParams(paramsViewL);
-                btContent.setTextColor(greenColor);
+                btContent.setTextColor(orangeColor);
                 btProducts.setTextColor(colorButtonSelect);
                 break;
         }
@@ -176,9 +180,9 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
 
     @Override
     public void setShared(ArrayList<ContentDoc> contentsShared) {
-        this.contentsShared= contentsShared;
-        tvShare.setVisibility(contentsShared.size() > 0 ? View.VISIBLE : View.GONE);
-        tvShare.setText("CONDIVIDI "+contentsShared.size()+" CONTENUTI");
+        presenter.setShareContents(contentsShared);
+        tvShare.setVisibility(presenter.getContentsShared().size() > 0 ? View.VISIBLE : View.GONE);
+        tvShare.setText("CONDIVIDI "+presenter.getContentsShared().size()+" CONTENUTI");
 
     }
 
@@ -213,11 +217,6 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         }
     }
 
-    @OnClick(R.id.tvShare)
-    void onTapShareButton() {
-        presenter.onSelectShare();
-    }
-
     @Override
     public void onBackPressed() {
       if(vPager.getCurrentItem() ==1){
@@ -225,5 +224,14 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
       }else{
           finish();
       }
+    }
+
+    private void changeStatusBar(int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
     }
 }

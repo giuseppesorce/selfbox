@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pdf"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.docgenerici.selfbox.android.pdf.PdfActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_toolbar_home"
+        android:background="@color/orange">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/logo_docgenerici" />
+
+
+
+        <Button
+            android:id="@+id/btHelp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+         android:layout_alignParentRight="true"
+            android:background="@drawable/ic_help_contents_orange" />
+
+        <Button
+            android:id="@+id/btBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/btHelp"
+            android:drawableTint="#ffffff"
+            android:background="@drawable/ic_isf_home" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/pdflayout"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+
+</RelativeLayout>

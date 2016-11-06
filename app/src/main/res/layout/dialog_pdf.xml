@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/rlRoot"
+    android:layout_height="match_parent"
+    android:background="#9b000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvHelp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#64c095"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="PDF"
+            android:textColor="@color/white"
+            android:textSize="27sp"
+            anytext:font="roboto" />
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:id="@+id/btClose"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ic_closex_w1" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/tvHelp"
+            android:id="@+id/fmPdf"
+            android:layout_height="match_parent"></RelativeLayout>
+
+        <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/tvHelp"-->
+        <!--android:background="@color/white">-->
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_margin="10dp"-->
+        <!--&gt;-->
+
+        <!--<com.docgenerici.selfbox.android.custom.texts.CTextView-->
+        <!--android:id="@+id/tvHelp1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/help1"-->
+        <!--android:textSize="18sp"-->
+        <!--<View-->
+        <!--anytext:font="roboto" />-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_above="@+id/tvHelp1"-->
+        <!--android:layout_height="1dp"/>-->
+
+        <!--</RelativeLayout>-->
+        <!--</ScrollView>-->
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

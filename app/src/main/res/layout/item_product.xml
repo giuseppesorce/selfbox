@@ -1,112 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="111dp">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="110dp"
-    android:orientation="horizontal"
-    android:weightSum="100">
-
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="110dp"
-        android:layout_weight="37">
-
-        <View
-            android:layout_width="16dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="#fff56c" />
-
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
-            android:id="@+id/tvProductname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:lines="1"
-            android:text="SEVELAMER DOC"
-            android:textColor="#000"
-            android:textSize="22sp" />
-
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:id="@+id/tvProductSubname"
-            android:lines="1"
-            android:layout_below="@+id/tvProductname"
-            android:text="180 cpr riv. con film 800 mg"
-            android:textColor="#646464"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <com.docgenerici.selfbox.android.custom.texts.CTextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:gravity="center"
-        android:id="@+id/tvClasse"
-        android:text="A84"
-        android:textColor="#000"
-        android:textSize="20sp" />
-
-    <com.docgenerici.selfbox.android.custom.texts.CTextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="13"
-        android:gravity="center"
-        android:text="FCD"
-        android:id="@+id/tvNoInside"
-        android:textColor="#000"
-        android:textSize="20sp" />
-
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="25"
-        android:paddingLeft="10dp"
-android:id="@+id/ivBarCode"
-        android:paddingRight="10dp"
-        android:scaleType="centerInside"
-        android:background="@drawable/codice1"
-        android:gravity="center" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:layout_weight="15"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="100">
 
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_rcp" />
 
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_pdf_products" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_weight="37">
 
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_cameraimage" />
+            <View
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="#fff56c" />
+
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:id="@+id/tvProductname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="20dp"
+                android:lines="1"
+                android:text="SEVELAMER DOC"
+                android:textColor="#000"
+                android:textSize="20sp"
+                anytext:font="medium" />
+
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:id="@+id/tvProductSubname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvProductname"
+                android:layout_marginLeft="35dp"
+                android:lines="1"
+                android:text="180 cpr riv. con film 800 mg"
+                android:textColor="#646464"
+                android:textSize="18sp"
+                anytext:font="helveticaltst" />
+        </RelativeLayout>
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvClasse"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:text="A84"
+            anytext:font="medium"
+            android:textColor="#333333"
+            android:textSize="20sp" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvNoInside"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="13"
+            android:gravity="center"
+            android:text="FCD"
+            anytext:font="medium"
+            android:textColor="#333333"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/ivBarCode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:background="@drawable/codice1"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:scaleType="centerInside" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_weight="15"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_rcp" />
+
+            <Button
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_pdf_products" />
+
+            <Button
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_cameraimage" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-
-</LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="110dp"
-        android:background="#a6a4a4"/>
+        android:background="#a6a4a4" />
 </FrameLayout>

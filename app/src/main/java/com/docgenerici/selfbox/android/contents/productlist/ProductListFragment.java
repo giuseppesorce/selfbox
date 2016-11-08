@@ -2,6 +2,9 @@ package com.docgenerici.selfbox.android.contents.productlist;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -16,12 +22,15 @@ import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.ProductsAdapter;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
+import com.docgenerici.selfbox.android.contents.filters.FilterProductDialog;
 import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
 import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
 import java.util.ArrayList;
 
+import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,8 +46,18 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     RecyclerView rvProduct;
     private ProductsListPresenter presenter;
     private ProductsAdapter adapter;
-    private FilterDialog filtersDialog;
+    private FilterProductDialog filtersDialog;
     private LegendaDialogFragment legendaFragment;
+    @BindView(R.id.btFilter)
+    Button btFilter;
+    @BindView(R.id.etSearch)
+    EditText etSearch;
+    @BindView(R.id.llDate)
+    LinearLayout llDate;
+    @BindView(R.id.llAZ)
+    LinearLayout llAZ;
+    @BindColor(R.color.grey_filter)
+    int grey_filter;
 
     @Nullable
     @Override
@@ -51,22 +70,51 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         if (getArguments() != null) {
 
         }
+        String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
+        Resources res = getResources();
+        switch ((category)) {
 
+            case "isf":
+                btFilter.setBackgroundResource(R.drawable.ic_filter_orange);
+                Drawable ic_search_orange = res.getDrawable(R.drawable.ic_search_orange);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_orange, null);
+                break;
+            case "medico":
+                Drawable ic_search_blue = res.getDrawable(R.drawable.ic_search_blu);
+                btFilter.setBackgroundResource(R.drawable.ic_filter_blu);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_blue, null);
+
+                break;
+            case "pharma":
+                Drawable ic_search_green = res.getDrawable(R.drawable.ic_search);
+                btFilter.setBackgroundResource(R.drawable.ic_filter_green);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_green, null);
+                break;
+        }
+        presenter.selectAZ();
         return view;
 
     }
 
+
+    @OnClick(R.id.llAZ)
+    void onSelectAZ() {
+        presenter.selectAZ();
+    }
+
+    @OnClick(R.id.llDate)
+    void onSelectDate() {
+        presenter.selectDate();
+    }
+
     @OnClick(R.id.btFilter)
-    void onSelectFilter(){
+    void onSelectFilter() {
         presenter.onSelectFilter();
     }
 
-
     @Override
     public void setup() {
-
         ArrayList<ProductDoc> productDocArrayList = new ArrayList<>();
-
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, "ALTRI PRODOTTI TERAPEUTICI"));
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SEVELAMER DOC", "180 cpr riv. con film 800 mg", "A84", "FCD"));
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, "ANTIINFETTIVI"));
@@ -83,16 +131,14 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         adapter = new ProductsAdapter(getActivity().getApplicationContext(), productDocArrayList, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvProduct.setLayoutManager(linearLayoutManager);
-       // rvProduct.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.margin_divider_decotator)));
         rvProduct.setAdapter(adapter);
-
     }
 
-   @Override
+    @Override
     public void openFilterDialog() {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        filtersDialog = FilterDialog.createInstance();
+        filtersDialog = FilterProductDialog.createInstance();
         filtersDialog.show(ft, "filtersDialog");
     }
 
@@ -103,6 +149,17 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         legendaFragment = LegendaDialogFragment.createInstance();
         legendaFragment.show(ft, "legendaFragment");
     }
+    @Override
+    public void showSelectAz() {
+        llAZ.getBackground().setColorFilter(grey_filter, PorterDuff.Mode.MULTIPLY);
+        llDate.getBackground().clearColorFilter();
+    }
+
+    @Override
+    public void showSelectDate() {
+        llAZ.getBackground().clearColorFilter();
+        llDate.getBackground().setColorFilter(grey_filter, PorterDuff.Mode.MULTIPLY);
+    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -110,7 +167,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     }
 
     @OnClick(R.id.btLegenda)
-    void onTapLegenda(){
+    void onTapLegenda() {
         presenter.onSelectLegenda();
     }
 

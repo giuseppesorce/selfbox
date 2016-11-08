@@ -18,28 +18,29 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/logo_docgenerici" />
+            android:id="@+id/ivLogo"
+            android:src="@drawable/logo_docgenerici_white" />
 
 
 
         <Button
             android:id="@+id/btHelp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
          android:layout_alignParentRight="true"
             android:background="@drawable/ic_help_contents_orange" />
 
         <Button
-            android:id="@+id/btBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/btShare"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/btHelp"
-            android:drawableTint="#ffffff"
-            android:background="@drawable/ic_isf_home" />
+
+            android:background="@drawable/ic_share_white" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

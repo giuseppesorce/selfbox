@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -24,9 +26,11 @@ import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
 import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
+import com.docgenerici.selfbox.android.contents.MainContentPresenterImpl;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.android.pdf.PdfFragment;
+import com.docgenerici.selfbox.android.video.VideoActivity;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
@@ -61,6 +65,8 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     Drawable sample2;
     @BindDrawable(R.drawable.sample3)
     Drawable sample3;
+    @BindView(R.id.btFilter)
+    Button btFilter;
     private ContentListPresenter presenter;
     private GalleryAdapter galleryAdapter;
     private FilterDialog filtersDialog;
@@ -75,12 +81,31 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
         presenter.setup(R.drawable.sample1, R.drawable.sample2, R.drawable.sample3);
         presenter.setView(this);
-        if (getArguments() != null) {
-
-        }
         createGalleryContentsItems();
         presenter.selectAZ();
         etSearch.clearFocus();
+        String category= SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
+        Resources res= getResources();
+        switch ((category)){
+
+            case "isf":
+                btFilter.setBackgroundResource(R.drawable.ic_filter_orange);
+                Drawable ic_search_orange= res.getDrawable(R.drawable.ic_search_orange);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_orange, null);
+                break;
+            case "medico":
+                Drawable ic_search_blue= res.getDrawable(R.drawable.ic_search_blu);
+                btFilter.setBackgroundResource(R.drawable.ic_filter_blu);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_blue, null);
+
+                break;
+            case "pharma":
+                Drawable ic_search_green= res.getDrawable(R.drawable.ic_search);
+                btFilter.setBackgroundResource(R.drawable.ic_filter_green);
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_green, null);
+                break;
+        }
+
         return view;
     }
 
@@ -89,7 +114,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         rvGallery.setLayoutManager(gridLayout);
         galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(), this);
         int spanCount = 3; // 3 columns
-        int spacing = 50; // 50px
+        int spacing = 40; // 50px
         boolean includeEdge = false;
         rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         rvGallery.setAdapter(galleryAdapter);
@@ -124,7 +149,10 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     @Override
     public void openFilterDialog() {
-
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        filtersDialog = FilterDialog.createInstance();
+        filtersDialog.show(ft, "filtersDialog");
     }
 
     @Override
@@ -146,7 +174,12 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void onItemClick(View view, int position) {
 
-      startActivity(new Intent(getActivity(), PdfActivity.class));
+        if(galleryAdapter.getItemPosition(position).type ==  SelfBoxConstants.TypeContent.VIDEO){
+            startActivity(new Intent(getActivity(), VideoActivity.class));
+        }else{
+            startActivity(new Intent(getActivity(), PdfActivity.class));
+        }
+
     }
 
     public static ContentsListFragment createInstance() {

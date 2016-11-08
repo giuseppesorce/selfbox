@@ -36,13 +36,11 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/ic_closex_w1" />
 
-
         <LinearLayout
             android:id="@+id/llContent"
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:layout_below="@+id/tvHelp"
-
             android:background="@color/white"
             android:minHeight="500dp"
 
@@ -110,9 +108,9 @@
                     android:layout_height="400dp"
                     android:layout_below="@+id/vLine2"
                     android:layout_marginTop="20dp"
+                    android:background="@drawable/back_square_share_insertmessage"
                     android:gravity="top"
-                    android:padding="5dp"
-                    android:background="@drawable/back_square_share_insertmessage" />
+                    android:padding="5dp" />
 
             </RelativeLayout>
 
@@ -133,9 +131,9 @@
                     anytext:font="robotoitalic" />
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvList"
                     android:layout_width="match_parent"
                     android:layout_height="270dp"
-                    android:id="@+id/rvList"
                     android:layout_above="@+id/tvSendAfter"
                     android:layout_below="@+id/tvSelectLabel" />
 

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="270dp"
+    android:id="@+id/rlItem"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ivImageBackground"
+        />
+
+
+    <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ivCover"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sample2"
+        app:riv_corner_radius="13dp"
+        android:paddingTop="10dp"
+
+        app:riv_mutate_background="true"
+        app:riv_oval="false" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/back_infoitem" />
+
+    <ImageView
+        android:id="@+id/ivType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="30dp"
+
+        android:layout_marginRight="15dp" />
+
+    <ImageView
+        android:id="@+id/ivShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_share_grey" />
+
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="23dp"
+        android:layout_toLeftOf="@id/ivShare"
+        android:layout_toRightOf="@+id/ivType"
+        android:gravity="center_vertical"
+        android:text="Listino prezzi 05/10/2016"
+        android:textSize="16sp" />
+    <View android:layout_width="match_parent"
+
+        android:id="@+id/vNew"
+        android:background="@drawable/back_rounded_orange_new"
+        android:layout_marginRight="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+        android:layout_height="36dp"/>
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:text="NEW"
+        android:id="@+id/tvNew"
+        android:textSize="19sp"
+        anytext:font="helveticabold"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

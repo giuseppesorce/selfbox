@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="50dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <com.docgenerici.selfbox.android.custom.texts.CTextView
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:id="@+id/tvPharmaName"
+        android:layout_height="50dp">
+
+    </com.docgenerici.selfbox.android.custom.texts.CTextView>
+
+
+</RelativeLayout>

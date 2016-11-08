@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Dbg {
-    public static String TAG = "doc";
+    public static String TAG = "seflbox";
 
 
     public static void p(Object m) {

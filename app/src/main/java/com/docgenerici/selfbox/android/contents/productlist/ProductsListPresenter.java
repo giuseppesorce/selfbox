@@ -16,6 +16,10 @@ public interface ProductsListPresenter extends Presenter {
 
     void onSelectLegenda();
 
+    void selectAZ();
+
+    void selectDate();
+
     interface PListView extends BaseView {
 
         void setup();
@@ -23,5 +27,9 @@ public interface ProductsListPresenter extends Presenter {
         void openFilterDialog();
 
         void showLegenda();
+
+        void showSelectAz();
+
+        void showSelectDate();
     }
 }

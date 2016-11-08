@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="dim_toolbar_home">65dp</dimen>
-    <dimen name="btn_height">45dp</dimen>
-    <dimen name="filter_width">90dp</dimen>
+
+
 </resources>

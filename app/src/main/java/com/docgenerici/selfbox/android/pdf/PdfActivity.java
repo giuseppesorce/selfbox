@@ -1,5 +1,6 @@
 package com.docgenerici.selfbox.android.pdf;
 
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,6 +18,9 @@ import com.artifex.mupdfdemo.MuPDFReaderView;
 import com.artifex.mupdfdemo.SearchTask;
 import com.artifex.mupdfdemo.SearchTaskResult;
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.android.contents.MainContentPresenter;
+import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 
 import java.io.File;
 
@@ -30,9 +34,14 @@ import static android.R.attr.path;
 public class PdfActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.btBack)
-    Button btBack;
-    private static final String SAMPLE_FILE = "sample.pdf";
+    @BindView(R.id.btShare)
+    Button btShare;
+    @BindView(R.id.rlToolbar)
+    RelativeLayout rlToolbar;
+    @BindView(R.id.btHelp)
+    Button btHelp;
+
+    String SAMPLE_FILE = "sample.pdf";
     private String pathPdf;
     private RelativeLayout mainLayout;
     private MuPDFCore core;
@@ -49,8 +58,11 @@ public class PdfActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         pathPdf = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SAMPLE_FILE;
         mainLayout = (RelativeLayout) findViewById(R.id.pdflayout);
-        changeStatusBar(green);
 
+        MainContentPresenter presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
+        changeStatusBar(presenter.getContentDarkColor());
+        rlToolbar.setBackgroundColor(presenter.getContentColor());
+        btHelp.setBackground(presenter.getBackGroundhelp());
         core = openFile(Uri.decode(pathPdf));
 
         if (core != null && core.countPages() == 0) {
@@ -84,11 +96,21 @@ public class PdfActivity extends AppCompatActivity {
             }
         };
 
+
     }
 
-    @OnClick(R.id.btBack)
-    void onTapBack(){
+    @OnClick(R.id.ivLogo)
+    void onTapBack() {
         finish();
+    }
+
+
+    @OnClick(R.id.btHelp)
+    public void showHelp() {
+        FragmentTransaction ft = getFragmentManager()
+                .beginTransaction();
+        HelpDialogFragment helpDialog = HelpDialogFragment.createInstance();
+        helpDialog.show(ft, "helpDialog");
     }
 
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rlRoot"
     android:background="@android:color/transparent">
 
     <LinearLayout
@@ -10,99 +10,111 @@
         android:layout_width="350dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="55dp"
         android:background="@color/white"
         android:orientation="vertical">
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvFiltri"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
             android:background="#e5e5e5"
             android:drawablePadding="30dp"
             android:drawableRight="@drawable/ic_close"
             android:gravity="center_vertical"
             android:paddingLeft="50dp"
-            android:id="@+id/tvFiltri"
-            android:layout_marginBottom="20dp"
             android:paddingRight="20dp"
             android:text="FILTRI"
             android:textSize="24sp" />
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvAvvisi"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="35dp"
-android:id="@+id/tvAvvisi"
             android:drawablePadding="30dp"
-            android:textSize="22sp"
             android:drawableRight="@drawable/ic_check_uncheck"
             android:gravity="center_vertical"
             android:paddingRight="20dp"
-            android:text="Avvisi importanti" />
-        <View android:layout_width="match_parent"
-            android:layout_marginLeft="35dp"
-            android:background="@color/color_text_home"
-            android:layout_height="1dp"/>
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:text="Avvisi importanti"
+            android:textSize="22sp" />
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="1dp"
             android:layout_marginLeft="35dp"
-            android:layout_marginTop="15dp"
-            android:drawablePadding="30dp"
-            android:textSize="22sp"
+            android:background="@color/color_text_home" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:id="@+id/tvDocumenti"
-            android:drawableRight="@drawable/ic_check_uncheck"
-            android:gravity="center_vertical"
-            android:paddingRight="20dp"
-            android:text="Documenti" />
-        <View android:layout_width="match_parent"
-            android:layout_marginLeft="35dp"
-            android:background="@color/color_text_home"
-            android:layout_height="1dp"/>
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="15dp"
             android:drawablePadding="30dp"
+            android:drawableRight="@drawable/ic_check_uncheck"
+            android:gravity="center_vertical"
+            android:paddingRight="20dp"
+            android:text="Documenti"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/color_text_home" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:id="@+id/tvVisual"
-            android:textSize="22sp"
-            android:drawableRight="@drawable/ic_check_uncheck"
-            android:gravity="center_vertical"
-            android:paddingRight="20dp"
-            android:text="eVisual" />
-        <View android:layout_width="match_parent"
-            android:layout_marginLeft="35dp"
-            android:background="@color/color_text_home"
-            android:layout_height="1dp"/>
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="15dp"
             android:drawablePadding="30dp"
-            android:textSize="22sp"
             android:drawableRight="@drawable/ic_check_uncheck"
             android:gravity="center_vertical"
             android:paddingRight="20dp"
+            android:text="eVisual"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/color_text_home" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:id="@+id/tvVideo"
-            android:text="Video" />
-        <View android:layout_width="match_parent"
-            android:layout_marginLeft="35dp"
-            android:background="@color/color_text_home"
-            android:layout_height="1dp"/>
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="15dp"
             android:drawablePadding="30dp"
-            android:textSize="22sp"
             android:drawableRight="@drawable/ic_check_uncheck"
             android:gravity="center_vertical"
-            android:id="@+id/tvVideoIntervesta"
             android:paddingRight="20dp"
-            android:text="Video Intervista" />
+            android:text="Video"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/color_text_home" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvVideoIntervesta"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="15dp"
+            android:drawablePadding="30dp"
+            android:drawableRight="@drawable/ic_check_uncheck"
+            android:gravity="center_vertical"
+            android:paddingRight="20dp"
+            android:text="Video Intervista"
+            android:textSize="22sp" />
 
     </LinearLayout>
 
@@ -111,7 +123,7 @@ android:id="@+id/tvAvvisi"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_marginRight="320dp"
-        android:layout_marginTop="115dp"
+        android:layout_marginTop="105dp"
         android:background="@drawable/backshadow"></ImageView>
 
     <ImageView
@@ -119,7 +131,7 @@ android:id="@+id/tvAvvisi"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="320dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="55dp"
         android:background="@drawable/shadowgrey"></ImageView>
 
 </RelativeLayout>

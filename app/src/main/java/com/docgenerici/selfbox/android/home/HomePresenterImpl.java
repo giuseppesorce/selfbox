@@ -1,6 +1,9 @@
 package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
+import com.docgenerici.selfbox.models.PharmaUser;
+
+import java.util.ArrayList;
 
 /**
  * @author Giuseppe Sorce
@@ -29,7 +32,7 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void onSelectPharma() {
-        view.showPharma();
+        view.showDialogPharmaSearch();
     }
 
     @Override
@@ -45,5 +48,27 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void onSelectInfo() {
         view.showInfo();
+    }
+
+    @Override
+    public ArrayList<PharmaUser> getPharmaList() {
+        ArrayList<PharmaUser> pharmaList= new ArrayList<>();
+        PharmaUser pharmaUser= new PharmaUser();
+        PharmaUser pharmaUser2= new PharmaUser();
+        PharmaUser pharmaUser3= new PharmaUser();
+        PharmaUser pharmaUser4= new PharmaUser();
+        PharmaUser pharmaUser5= new PharmaUser();
+        pharmaUser.name="FARMATEST1 FARMAtest1";
+        pharmaUser2.name="D FARMATEST2 ";
+        pharmaUser3.name="A FARMATEST2 ";
+        pharmaUser4.name="C FARMATEST2 ";
+        pharmaUser5.name="Demo FARMATEST2 ";
+
+        pharmaList.add(pharmaUser);
+        pharmaList.add(pharmaUser2);
+        pharmaList.add(pharmaUser3);
+        pharmaList.add(pharmaUser4);
+        pharmaList.add(pharmaUser5);
+        return pharmaList;
     }
 }

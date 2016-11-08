@@ -23,8 +23,8 @@
             android:paddingRight="20dp"
             android:text="INFO"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            anytext:font="roboto" />
+            android:textSize="23sp"
+            anytext:font="robotobold" />
 
         <Button
             android:id="@+id/btClose"

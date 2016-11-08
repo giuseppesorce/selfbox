@@ -1,6 +1,8 @@
 package com.docgenerici.selfbox.android.contents;
 
 
+import android.graphics.drawable.Drawable;
+
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
@@ -26,6 +28,17 @@ public interface MainContentPresenter extends Presenter {
     void setShareContents(ArrayList<ContentDoc> contentsShared);
 
     ArrayList<ContentDoc> getContentsShared();
+
+    void setCategory(String category);
+
+    int getContentColor();
+
+    int getContentDarkColor();
+
+    String getCategory();
+
+    Drawable getBackGroundhelp();
+
 
     interface MainContentView extends BaseView {
 

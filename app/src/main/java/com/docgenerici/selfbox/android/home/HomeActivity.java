@@ -16,13 +16,17 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.ContentsActivity;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
+import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
+import com.docgenerici.selfbox.models.PharmaUser;
+
+import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView {
+public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView , HomeActivityInterface{
 
 
     private static final int WRITE_PERMISSION =124 ;
@@ -74,29 +78,32 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void showISF() {
-
-        startActivity(new Intent(this, ContentsActivity.class));
+       Intent intent= new Intent(this, ContentsActivity.class);
+        intent.putExtra("category", "isf");
+        startActivity(intent);
     }
 
     @Override
     public void showMedico() {
-        startActivity(new Intent(this, ContentsActivity.class));
+        Intent intent= new Intent(this, ContentsActivity.class);
+        intent.putExtra("category", "medico");
+        startActivity(intent);
     }
 
     @Override
-    public void showPharma() {
-        startActivity(new Intent(this, ContentsActivity.class));
+    public void showDialogPharmaSearch() {
+        ArrayList<PharmaUser>  pharmaList= presenter.getPharmaList();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        PharmaDialogFragment pharmaDialog = PharmaDialogFragment.createInstance(pharmaList);
+        pharmaDialog.show(ft, "pharmaDialog");
     }
 
     @Override
     public void showHelp() {
-
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
         HelpDialogFragment helpDialog = HelpDialogFragment.createInstance();
         helpDialog.show(ft, "helpDialog");
-
-
     }
 
     @Override
@@ -113,7 +120,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         infoDialogFragment.show(ft, "infoDialogFragment");
     }
 
-
     private void changeStatusBar(int color) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -129,9 +135,21 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
             if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         WRITE_PERMISSION);
-
             }
         }
+    }
 
+    @Override
+    public void onSelectPharmaUser(PharmaUser lastPharmaUser) {
+        Intent intent= new Intent(this, ContentsActivity.class);
+        intent.putExtra("category", "pharma");
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSelectTraining(PharmaUser lastPharmaUser) {
+        Intent intent= new Intent(this, ContentsActivity.class);
+        intent.putExtra("category", "pharma");
+        startActivity(intent);
     }
 }

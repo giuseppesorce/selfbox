@@ -11,6 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -26,10 +27,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".android.home.HomeActivity" />
-        <activity android:name=".android.contents.ContentsActivity" />
-        <activity android:name=".android.sync.SyncActivity" />
-        <activity android:name=".android.pdf.PdfActivity"></activity>
+        <activity android:name=".android.home.HomeActivity"   android:screenOrientation="landscape"/>
+        <activity android:name=".android.contents.ContentsActivity"   android:screenOrientation="landscape"/>
+        <activity android:name=".android.sync.SyncActivity"   android:screenOrientation="landscape"/>
+        <activity android:name=".android.pdf.PdfActivity"   android:screenOrientation="landscape"/>
+        <activity android:name=".android.video.VideoActivity"  android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

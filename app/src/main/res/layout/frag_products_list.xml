@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
     android:background="#f3f3f3"
     android:orientation="vertical">
 
@@ -19,13 +20,12 @@
             android:layout_marginLeft="40dp"
             android:text="@string/catalogo_prodotti"
             android:textColor="#4e4e4e"
-            android:textSize="30sp" />
-
+            android:textSize="25sp" />
 
 
         <Button
             android:id="@+id/btFilter"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/btn_height"
             android:layout_height="@dimen/btn_height"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -88,7 +88,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="@string/legenda"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -109,6 +109,7 @@
             android:textSize="20sp"
             android:text="Nome"
             android:paddingLeft="20dp"
+            anytext:font="medium"
             android:textColor="#999898" />
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
@@ -116,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:text="Classe"
-
+            anytext:font="medium"
             android:textSize="20sp"
             android:gravity="center"
             android:textColor="#999898" />
@@ -127,8 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="13"
             android:gravity="center"
-
-           
+            anytext:font="medium"
             android:text="Non contiene"
             android:textColor="#999898" />
 
@@ -138,15 +138,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="25"
             android:gravity="center"
-
-
+            anytext:font="medium"
             android:text="Codice a barre"
             android:textColor="#999898" />
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="0dp"
             android:textSize="15sp"
-           
+
             android:layout_height="wrap_content"
             android:layout_weight="15"
             android:text=""
@@ -165,6 +164,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/llheader"
 
-        android:layout_marginTop="30dp" />
+         />
 
 </RelativeLayout>

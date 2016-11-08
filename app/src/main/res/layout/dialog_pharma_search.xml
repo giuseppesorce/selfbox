@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:background="#9b000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="900dp"
+        android:layout_height="600dp"
+        android:background="@color/white"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvHelp"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="#64c095"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="SELEZIONA FARMACISTA"
+            android:textColor="@color/white"
+            android:textSize="23sp"
+            anytext:font="robotobold" />
+        <Button
+            android:id="@+id/btClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ic_closex_w1" />
+
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height"
+            android:layout_below="@+id/tvHelp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/back_rounded_search"
+            android:drawableRight="@drawable/ic_search"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_above="@+id/llButtons"
+            android:id="@+id/rvList"
+            android:layout_below="@+id/etSearch"
+            android:layout_marginTop="15dp"/>
+
+        <LinearLayout
+            android:id="@+id/llButtons"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:background="@color/white"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btTraining"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_rounded_left_white"
+                android:text="training"
+                android:textColor="#545454"
+
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btNext"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_rounded_right_green"
+                android:text="procedi"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -46,13 +46,13 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void setup(int sample1, int sample2, int sample3) {
         contents = new ArrayList<>();
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino prezzi 05/10/2016", sample1, "10886"));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino medico settembre 2015", sample2, "10866"));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Programmi Eventi 2016", sample1, ""));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Congressi 2016", sample2, ""));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.VISUAL, "Presentazione nuovi prodotti", sample3, ""));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure OMEGA 3", sample2, "10886"));
-        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure 2016", sample1, "10886"));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino prezzi 05/10/2016", sample1, "10886",SelfBoxConstants.TypeViewContent.NEW ));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Listino medico settembre 2015", sample2, "10866", SelfBoxConstants.TypeViewContent.NOREAD));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Programmi Eventi 2016", sample1, "", SelfBoxConstants.TypeViewContent.READ));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.FOLDER, "Congressi 2016", sample2, "", SelfBoxConstants.TypeViewContent.READ));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.VISUAL, "Presentazione nuovi prodotti", sample3, "", SelfBoxConstants.TypeViewContent.READ));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.VIDEO, "Brochure OMEGA 3", sample2, "10886", SelfBoxConstants.TypeViewContent.READ));
+        contents.add(new ContentDoc(SelfBoxConstants.TypeContent.PDF, "Brochure 2016", sample1, "10886", SelfBoxConstants.TypeViewContent.READ));
     }
 
     @Override

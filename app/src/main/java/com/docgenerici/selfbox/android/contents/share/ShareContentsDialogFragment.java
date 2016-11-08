@@ -58,7 +58,6 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.detail);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,11 +65,9 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
                 false);
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
-
         if(getArguments() !=null){
             contentsShared= getArguments().getParcelableArrayList("contentsShared");
         }
-
         npDay.setMinValue(1);
         npDay.setMaxValue(31);
         npMonth.setMinValue(1);
@@ -104,7 +101,6 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         npYear.setValue(calendar.get(Calendar.YEAR));
         npHour.setValue(calendar.get(Calendar.HOUR_OF_DAY));
         npMinutes.setValue(calendar.get(Calendar.MINUTE));
-
         if(contentsShared !=null && contentsShared.size() > 0){
 
             adapter= new ListContentShareAdapter(contentsShared, this);
@@ -143,6 +139,5 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         contentsShared.remove(position);
         adapter.notifyDataSetChanged();
     }
-
 
 }

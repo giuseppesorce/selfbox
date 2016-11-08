@@ -23,7 +23,7 @@
             android:paddingRight="20dp"
             android:text="LEGENDA"
             android:textColor="@color/white"
-            android:textSize="22sp"
+            android:textSize="23sp"
             android:textStyle="bold"
             anytext:font="robotobold" />
 
@@ -228,7 +228,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#71b1e1">
+                            android:background="#ada5d0">
 
                         </View>
 

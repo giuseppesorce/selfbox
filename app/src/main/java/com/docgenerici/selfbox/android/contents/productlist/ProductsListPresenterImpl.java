@@ -8,7 +8,9 @@ import com.docgenerici.selfbox.BaseView;
 
 public class ProductsListPresenterImpl implements ProductsListPresenter {
     private PListView view;
-
+    private final int FILTER_BY_DATE= 1;
+    private final int FILTER_BY_AZ= 2;
+    private  int FILTER_NOW= FILTER_BY_AZ;
     @Override
     public void setView(BaseView view) {
         if (!(view instanceof PListView)) {
@@ -30,5 +32,17 @@ public class ProductsListPresenterImpl implements ProductsListPresenter {
     @Override
     public void onSelectLegenda() {
         view.showLegenda();
+    }
+
+    @Override
+    public void selectAZ() {
+        FILTER_NOW= FILTER_BY_AZ;
+        view.showSelectAz();
+    }
+
+    @Override
+    public void selectDate() {
+        FILTER_NOW= FILTER_BY_DATE;
+        view.showSelectDate();
     }
 }

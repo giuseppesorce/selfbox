@@ -3,6 +3,9 @@ package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
+import com.docgenerici.selfbox.models.PharmaUser;
+
+import java.util.ArrayList;
 
 /**
  * @author Giuseppe Sorce
@@ -22,13 +25,15 @@ public interface HomePresenter extends Presenter {
 
     void onSelectInfo();
 
+    ArrayList<PharmaUser> getPharmaList();
+
     interface HomeView extends BaseView {
 
         void showISF();
 
         void showMedico();
 
-        void showPharma();
+        void showDialogPharmaSearch();
 
         void showHelp();
 

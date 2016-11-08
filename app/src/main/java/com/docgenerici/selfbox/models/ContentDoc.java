@@ -12,6 +12,7 @@ public class ContentDoc implements Parcelable {
 
   //this model is temporaney
     public int type;
+    public int typeview;
     public String title;
     public int image;
     public boolean shared;
@@ -19,11 +20,12 @@ public class ContentDoc implements Parcelable {
     public boolean  isnew= false;
 
 
-    public ContentDoc(int type, String title, int image, String content) {
+    public ContentDoc(int type, String title, int image, String content, int typeview) {
         this.type= type;
         this.title= title;
         this.image= image;
         this.content= content;
+        this.typeview= typeview;
     }
 
 

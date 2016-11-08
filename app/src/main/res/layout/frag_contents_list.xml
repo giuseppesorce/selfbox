@@ -20,13 +20,12 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
             android:text="Contenuti"
-            android:textColor="#4e4e4e"
-            android:textSize="30sp" />
-
+            android:textColor="#6b6a6a"
+            android:textSize="26sp" />
 
         <Button
             android:id="@+id/btFilter"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/btn_height"
             android:layout_height="@dimen/btn_height"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -35,7 +34,7 @@
 
         <EditText
             android:id="@+id/etSearch"
-            android:layout_width="250dp"
+            android:layout_width="320dp"
             android:layout_height="@dimen/btn_height"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
@@ -86,6 +85,6 @@
         android:layout_below="@+id/rlHeaderFunc"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

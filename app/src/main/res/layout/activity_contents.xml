@@ -25,8 +25,8 @@
 
         <Button
             android:id="@+id/btHelp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
@@ -40,25 +40,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rlToolbar"
-        android:layout_marginTop="35dp">
+        android:layout_marginTop="10dp">
 
         <com.docgenerici.selfbox.android.custom.buttons.CButton
             android:id="@+id/btContent"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="190dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:padding="20dp"
             android:text="Contenuti"
             android:textAllCaps="false"
             android:textColor="@color/color_text_tab_button"
-            android:textSize="27sp"
+            android:textSize="18sp"
             anytext:font="medium" />
 
         <com.docgenerici.selfbox.android.custom.buttons.CButton
             android:id="@+id/btProducts"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="260dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@+id/btContent"
@@ -66,7 +66,7 @@
             android:text="Catalogo prodotti"
             android:textAllCaps="false"
             android:textColor="@color/orange"
-            android:textSize="27sp"
+            android:textSize="18sp"
             anytext:font="medium" />
 
         <View

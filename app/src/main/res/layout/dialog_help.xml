@@ -23,8 +23,8 @@
             android:paddingRight="20dp"
             android:text="HELP"
             android:textColor="@color/white"
-            android:textSize="27sp"
-            anytext:font="roboto" />
+            android:textSize="23sp"
+            anytext:font="robotobold" />
 
         <Button
             android:layout_width="20dp"

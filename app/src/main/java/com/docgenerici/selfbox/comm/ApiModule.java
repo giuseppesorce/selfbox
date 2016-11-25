@@ -9,12 +9,12 @@ import dagger.Provides;
  * @author Giuseppe Sorce
  */
 @Module
-public class LoginModule {
+public class ApiModule {
 
   @Provides
   @Singleton
-  LoginInteractor provideLoginInteractor(LoginApi api) {
-    return new LoginInteractorImpl(api);
+  ApiInteractor provideLoginInteractor(CommApi api) {
+    return new ApiInteractorImpl(api);
   }
 
 }

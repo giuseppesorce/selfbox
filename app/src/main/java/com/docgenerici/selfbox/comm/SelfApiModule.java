@@ -31,7 +31,7 @@ public class SelfApiModule {
 
     @Provides
     @Singleton
-    LoginApi provideLoginApi(SelfApi api) {
+    CommApi provideLoginApi(SelfApi api) {
         return api;
     }
 }

@@ -16,7 +16,7 @@ import com.docgenerici.selfbox.android.start.StartModule;
 import com.docgenerici.selfbox.android.start.StartPresenter;
 import com.docgenerici.selfbox.android.sync.SyncModule;
 import com.docgenerici.selfbox.android.sync.SyncPresenter;
-import com.docgenerici.selfbox.comm.LoginModule;
+import com.docgenerici.selfbox.comm.ApiModule;
 import com.docgenerici.selfbox.comm.SelfApiModule;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.comm.storage.EnvironmentModule;
@@ -32,7 +32,7 @@ import io.realm.Realm;
  */
 @Singleton
 @Component(modules = {AppModule.class, RetrofitModule.class,SyncModule.class, SelfApiModule.class,EnvironmentModule.class,
-        StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class, ProductListModule.class, LoginModule.class
+        StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class, ProductListModule.class, ApiModule.class
 })
 public interface AppComponent {
 

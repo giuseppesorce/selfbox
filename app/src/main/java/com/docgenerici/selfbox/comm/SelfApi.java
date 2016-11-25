@@ -4,5 +4,5 @@ package com.docgenerici.selfbox.comm;
  * @uthor giuseppesorce
  */
 
-public interface SelfApi extends LoginApi{
+public interface SelfApi extends CommApi {
 }

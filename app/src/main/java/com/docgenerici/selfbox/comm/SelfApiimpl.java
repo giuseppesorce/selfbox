@@ -4,8 +4,12 @@ package com.docgenerici.selfbox.comm;
 
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.models.LoginResponse;
+import com.docgenerici.selfbox.models.MedicalList;
+import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.retrofit.SelfBoxUserApi;
 
+
+import java.util.List;
 
 import rx.Single;
 
@@ -26,5 +30,15 @@ class SelfApiImpl implements SelfApi {
     @Override
     public Single<LoginResponse> login( String appVer,  String devId,  String isfCode,  String appLicence) {
         return selfBoxUserApi.login(appVer, devId, isfCode, appLicence);
+    }
+
+    @Override
+    public Single<MedicalList> getallMedical(String isf) {
+        return selfBoxUserApi.getMedicalData(isf);
+    }
+
+    @Override
+    public Single<List<Folder>> getAllContents(String isf) {
+        return selfBoxUserApi.getAllContents(isf);
     }
 }

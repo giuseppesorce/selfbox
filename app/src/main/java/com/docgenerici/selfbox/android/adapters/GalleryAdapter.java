@@ -1,6 +1,7 @@
 package com.docgenerici.selfbox.android.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,12 +89,17 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             case "isf":
                 ((MyHolder)holder).vNew.setBackgroundResource( R.drawable.back_rounded_orange_new);
+                ((MyHolder)holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.orange),PorterDuff.Mode.SRC_ATOP);
                 break;
             case "medico":
                 ((MyHolder)holder).vNew.setBackgroundResource( R.drawable.back_rounded_blue_new);
+                ((MyHolder)holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.blu), PorterDuff.Mode.SRC_ATOP);
+
                 break;
             case "pharma":
                 ((MyHolder)holder).vNew.setBackgroundResource( R.drawable.back_rounded_green_new);
+                ((MyHolder)holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.green), PorterDuff.Mode.SRC_ATOP);
+
                 break;
         }
 
@@ -105,16 +111,34 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyHolder)holder).vNew.setVisibility(View.VISIBLE);
             ((MyHolder)holder).tvNew.setVisibility(View.VISIBLE);
             ((MyHolder)holder).rlItem.setAlpha(1.0f);
+            ((MyHolder)holder).ivBorder.setVisibility(View.GONE);
+            ((MyHolder)holder).ivImp.setVisibility(View.GONE);
             ((MyHolder)holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
+        }else if(contentDoc.typeview ==  SelfBoxConstants.TypeViewContent.MPORTANT){
+            ((MyHolder)holder).rlItem.setAlpha(1.0f);
+            if(category.equalsIgnoreCase("isf")){
+                ((MyHolder)holder).ivBorder.setVisibility(View.VISIBLE);
+                ((MyHolder)holder).ivImp.setVisibility(View.VISIBLE);
+            }
+
+            ((MyHolder)holder).vNew.setVisibility(View.GONE);
+            ((MyHolder)holder).tvNew.setVisibility(View.GONE);
+            ((MyHolder)holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
+
+
         }else if(contentDoc.typeview ==  SelfBoxConstants.TypeViewContent.READ){
             ((MyHolder)holder).vNew.setVisibility(View.GONE);
             ((MyHolder)holder).tvNew.setVisibility(View.GONE);
             ((MyHolder)holder).rlItem.setAlpha(0.5f);
+            ((MyHolder)holder).ivBorder.setVisibility(View.GONE);
+            ((MyHolder)holder).ivImp.setVisibility(View.GONE);
             ((MyHolder)holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_gridshadw);
         }else{
             ((MyHolder)holder).rlItem.setAlpha(1.0f);
             ((MyHolder)holder).vNew.setVisibility(View.GONE);
+            ((MyHolder)holder).ivBorder.setVisibility(View.GONE);
             ((MyHolder)holder).tvNew.setVisibility(View.GONE);
+            ((MyHolder)holder).ivImp.setVisibility(View.GONE);
             ((MyHolder)holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
         }
 
@@ -138,7 +162,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView ivImageBackground;
         ImageView ivCover;
         ImageView ivShare;
+        ImageView ivBorder;
         ImageView ivType;
+        ImageView ivImp;
+
+
         TextView tvTitle;
         TextView tvNew;
         RelativeLayout rlItem;
@@ -147,8 +175,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             rlItem= (RelativeLayout) itemView.findViewById(R.id.rlItem);
             vNew= (View) itemView.findViewById(R.id.vNew);
             ivShare= (ImageView) itemView.findViewById(R.id.ivShare);
+            ivImp= (ImageView) itemView.findViewById(R.id.ivImp);
             ivImageBackground= (ImageView) itemView.findViewById(R.id.ivImageBackground);
             ivCover= (ImageView) itemView.findViewById(R.id.ivCover);
+            ivBorder= (ImageView) itemView.findViewById(R.id.ivBorder);
             ivType= (ImageView) itemView.findViewById(R.id.ivType);
             tvTitle= (TextView) itemView.findViewById(R.id.tvTitle);
             tvNew= (TextView) itemView.findViewById(R.id.tvNew);
@@ -166,8 +196,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         View vNew;
         ImageView ivCover;
         ImageView ivShare;
+        ImageView ivBorder;
         ImageView ivType;
         TextView tvTitle;
+        ImageView ivImp;
         TextView tvNew;
         RelativeLayout rlItem;
 
@@ -175,12 +207,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             rlItem= (RelativeLayout) itemView.findViewById(R.id.rlItem);
             vNew= (View) itemView.findViewById(R.id.vNew);
+            ivBorder= (ImageView) itemView.findViewById(R.id.ivBorder);
+            ivImp= (ImageView) itemView.findViewById(R.id.ivImp);
             ivImageBackground= (ImageView) itemView.findViewById(R.id.ivImageBackground);
             ivShare= (ImageView) itemView.findViewById(R.id.ivShare);
             ivCover= (ImageView) itemView.findViewById(R.id.ivCover);
             ivType= (ImageView) itemView.findViewById(R.id.ivType);
             tvTitle= (TextView) itemView.findViewById(R.id.tvTitle);
             tvNew= (TextView) itemView.findViewById(R.id.tvNew);
+            ivBorder= (ImageView) itemView.findViewById(R.id.ivBorder);
             itemView.setOnClickListener(this);
         }
 
@@ -196,7 +231,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         View vNew;
         ImageView ivCover;
         RelativeLayout rlItem;
+        ImageView ivBorder;
         ImageView ivShare;
+        ImageView ivImp;
         ImageView ivType;
         TextView tvTitle;
         TextView tvNew;
@@ -205,7 +242,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             rlItem= (RelativeLayout) itemView.findViewById(R.id.rlItem);
             vNew= (View) itemView.findViewById(R.id.vNew);
+            ivImp= (ImageView) itemView.findViewById(R.id.ivImp);
             ivShare= (ImageView) itemView.findViewById(R.id.ivShare);
+            ivBorder= (ImageView) itemView.findViewById(R.id.ivBorder);
             ivImageBackground= (ImageView) itemView.findViewById(R.id.ivImageBackground);
             ivCover= (ImageView) itemView.findViewById(R.id.ivCover);
             ivType= (ImageView) itemView.findViewById(R.id.ivType);

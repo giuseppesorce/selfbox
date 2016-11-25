@@ -16,6 +16,10 @@ import com.docgenerici.selfbox.android.start.StartModule;
 import com.docgenerici.selfbox.android.start.StartPresenter;
 import com.docgenerici.selfbox.android.sync.SyncModule;
 import com.docgenerici.selfbox.android.sync.SyncPresenter;
+import com.docgenerici.selfbox.comm.LoginModule;
+import com.docgenerici.selfbox.comm.SelfApiModule;
+import com.docgenerici.selfbox.comm.storage.Environment;
+import com.docgenerici.selfbox.comm.storage.EnvironmentModule;
 import com.docgenerici.selfbox.retrofit.RetrofitModule;
 
 import javax.inject.Singleton;
@@ -27,7 +31,8 @@ import io.realm.Realm;
  * @author Giuseppe Sorce
  */
 @Singleton
-@Component(modules = {AppModule.class, RetrofitModule.class,SyncModule.class,  StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class, ProductListModule.class
+@Component(modules = {AppModule.class, RetrofitModule.class,SyncModule.class, SelfApiModule.class,EnvironmentModule.class,
+        StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class, ProductListModule.class, LoginModule.class
 })
 public interface AppComponent {
 
@@ -46,4 +51,5 @@ public interface AppComponent {
     ContentListPresenter contentListPresenter();
     ProductsListPresenter productsListPresenter();
     SyncPresenter syncPresenter();
+    Environment environment();
 }

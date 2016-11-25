@@ -93,18 +93,21 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
+                android:id="@+id/btCp"
                 android:background="@drawable/ic_rcp" />
 
             <Button
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
+                android:id="@+id/btPdf"
                 android:background="@drawable/ic_pdf_products" />
 
             <Button
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
+                android:id="@+id/btCamera"
                 android:background="@drawable/ic_cameraimage" />
 
         </LinearLayout>

@@ -5,15 +5,18 @@ package com.docgenerici.selfbox.android.adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
@@ -45,7 +48,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
     }
 
     @Override
-    public void onBindViewHolder(MyHolder viewHolder, int position) {
+    public void onBindViewHolder(MyHolder viewHolder, final int position) {
         final ProductDoc item = productDocArrayList.get(position);
 
         if (item.getTyperow() == SelfBoxConstants.TypeProductRow.HEADER) {
@@ -55,6 +58,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
             ((MyViewHolder) viewHolder).tvProductSubname.setText(item.getSubtitle());
             ((MyViewHolder) viewHolder).tvClasse.setText(item.getClasse());
             ((MyViewHolder) viewHolder).tvNoInside.setText(item.getNoinside());
+
         }
     }
 
@@ -90,15 +94,32 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
         public TextView tvNoInside;
         private TextView tvClasse;
         private ImageView ivBarCode;
-
-        public MyViewHolder(View itemView) {
+         Button btPdf;
+         Button btCp;
+        public MyViewHolder(final View itemView) {
             super(itemView);
             ivBarCode = (ImageView) itemView.findViewById(R.id.ivBarCode);
             tvProductname = (TextView) itemView.findViewById(R.id.tvProductname);
             tvProductSubname = (TextView) itemView.findViewById(R.id.tvProductSubname);
             tvClasse = (TextView) itemView.findViewById(R.id.tvClasse);
             tvNoInside = (TextView) itemView.findViewById(R.id.tvNoInside);
-            itemView.setOnClickListener(this);
+            btPdf = (Button) itemView.findViewById(R.id.btPdf);
+            btCp = (Button) itemView.findViewById(R.id.btCp);
+           btCp.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onItemClick(itemView, getAdapterPosition());
+                }
+            });
+            btPdf.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onItemClick(itemView, getAdapterPosition());
+
+                }
+            });
         }
 
         @Override
@@ -110,10 +131,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
     }
 
     public class MyViewHolderHeader extends MyHolder {
+
         public TextView tvTitle;
         public MyViewHolderHeader(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+
+
         }
     }
 }

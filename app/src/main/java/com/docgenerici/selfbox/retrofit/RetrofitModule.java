@@ -1,8 +1,12 @@
 package com.docgenerici.selfbox.retrofit;
 
 import android.annotation.SuppressLint;
+import android.view.MotionEvent;
 
 
+import com.docgenerici.selfbox.BuildConfig;
+import com.docgenerici.selfbox.comm.storage.Environment;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -74,18 +78,18 @@ public class RetrofitModule {
       Cache cache = new Cache(cacheDir, cacheSize);
       builder.cache(cache);
     }
- //   if (BuildConfig.debug) {
+
       HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(     new HttpLoggingInterceptor.Logger() {
         @Override
         public void log(String message) {
-
+        Dbg.p("SERVER_RESPONSE: "+ message);
         }
       });
 
       httpLoggingInterceptor
           .setLevel(HttpLoggingInterceptor.Level.BODY);
       builder.interceptors().add(httpLoggingInterceptor);
-   // }
+
 
     builder.interceptors().add(authHeaderInterceptor);
     return builder.build();
@@ -139,13 +143,12 @@ public class RetrofitModule {
    */
   @Provides
   @Singleton
-  Retrofit provideRetrofit(Call.Factory factory /*, Environment environment*/) {
+  Retrofit provideRetrofit(Call.Factory factory , Environment environment) {
     Gson gson = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             .create();
 //TODO insert baseURL
     return new Retrofit.Builder()
-        .baseUrl("")
+        .baseUrl(environment.getBaseUrl())
         .callFactory(factory)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

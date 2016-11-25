@@ -2,6 +2,7 @@ package com.docgenerici.selfbox.android.contents.productlist;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,7 @@ import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragmen
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.filters.FilterProductDialog;
 import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
+import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.models.SelfBoxConstants;
 
@@ -128,7 +130,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "FLUCONAZOLO", "100 mg capsule rigide", "A94", "FCD"));
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "NIMESULIDE", "100 mg compresse", "A84", "FCD"));
         productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SILDENAFIL", "50 mc compresse masticabili", "A84", "FCD"));
-        adapter = new ProductsAdapter(getActivity().getApplicationContext(), productDocArrayList, this);
+        adapter = new ProductsAdapter(getActivity(), productDocArrayList, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvProduct.setLayoutManager(linearLayoutManager);
         rvProduct.setAdapter(adapter);
@@ -163,6 +165,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
 
     @Override
     public void onItemClick(View view, int position) {
+        getActivity().startActivity(new Intent(getActivity(), PdfActivity.class));
 
     }
 

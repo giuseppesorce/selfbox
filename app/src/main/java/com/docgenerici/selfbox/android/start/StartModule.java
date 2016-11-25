@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+import com.docgenerici.selfbox.comm.LoginInteractor;
+
 /**
  * @author Giuseppe Sorce
  */
@@ -14,7 +16,7 @@ public class StartModule {
 
   @Provides
   @Singleton
-  StartPresenter provideStartPresenter() {
-    return new StartPresenterImpl();
+  StartPresenter provideStartPresenter(LoginInteractor loginInteractor) {
+    return new StartPresenterImpl(loginInteractor);
   }
 }

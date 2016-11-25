@@ -43,7 +43,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         presenter.setView(this);
         changeStatusBar(grey);
         checkWritePermission();
-        presenter.onSelectISF();
     }
 
     @OnClick(R.id.rlISF)

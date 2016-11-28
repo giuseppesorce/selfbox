@@ -1,14 +1,12 @@
 package com.docgenerici.selfbox.comm.storage;
 
 
-import com.docgenerici.selfbox.BuildConfig;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 
 /**
- * @author Giuseppe Sorce @copyright ReMago srl  2016.
+ * @author Giuseppe Sorce @copyright
  */
 
 @Singleton
@@ -24,7 +22,8 @@ public class Environment {
    }
 
   public String getBaseUrl() {
-    return BuildConfig.BASE_URL;
+
+    return baseUrl;
   }
 
   public void setBaseUrl(String baseUrl) {

@@ -1,14 +1,10 @@
 package com.docgenerici.selfbox.retrofit;
 
 import android.annotation.SuppressLint;
-import android.view.MotionEvent;
 
 
-import com.docgenerici.selfbox.BuildConfig;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.debug.Dbg;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.security.SecureRandom;
@@ -82,7 +78,7 @@ public class RetrofitModule {
       HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(     new HttpLoggingInterceptor.Logger() {
         @Override
         public void log(String message) {
-        Dbg.p("SERVER_RESPONSE: "+ message);
+        Dbg.p("SERVER_RESPONSE: "+ message, "server");
         }
       });
 
@@ -144,14 +140,13 @@ public class RetrofitModule {
   @Provides
   @Singleton
   Retrofit provideRetrofit(Call.Factory factory , Environment environment) {
-    Gson gson = new GsonBuilder()
-            .create();
-//TODO insert baseURL
+
+
     return new Retrofit.Builder()
-        .baseUrl(environment.getBaseUrl())
-        .callFactory(factory)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-        .build();
+            .baseUrl(environment.getBaseUrl())
+            .callFactory(factory)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build();
   }
 }

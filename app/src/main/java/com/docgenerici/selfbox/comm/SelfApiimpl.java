@@ -2,7 +2,9 @@ package com.docgenerici.selfbox.comm;
 
 
 
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.comm.storage.Environment;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
@@ -11,6 +13,7 @@ import com.docgenerici.selfbox.retrofit.SelfBoxUserApi;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import rx.Single;
 
 /**
@@ -40,5 +43,10 @@ class SelfApiImpl implements SelfApi {
     @Override
     public Single<List<Folder>> getAllContents(String isf) {
         return selfBoxUserApi.getAllContents(isf);
+    }
+
+    @Override
+    public Single<ResponseBody> getProduct(String date) {
+             return selfBoxUserApi.getProducts("http://www.docgenerici.it/app/app.php",date);
     }
 }

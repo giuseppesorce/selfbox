@@ -7,6 +7,7 @@ import com.docgenerici.selfbox.models.contents.Folder;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import rx.Single;
 
 /**
@@ -26,6 +27,9 @@ public interface CommApi {
     Single<MedicalList> getallMedical(String isf);
 
     Single<List<Folder>> getAllContents(String isf);
+
+
+    Single<ResponseBody> getProduct(String date);
 
 
 }

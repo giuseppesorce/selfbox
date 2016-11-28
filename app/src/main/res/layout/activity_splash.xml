@@ -1,10 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:anytext="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
 
-    tools:context="com.docgenerici.selfbox.android.start.StartActivity">
+    >
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="400dp"
+            android:id="@+id/tvLabel"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Inserisci il codice:"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/etCode"
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@drawable/back_rounded_search" />
+
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:id="@+id/tvSend"
+            android:layout_width="400dp"
+            android:layout_height="48dp"
+
+            android:layout_above="@+id/relativeLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="18dp"
+
+
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/back_rounded_green"
+            android:gravity="center"
+            android:text="INVIA"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            anytext:font="robotobold" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import com.docgenerici.selfbox.models.contents.Folder;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import rx.Single;
 
 /**
@@ -35,6 +36,11 @@ class ApiInteractorImpl implements ApiInteractor {
     @Override
     public Single<List<Folder>> getAllContents(String isf) {
         return api.getAllContents(isf);
+    }
+
+    @Override
+    public Single<ResponseBody> getProduct(String date) {
+        return api.getProduct(date);
     }
 
 

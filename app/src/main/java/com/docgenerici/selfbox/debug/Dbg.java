@@ -40,6 +40,16 @@ public class Dbg {
 
     }
 
+    public static void p(String m, String tag) {
+
+        try {
+            Log.i(tag, m);
+
+        } catch (Exception e) {
+
+        }
+
+    }
     public static void p(String m) {
 
         try {

@@ -4,8 +4,12 @@ package com.docgenerici.selfbox.models.farmacia;
 
 import com.docgenerici.selfbox.models.medico.Microbrick;
 
-public class Farmacia {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
+public class Farmacia extends RealmObject{
+
+    @PrimaryKey
     public int id;
     public String ente;
     public String ims;
@@ -19,11 +23,11 @@ public class Farmacia {
     public String provinceCode;
     public String provinceDescr;
     public String provinceLabel;
-    public Object csvCodMicrobrick;
+    public Microbrick csvCodMicrobrick;
     public Object csvDescrMicrobrick;
     public Microbrick microbrick;
-    public Object csvCodCluster;
-    public Object csvDescrCluster;
+    public String csvCodCluster;
+    public String csvDescrCluster;
     public Cluster cluster;
     public String qmDoc;
 

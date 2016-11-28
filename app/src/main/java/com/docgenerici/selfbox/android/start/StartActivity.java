@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
-import com.docgenerici.selfbox.android.custom.texts.CTextView;
 import com.docgenerici.selfbox.android.home.HomeActivity;
 
 import butterknife.BindView;
@@ -62,8 +60,8 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
     }
 
     @Override
-    public void showCodeError() {
-        Toast.makeText(this, "Inserisci un codice corretto", Toast.LENGTH_SHORT).show();
+    public void showCodeError(String error) {
+        Toast.makeText(this,error, Toast.LENGTH_SHORT).show();
     }
 
     @Override

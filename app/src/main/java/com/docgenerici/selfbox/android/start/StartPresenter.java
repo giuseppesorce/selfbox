@@ -21,7 +21,7 @@ public interface StartPresenter extends Presenter {
 
         void showActivationInput();
 
-        void showCodeError();
+        void showCodeError(String s);
 
         void showProgressToSend();
     }

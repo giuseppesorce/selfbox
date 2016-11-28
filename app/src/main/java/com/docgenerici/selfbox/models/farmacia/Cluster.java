@@ -2,7 +2,9 @@
 package com.docgenerici.selfbox.models.farmacia;
 
 
-public class Cluster {
+import io.realm.RealmObject;
+
+public class Cluster extends RealmObject{
 
     public int id;
     public String code;

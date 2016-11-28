@@ -1,16 +1,11 @@
 
 package com.docgenerici.selfbox.models.medico;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Generated;
+import io.realm.RealmObject;
 
-
-public class Microbrick {
+public class Microbrick extends RealmObject{
 
     public int id;
     public String code;
     public String descr;
-
-
 }

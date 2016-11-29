@@ -4,14 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * @author Giuseppe Sorce
@@ -19,14 +17,12 @@ import java.util.Locale;
 public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnItemClickListener onClickListener;
+    ArrayList<FarmaciaDto> pharmaUserArrayList = new ArrayList<>();
 
-    ArrayList<PharmaUser> pharmaUserArrayList = new ArrayList<>();
-
-    public ListPharmauserAdapter(ArrayList<PharmaUser> contentDocList, OnItemClickListener listener) {
+    public ListPharmauserAdapter(ArrayList<FarmaciaDto> contentDocList, OnItemClickListener listener) {
         this.pharmaUserArrayList = contentDocList;
         this.onClickListener= listener;
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,15 +37,13 @@ public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        PharmaUser contentDoc= pharmaUserArrayList.get(position);
-        ((MyItemHolder)holder).tvPharmaName.setText(contentDoc.name);
+        FarmaciaDto contentDoc= pharmaUserArrayList.get(position);
+        ((MyItemHolder)holder).tvPharmaName.setText(contentDoc.fullname);
         if(contentDoc.selected){
             ((MyItemHolder)holder).tvPharmaName.setBackgroundResource(R.color.green_transparent);
         }else{
             ((MyItemHolder)holder).tvPharmaName.setBackgroundResource(android.R.color.transparent);
         }
-
-
     }
 
     @Override
@@ -57,11 +51,11 @@ public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return pharmaUserArrayList.size();
     }
 
-    public PharmaUser getPharmaUser(int position) {
+    public FarmaciaDto getPharmaUser(int position) {
         return pharmaUserArrayList.get(position);
     }
 
-    public void setPharmaList(ArrayList<PharmaUser> newlist) {
+    public void setPharmaList(ArrayList<FarmaciaDto> newlist) {
         pharmaUserArrayList.clear();
         pharmaUserArrayList.addAll(newlist);
         notifyDataSetChanged();
@@ -71,10 +65,8 @@ public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public  class MyItemHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
 
         TextView tvPharmaName;
-
         public MyItemHolder(View itemView) {
             super(itemView);
-
             tvPharmaName= (TextView) itemView.findViewById(R.id.tvPharmaName);
             itemView.setOnClickListener(this);
         }
@@ -84,6 +76,4 @@ public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             onClickListener.onItemClick(v,getPosition());
         }
     }
-
-
 }

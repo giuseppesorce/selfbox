@@ -1,6 +1,6 @@
 package com.docgenerici.selfbox.android.home;
 
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 06/11/16.
@@ -9,7 +9,7 @@ import com.docgenerici.selfbox.models.PharmaUser;
 public interface HomeActivityInterface {
 
 
-    void onSelectPharmaUser(PharmaUser lastPharmaUser);
+    void onSelectPharmaUser(FarmaciaDto lastPharmaUser);
 
-    void onSelectTraining(PharmaUser lastPharmaUser);
+    void onSelectTraining(FarmaciaDto lastPharmaUser);
 }

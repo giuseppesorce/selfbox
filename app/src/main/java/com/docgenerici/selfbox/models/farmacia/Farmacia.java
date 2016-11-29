@@ -7,7 +7,7 @@ import com.docgenerici.selfbox.models.medico.Microbrick;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Farmacia extends RealmObject{
+public class Farmacia extends RealmObject {
 
     @PrimaryKey
     public int id;
@@ -23,12 +23,9 @@ public class Farmacia extends RealmObject{
     public String provinceCode;
     public String provinceDescr;
     public String provinceLabel;
-    public Microbrick csvCodMicrobrick;
-    public Object csvDescrMicrobrick;
     public Microbrick microbrick;
-    public String csvCodCluster;
-    public String csvDescrCluster;
     public Cluster cluster;
     public String qmDoc;
+
 
 }

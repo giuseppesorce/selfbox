@@ -13,6 +13,6 @@ import io.realm.RealmObject;
 
 public class MedicalList{
 
-    List<Medico> medici;
-    List<Farmacia> farmacie;
+   public List<Medico> medici;
+    public List<Farmacia> farmacie;
 }

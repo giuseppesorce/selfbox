@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.EditText;
 
 import com.docgenerici.selfbox.R;
@@ -17,17 +16,13 @@ import com.docgenerici.selfbox.android.adapters.ListPharmauserAdapter;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.SimpleDividerItemDecoration;
 import com.docgenerici.selfbox.android.home.HomeActivityInterface;
-import com.docgenerici.selfbox.debug.Dbg;
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.docgenerici.selfbox.R.id.rvList;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 18/10/16.
@@ -40,15 +35,15 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     @BindView(R.id.etSearch)
     EditText etSearch;
 
-    private ArrayList<PharmaUser> pharmaList;
+    private ArrayList<FarmaciaDto> pharmaList;
     private ListPharmauserAdapter adapter;
-    private PharmaUser lastPharmaUser;
+    private FarmaciaDto lastPharmaUser;
     private HomeActivityInterface homeInterface;
 
-    public static PharmaDialogFragment createInstance(ArrayList<PharmaUser> pharmaList) {
+    public static PharmaDialogFragment createInstance(ArrayList<FarmaciaDto> pharmaList) {
         PharmaDialogFragment frag = new PharmaDialogFragment();
         Bundle init = new Bundle();
-        init.putParcelableArrayList("pharmaList", pharmaList);
+       init.putParcelableArrayList("pharmaList", pharmaList);
         frag.setArguments(init);
         return frag;
     }
@@ -81,7 +76,6 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
         }
 
         etSearch.addTextChangedListener(this);
-
         return root;
     }
 
@@ -91,7 +85,7 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     }
 
     private void createPharmaList() {
-        adapter= new ListPharmauserAdapter(new ArrayList<PharmaUser>(), this);
+        adapter= new ListPharmauserAdapter(new ArrayList<FarmaciaDto>(), this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvList.setLayoutManager(linearLayoutManager);
         rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.nomargin_divider_decotator)));
@@ -114,8 +108,8 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
 
     @Override
     public void onItemClick(View view, int position) {
-        PharmaUser pharmaSelect = adapter.getPharmaUser(position);
-        if (lastPharmaUser !=null && pharmaSelect.name.equalsIgnoreCase(lastPharmaUser.name)) {
+        FarmaciaDto pharmaSelect = adapter.getPharmaUser(position);
+        if (lastPharmaUser !=null && pharmaSelect.fullname.equalsIgnoreCase(lastPharmaUser.fullname)) {
                 pharmaSelect.selected= false;
         }else{
             pharmaSelect.selected= true;
@@ -140,19 +134,19 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
 
     private void filterList(String charText) {
 
-        ArrayList<PharmaUser> worldpopulationlist = new ArrayList<>();
+        ArrayList<FarmaciaDto> worldpopulationlist = new ArrayList<>();
             worldpopulationlist.clear();
             if (charText.length() == 0) {
                 worldpopulationlist.addAll(pharmaList);
             }
             else
             {
-                for (PharmaUser wp : pharmaList)
+                for (FarmaciaDto wp : pharmaList)
                 {
-                    if (wp.name.toLowerCase().startsWith(charText.toLowerCase()))
+                    if (wp.fullname.toLowerCase().startsWith(charText.toLowerCase()))
                     {
                         worldpopulationlist.add(wp);
-                        Dbg.p("aggiungo "+wp.name);
+
                     }
                 }
             }

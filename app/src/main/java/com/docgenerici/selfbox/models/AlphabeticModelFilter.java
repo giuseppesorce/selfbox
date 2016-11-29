@@ -3,6 +3,8 @@ package com.docgenerici.selfbox.models;
 
 import android.widget.Filter;
 
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+
 import java.util.ArrayList;
 
 /**
@@ -10,8 +12,8 @@ import java.util.ArrayList;
  */
 
 public class AlphabeticModelFilter extends Filter {
-    private ArrayList<PharmaUser> allModelItemsArray;
-    private ArrayList<PharmaUser> filteredModelItemsArray;
+    private ArrayList<FarmaciaDto> allModelItemsArray;
+    private ArrayList<FarmaciaDto> filteredModelItemsArray;
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
@@ -20,12 +22,12 @@ public class AlphabeticModelFilter extends Filter {
         FilterResults result = new FilterResults();
         if(constraint != null && constraint.toString().length() > 0)
         {
-            ArrayList<PharmaUser> filteredItems = new ArrayList<PharmaUser>();
+            ArrayList<FarmaciaDto> filteredItems = new ArrayList<FarmaciaDto>();
 
             for(int i = 0, l = allModelItemsArray.size(); i < l; i++)
             {
-                PharmaUser m = allModelItemsArray.get(i);
-                if(m.name.toLowerCase().contains(constraint))
+                FarmaciaDto m = allModelItemsArray.get(i);
+                if(m.fullname.toLowerCase().contains(constraint))
                     filteredItems.add(m);
             }
             result.count = filteredItems.size();
@@ -44,6 +46,6 @@ public class AlphabeticModelFilter extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        filteredModelItemsArray = (ArrayList<PharmaUser>)results.values;
+        filteredModelItemsArray = (ArrayList<FarmaciaDto>)results.values;
     }
 }

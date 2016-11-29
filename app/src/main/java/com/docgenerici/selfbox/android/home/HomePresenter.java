@@ -3,7 +3,7 @@ package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public interface HomePresenter extends Presenter {
 
     void onSelectInfo();
 
-    ArrayList<PharmaUser> getPharmaList();
+    ArrayList<FarmaciaDto> getPharmaList();
 
     interface HomeView extends BaseView {
 

@@ -10,6 +10,8 @@ import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.farmacia.Farmacia;
+import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
 
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class StartPresenterImpl implements StartPresenter {
     @Override
     public void chekActivation() {
         if (hereActivation()) {
+            view.showProgressToSend();
             getAllMedicalData();
         } else {
             view.showActivationInput();
@@ -105,9 +108,9 @@ public class StartPresenterImpl implements StartPresenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<MedicalList>() {
                         @Override
-                        public void call(MedicalList loginResponse) {
+                        public void call(MedicalList medialresponse) {
 
-
+                            persistenceMedicalList(medialresponse);
 
                             view.gotoHome();
 
@@ -124,6 +127,21 @@ public class StartPresenterImpl implements StartPresenter {
         }else{
             view.showCodeError("Errore nel caricamento dei dati");
         }
+    }
+
+    private void persistenceMedicalList(MedicalList medicalList) {
+
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        realm.beginTransaction();
+        List<Medico> medici = medicalList.medici;
+        for (int i = 0; i < medici.size(); i++) {
+            realm.copyToRealmOrUpdate(medici.get(i));
+        }
+        List<Farmacia> farmacie= medicalList.farmacie;
+        for (int i = 0; i < farmacie.size(); i++) {
+            realm.copyToRealmOrUpdate(farmacie.get(i));
+        }
+        realm.commitTransaction();
     }
 
     private void getAllContents() {

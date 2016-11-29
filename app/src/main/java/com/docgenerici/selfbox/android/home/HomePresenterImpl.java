@@ -1,9 +1,14 @@
 package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.models.farmacia.Farmacia;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * @author Giuseppe Sorce
@@ -51,24 +56,17 @@ public class HomePresenterImpl implements HomePresenter {
     }
 
     @Override
-    public ArrayList<PharmaUser> getPharmaList() {
-        ArrayList<PharmaUser> pharmaList= new ArrayList<>();
-        PharmaUser pharmaUser= new PharmaUser();
-        PharmaUser pharmaUser2= new PharmaUser();
-        PharmaUser pharmaUser3= new PharmaUser();
-        PharmaUser pharmaUser4= new PharmaUser();
-        PharmaUser pharmaUser5= new PharmaUser();
-        pharmaUser.name="FARMATEST1 FARMAtest1";
-        pharmaUser2.name="D FARMATEST2 ";
-        pharmaUser3.name="A FARMATEST2 ";
-        pharmaUser4.name="C FARMATEST2 ";
-        pharmaUser5.name="Demo FARMATEST2 ";
-
-        pharmaList.add(pharmaUser);
-        pharmaList.add(pharmaUser2);
-        pharmaList.add(pharmaUser3);
-        pharmaList.add(pharmaUser4);
-        pharmaList.add(pharmaUser5);
+    public ArrayList<FarmaciaDto> getPharmaList() {
+        ArrayList<FarmaciaDto> pharmaList= new ArrayList<>();
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<Farmacia> farmacie = realm.where(Farmacia.class).findAll();
+        for (int i = 0; i < farmacie.size(); i++) {
+            FarmaciaDto farmaciaDto= new FarmaciaDto();
+            farmaciaDto.id= farmacie.get(i).id;
+            farmaciaDto.fullname= farmacie.get(i).fullname;
+            farmaciaDto.type= farmacie.get(i).type;
+            pharmaList.add(farmaciaDto);
+        }
         return pharmaList;
     }
 }

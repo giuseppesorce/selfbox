@@ -18,7 +18,7 @@ import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
 import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
-import com.docgenerici.selfbox.models.PharmaUser;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 
 import java.util.ArrayList;
 
@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void showDialogPharmaSearch() {
-        ArrayList<PharmaUser>  pharmaList= presenter.getPharmaList();
+        ArrayList<FarmaciaDto>  pharmaList= presenter.getPharmaList();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         PharmaDialogFragment pharmaDialog = PharmaDialogFragment.createInstance(pharmaList);
         pharmaDialog.show(ft, "pharmaDialog");
@@ -139,14 +139,14 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     }
 
     @Override
-    public void onSelectPharmaUser(PharmaUser lastPharmaUser) {
+    public void onSelectPharmaUser(FarmaciaDto lastPharmaUser) {
         Intent intent= new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         startActivity(intent);
     }
 
     @Override
-    public void onSelectTraining(PharmaUser lastPharmaUser) {
+    public void onSelectTraining(FarmaciaDto lastPharmaUser) {
         Intent intent= new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         startActivity(intent);

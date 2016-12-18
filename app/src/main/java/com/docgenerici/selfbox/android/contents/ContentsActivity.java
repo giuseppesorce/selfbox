@@ -72,6 +72,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     private ProductListFragment productsListFragment;
     private ShareContentsDialogFragment shareDialog;
     private String category;
+    private ContentsListFragment contentFrag;
 
 
     @Override
@@ -81,15 +82,13 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
         presenter.setView(this);
-
-        vPager.setAdapter(new CustomAdapter(getFragmentManager()));
+        vPager.setAdapter(new ContentsAdapter(getFragmentManager()));
         vPager.addOnPageChangeListener(this);
         if (getIntent() != null) {
             category = getIntent().getStringExtra("category");
-
             presenter.setCategory(category);
         }
-        presenter.setup();
+        presenter.setup(category);
 
 
     }
@@ -219,10 +218,10 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
 
     }
 
-    private class CustomAdapter extends FragmentStatePagerAdapter {
+    private class ContentsAdapter extends FragmentStatePagerAdapter {
 
 
-        public CustomAdapter(FragmentManager supportFragmentManager) {
+        public ContentsAdapter(FragmentManager supportFragmentManager) {
             super(supportFragmentManager);
         }
 
@@ -230,7 +229,8 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ContentsListFragment.createInstance();
+                   contentFrag= ContentsListFragment.createInstance(category);
+                    return contentFrag;
                 case 1:
                     return ProductListFragment.createInstance();
 
@@ -255,7 +255,9 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         if (vPager.getCurrentItem() == 1) {
             vPager.setCurrentItem(0);
         } else {
-            finish();
+            if(contentFrag !=null && contentFrag.isFolder()) {
+                finish();
+            }
         }
     }
 

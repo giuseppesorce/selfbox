@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.models.FilterProduct;
-import com.docgenerici.selfbox.models.ProductDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
 
 import java.util.ArrayList;
 
@@ -83,6 +81,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyHolder> 
         public void onClick(View view) {
             final FilterProduct item = filterProducts.get(getPosition());
             item.select= !item.select;
+            mItemClickListener.onItemClick(view, 0);
             notifyDataSetChanged();
         }
     }

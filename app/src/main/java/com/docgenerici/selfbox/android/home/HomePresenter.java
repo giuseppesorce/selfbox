@@ -4,6 +4,7 @@ package com.docgenerici.selfbox.android.home;
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 
 import java.util.ArrayList;
 
@@ -26,12 +27,15 @@ public interface HomePresenter extends Presenter {
     void onSelectInfo();
 
     ArrayList<FarmaciaDto> getPharmaList();
+    ArrayList<MedicoDto> getMedicalList();
+
+    void onSelectMedicoUser(MedicoDto lastMedicoUser);
 
     interface HomeView extends BaseView {
 
         void showISF();
 
-        void showMedico();
+        void showMedico(MedicoDto lastMedicoUser);
 
         void showDialogPharmaSearch();
 
@@ -40,5 +44,7 @@ public interface HomePresenter extends Presenter {
         void gotoSync();
 
         void showInfo();
+
+        void showDialogMedicalSearch();
     }
 }

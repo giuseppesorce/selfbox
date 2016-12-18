@@ -1,14 +1,13 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,18 +22,14 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.GalleryAdapter;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
-import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
 import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
-import com.docgenerici.selfbox.android.contents.MainContentPresenterImpl;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
-import com.docgenerici.selfbox.android.pdf.PdfFragment;
 import com.docgenerici.selfbox.android.video.VideoActivity;
 import com.docgenerici.selfbox.models.ContentDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindColor;
@@ -66,11 +61,16 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @BindDrawable(R.drawable.sample3)
     Drawable sample3;
     @BindView(R.id.btFilter)
+
+
     Button btFilter;
     private ContentListPresenter presenter;
     private GalleryAdapter galleryAdapter;
     private FilterDialog filtersDialog;
     private ContentActivityInterface activityInterface;
+    private String categoryContent;
+    private ContentDoc contentSelect;
+    private ListContentByFolderFragment listContentByFolderFrag;
 
 
     @Nullable
@@ -78,8 +78,11 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_contents_list, container, false);
         ButterKnife.bind(this, view);
+        if(getArguments() !=null){
+            categoryContent= getArguments().getString("category");
+        }
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
-        presenter.setup(R.drawable.sample1, R.drawable.sample2, R.drawable.sample3);
+        presenter.setup(R.drawable.foldersample,R.drawable.sample1, R.drawable.sample2, R.drawable.sample3);
         presenter.setView(this);
         createGalleryContentsItems();
         presenter.selectAZ();
@@ -112,7 +115,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private void createGalleryContentsItems() {
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 3);
         rvGallery.setLayoutManager(gridLayout);
-        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(), this);
+        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), this);
         int spanCount = 3; // 3 columns
         int spacing = 40; // 50px
         boolean includeEdge = false;
@@ -174,17 +177,28 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void onItemClick(View view, int position) {
 
-        if(galleryAdapter.getItemPosition(position).type ==  SelfBoxConstants.TypeContent.VIDEO){
-            startActivity(new Intent(getActivity(), VideoActivity.class));
-        }else{
-            startActivity(new Intent(getActivity(), PdfActivity.class));
+        contentSelect= galleryAdapter.getItemPosition(position);
+
+        if(contentSelect.type ==  SelfBoxConstants.TypeContent.FOLDER){
+
+           ArrayList<ContentDoc> folderContents= presenter.getContentFolder(contentSelect);
+
+                listContentByFolderFrag=  ListContentByFolderFragment.createInstance(folderContents);
+            //showFragment(listContentByFolderFrag, "list", R.id.folderContainer);
+        }else {
+            if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
+                startActivity(new Intent(getActivity(), VideoActivity.class));
+            } else {
+                startActivity(new Intent(getActivity(), PdfActivity.class));
+            }
         }
 
     }
 
-    public static ContentsListFragment createInstance() {
+    public static ContentsListFragment createInstance(String category) {
         ContentsListFragment frag = new ContentsListFragment();
         Bundle init = new Bundle();
+        init.putString("category", category);
         frag.setArguments(init);
         return frag;
     }
@@ -193,5 +207,32 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public void onSelectShare(int position) {
         presenter.setShare(position);
 
+    }
+
+    private void showFragment(Fragment frag, String tag, int container) {
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+        ft.add(container, frag , "fragment");
+
+        try {
+                ft.commitAllowingStateLoss();
+            } catch (Exception ex) {
+
+            }
+
+    }
+
+    public boolean isFolder() {
+        boolean isfolder= true;
+        if(listContentByFolderFrag !=null){
+            isfolder= false;
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.remove(listContentByFolderFrag);
+            listContentByFolderFrag= null;
+
+        }
+        return isfolder;
     }
 }

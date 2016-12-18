@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="900dp"
-        android:layout_height="600dp"
+        android:layout_height="650dp"
         android:background="@color/white"
         android:layout_centerInParent="true"
         android:orientation="vertical">
@@ -60,7 +60,10 @@
             android:layout_marginLeft="25dp"
             android:layout_above="@+id/llButtons"
             android:id="@+id/rvList"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
             android:layout_below="@+id/etSearch"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"/>
 
         <LinearLayout
@@ -71,7 +74,7 @@
             android:layout_marginRight="25dp"
             android:layout_marginLeft="25dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:orientation="horizontal">
 
             <Button

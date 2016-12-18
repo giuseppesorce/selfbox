@@ -41,7 +41,7 @@ public class ListContentShareAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
        ContentDoc contentDoc= contentDocs.get(position);
-        ((MyItemHolder)holder).tvShareTitle.setText(contentDoc.title);
+        ((MyItemHolder)holder).tvShareTitle.setText(contentDoc.name);
         ((MyItemHolder)holder).ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

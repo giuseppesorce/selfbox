@@ -16,4 +16,36 @@
     <color name="color_text_tab_button">#525353</color>
     <color name="grey_filter">#b8b8b8</color>
 
+    <string-array name="categorie_color">
+
+        <item>#fff05c</item>
+        <item>#a77c40</item>
+        <item>#be0f0f</item>
+        <item>#ada5d0</item>
+        <item>#f8ab01</item>
+        <item>#67ba8d</item>
+        <item>#f37111</item>
+        <item>#152073</item>
+        <item>#008f76</item>
+        <item>#ac308b</item>
+        <item>#ada5d0</item>
+        <item>#03a5b0</item>
+        <item>#aa7dda</item>
+        <item>#262428</item>
+        <item>#fff05c</item>
+        <item>#a77c40</item>
+        <item>#be0f0f</item>
+        <item>#ada5d0</item>
+        <item>#f8ab01</item>
+        <item>#67ba8d</item>
+        <item>#f37111</item>
+        <item>#152073</item>
+        <item>#008f76</item>
+        <item>#ac308b</item>
+        <item>#ada5d0</item>
+        <item>#03a5b0</item>
+        <item>#aa7dda</item>
+        <item>#262428</item>
+    </string-array>
+
 </resources>

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public interface MainContentPresenter extends Presenter {
 
-    void setup();
+    void setup(String category);
 
     float getScale(int width, int width1);
 

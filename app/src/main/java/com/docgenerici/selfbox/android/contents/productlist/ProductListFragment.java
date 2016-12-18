@@ -4,12 +4,15 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,29 +22,32 @@ import android.widget.LinearLayout;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
-import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
+import com.docgenerici.selfbox.android.adapters.OnSelectProdcutDetail;
 import com.docgenerici.selfbox.android.adapters.ProductsAdapter;
-import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
-import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.contents.filters.FilterProductDialog;
 import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
+import com.docgenerici.selfbox.models.FilterProduct;
 import com.docgenerici.selfbox.models.ProductDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.docgenerici.selfbox.models.products.Product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindColor;
-import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * @author Giuseppe Sorce
  */
 
-public class ProductListFragment extends Fragment implements ProductsListPresenter.PListView, OnItemClickListener {
+public class ProductListFragment extends Fragment implements ProductsListPresenter.PListView, OnSelectProdcutDetail, OnSelectFilter, TextWatcher {
 
 
     @BindView(R.id.rvProduct)
@@ -60,15 +66,20 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     LinearLayout llAZ;
     @BindColor(R.color.grey_filter)
     int grey_filter;
+    private ArrayList<ProductDoc> productDocArrayList = new ArrayList<>();
+    private String[] colors;
+    private HashMap<String, String> categorieColors = new HashMap<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_products_list, container, false);
         ButterKnife.bind(this, view);
+        colors = getResources().getStringArray(R.array.categorie_color);
         presenter = SelfBoxApplicationImpl.appComponent.productsListPresenter();
         presenter.setView(this);
         presenter.setup();
+
         if (getArguments() != null) {
 
         }
@@ -93,7 +104,9 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_green, null);
                 break;
         }
-        presenter.selectAZ();
+        presenter.selectTerapeutica();
+
+        etSearch.addTextChangedListener(this);
         return view;
 
     }
@@ -106,7 +119,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
 
     @OnClick(R.id.llDate)
     void onSelectDate() {
-        presenter.selectDate();
+        presenter.selectTerapeutica();
     }
 
     @OnClick(R.id.btFilter)
@@ -116,20 +129,8 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
 
     @Override
     public void setup() {
-        ArrayList<ProductDoc> productDocArrayList = new ArrayList<>();
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, "ALTRI PRODOTTI TERAPEUTICI"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SEVELAMER DOC", "180 cpr riv. con film 800 mg", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, "ANTIINFETTIVI"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SEVELAMER DOC", "180 cpr riv. con film 800 mg", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "PIROXICAM", "20 mg cpr rig. con 30 capsule, uso orale", "A85", "FCN"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "FLUCONAZOLO", "100 mg capsule rigide", "A94", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "NIMESULIDE", "100 mg compresse", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SILDENAFIL", "50 mc compresse masticabili", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SEVELAMER DOC", "180 cpr riv. con film 800 mg", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "PIROXICAM", "20 mg cpr rig. con 30 capsule, uso orale", "A85", "FCN"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "FLUCONAZOLO", "100 mg capsule rigide", "A94", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "NIMESULIDE", "100 mg compresse", "A84", "FCD"));
-        productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, "SILDENAFIL", "50 mc compresse masticabili", "A84", "FCD"));
+        productDocArrayList = new ArrayList<>();
+
         adapter = new ProductsAdapter(getActivity(), productDocArrayList, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvProduct.setLayoutManager(linearLayoutManager);
@@ -140,7 +141,8 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     public void openFilterDialog() {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        filtersDialog = FilterProductDialog.createInstance();
+        filtersDialog = FilterProductDialog.createInstance(presenter.getCategoriesFilter());
+        filtersDialog.setListener(this);
         filtersDialog.show(ft, "filtersDialog");
     }
 
@@ -151,23 +153,54 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         legendaFragment = LegendaDialogFragment.createInstance();
         legendaFragment.show(ft, "legendaFragment");
     }
+
     @Override
     public void showSelectAz() {
         llAZ.getBackground().setColorFilter(grey_filter, PorterDuff.Mode.MULTIPLY);
         llDate.getBackground().clearColorFilter();
+
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        ArrayList<String> categories = presenter.getCategoriesFilter();
+        productDocArrayList.clear();
+
+
+        RealmResults<Product> products = realm.where(Product.class).findAllSorted("nome", Sort.ASCENDING);
+        for (int j = 0; j < products.size(); j++) {
+            Product product = products.get(j);
+
+            productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.nome.toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(categorieColors.get(product.categoria_farmacologica)), product.scheda.uri, product.rcp));
+        }
+
+        adapter.notifyDataSetChanged();
+        etSearch.getText().clear();
     }
 
     @Override
-    public void showSelectDate() {
+    public void showSelectTerapeutica() {
         llAZ.getBackground().clearColorFilter();
         llDate.getBackground().setColorFilter(grey_filter, PorterDuff.Mode.MULTIPLY);
+
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        ArrayList<String> categories = presenter.getCategoriesFilter();
+        productDocArrayList.clear();
+        categorieColors.clear();
+        for (int i = 0; i < categories.size(); i++) {
+            String categoria = categories.get(i);
+
+            categorieColors.put(categoria, colors[i]);
+
+            productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, categoria.toUpperCase()));
+            RealmResults<Product> products = realm.where(Product.class).equalTo("categoria_farmacologica", categoria).findAll();
+            for (int j = 0; j < products.size(); j++) {
+                Product product = products.get(j);
+
+                productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.nome.toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(colors[i]), product.scheda.uri, product.rcp));
+            }
+        }
+        adapter.notifyDataSetChanged();
+        etSearch.getText().clear();
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        getActivity().startActivity(new Intent(getActivity(), PdfActivity.class));
-
-    }
 
     @OnClick(R.id.btLegenda)
     void onTapLegenda() {
@@ -179,5 +212,81 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         Bundle init = new Bundle();
         frag.setArguments(init);
         return frag;
+    }
+
+    @Override
+    public void onSelectScheda(ProductDoc product) {
+        String url = SelfBoxConstants.pathProduct + product.getScheda();
+        Intent intent = new Intent(getActivity(), PdfActivity.class);
+        intent.putExtra("path", url);
+        getActivity().startActivity(intent);
+
+    }
+
+    @Override
+    public void onSelectRpc(ProductDoc product) {
+        String url = SelfBoxConstants.pathProduct + product.getRpc();
+        Intent intent = new Intent(getActivity(), PdfActivity.class);
+        intent.putExtra("path", url);
+        getActivity().startActivity(intent);
+
+    }
+
+    @Override
+    public void onChangeFilter(ArrayList<FilterProduct> filtersProducts) {
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        productDocArrayList.clear();
+        for (int i = 0; i < filtersProducts.size(); i++) {
+            String categoria = filtersProducts.get(i).name;
+            if (filtersProducts.get(i).select) {
+                productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, categoria.toUpperCase()));
+                RealmResults<Product> products = realm.where(Product.class).equalTo("categoria_farmacologica", categoria).findAll();
+                for (int j = 0; j < products.size(); j++) {
+                    Product product = products.get(j);
+
+                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.nome.toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(colors[i]), product.scheda.uri, product.rcp));
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String filterText = etSearch.getText().toString().toLowerCase();
+        searchText(filterText);
+
+    }
+
+    private void searchText(String filterText) {
+        if(filterText.length() > 2){
+            final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+             productDocArrayList.clear();
+
+
+            RealmResults<Product> products = realm.where(Product.class).findAll();
+            for (int j = 0; j < products.size(); j++) {
+                Product product = products.get(j);
+                if(product.nome.toLowerCase().contains(filterText.toLowerCase())) {
+                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.nome.toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(categorieColors.get(product.categoria_farmacologica)), product.scheda.uri, product.rcp));
+
+                }}
+
+            adapter.notifyDataSetChanged();
+        }else{
+            presenter.selectLastFilter();
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

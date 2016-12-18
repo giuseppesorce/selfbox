@@ -30,7 +30,7 @@
         android:layout_below="@+id/rlToolbar"
         android:layout_marginRight="20dp"
         android:layout_marginTop="35dp"
-        android:layout_toLeftOf="@+id/btSend"
+        android:layout_toLeftOf="@+id/tvSend"
         android:background="@drawable/back_rounded_search"
         android:gravity="center"
         android:text="ANNULLA"
@@ -46,20 +46,36 @@
         android:layout_marginTop="20dp"
         android:background="#f3f3f3"
         android:id="@+id/relativeLayout">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/llTop"
+            android:layout_margin="25dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp"
             android:text="Sincronizzazione"
             android:textColor="#4e4e4e"
             android:textSize="25sp"
             android:id="@+id/tvTitle"
             anytext:font="helveticaltpro" />
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="30dp"
+            android:visibility="gone"
+             />
+        </LinearLayout>
+
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_below="@+id/tvTitle"
+            android:layout_below="@+id/llTop"
             android:id="@+id/rvGrid"
             android:layout_margin="25dp"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
@@ -67,7 +83,7 @@
     </RelativeLayout>
 
     <com.docgenerici.selfbox.android.custom.texts.CTextView
-        android:id="@+id/btSend"
+        android:id="@+id/tvSend"
         android:layout_width="250dp"
         android:layout_height="38dp"
 

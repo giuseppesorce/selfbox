@@ -2,8 +2,11 @@ package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.Medico;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void onSelectMedico() {
-        view.showMedico();
+        view.showDialogMedicalSearch();
     }
 
     @Override
@@ -68,5 +71,26 @@ public class HomePresenterImpl implements HomePresenter {
             pharmaList.add(farmaciaDto);
         }
         return pharmaList;
+    }
+
+    @Override
+    public ArrayList<MedicoDto> getMedicalList() {
+        ArrayList<MedicoDto> medicoDtoArrayList= new ArrayList<>();
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<Medico> medici = realm.where(Medico.class).findAll();
+        for (int i = 0; i < medici.size(); i++) {
+            MedicoDto farmaciaDto= new MedicoDto();
+            farmaciaDto.id= medici.get(i).id;
+            farmaciaDto.fullname= medici.get(i).fullname;
+
+            medicoDtoArrayList.add(farmaciaDto);
+        }
+        return medicoDtoArrayList;
+    }
+
+    @Override
+    public void onSelectMedicoUser(MedicoDto lastMedicoUser) {
+
+        view.showMedico(lastMedicoUser);
     }
 }

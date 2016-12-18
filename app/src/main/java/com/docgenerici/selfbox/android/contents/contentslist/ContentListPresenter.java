@@ -22,13 +22,15 @@ public interface ContentListPresenter extends Presenter {
 
     void onSelecteFilter();
 
-    void setup(int sample1, int sample2, int sample3);
+    void setup(int folderdraw, int sample1, int sample2, int sample3);
 
-    List<ContentDoc> getContents();
+    List<ContentDoc> getContents(String categoryContent);
 
     void setShare(int position);
 
     ArrayList<ContentDoc> getContentsShared();
+
+    ArrayList<ContentDoc> getContentFolder(ContentDoc contentSelect);
 
     interface ContentView extends BaseView {
 

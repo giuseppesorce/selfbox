@@ -1,6 +1,8 @@
 package com.docgenerici.selfbox.android.sync;
 
 
+import com.docgenerici.selfbox.comm.ApiInteractor;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +16,7 @@ public class SyncModule {
 
   @Provides
   @Singleton
-  SyncPresenter provideSyncPresenter() {
-    return new SyncPresenterImpl();
+  SyncPresenter provideSyncPresenter( ApiInteractor apiInteractor) {
+    return new SyncPresenterImpl(apiInteractor);
   }
 }

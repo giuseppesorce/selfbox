@@ -58,6 +58,14 @@
             android:textSize="17sp"
             android:textStyle="bold"
             anytext:font="robotobold" />
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="wrap_content"
+            android:id="@+id/tvError"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="#e75c36"
+            android:textSize="22sp" />
+
 
     </LinearLayout>
 

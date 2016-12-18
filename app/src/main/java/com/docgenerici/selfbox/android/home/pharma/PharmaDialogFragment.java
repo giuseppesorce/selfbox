@@ -102,7 +102,7 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
 
     @OnClick(R.id.btTraining)
     void selectTraining(){
-        homeInterface.onSelectTraining(lastPharmaUser);
+        homeInterface.onSelectTrainingFamarcia(lastPharmaUser);
         dismiss();
     }
 

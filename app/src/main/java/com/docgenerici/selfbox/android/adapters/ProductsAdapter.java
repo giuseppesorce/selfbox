@@ -5,7 +5,6 @@ package com.docgenerici.selfbox.android.adapters;
  */
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,8 @@ import android.widget.TextView;
 
 
 import com.docgenerici.selfbox.R;
-import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.models.ProductDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
 
 import java.util.ArrayList;
 
@@ -26,11 +24,11 @@ import java.util.ArrayList;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHolder> {
 
 
-    private OnItemClickListener mItemClickListener;
+    private OnSelectProdcutDetail mItemClickListener;
     private Context mContext;
     private ArrayList<ProductDoc> productDocArrayList;
 
-    public ProductsAdapter(Context context, ArrayList<ProductDoc> productDocArrayList, OnItemClickListener mItemClickListener) {
+    public ProductsAdapter(Context context, ArrayList<ProductDoc> productDocArrayList, OnSelectProdcutDetail mItemClickListener) {
         mContext = context;
         this.productDocArrayList = productDocArrayList;
         this.mItemClickListener = mItemClickListener;
@@ -58,6 +56,23 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
             ((MyViewHolder) viewHolder).tvProductSubname.setText(item.getSubtitle());
             ((MyViewHolder) viewHolder).tvClasse.setText(item.getClasse());
             ((MyViewHolder) viewHolder).tvNoInside.setText(item.getNoinside());
+            ((MyViewHolder) viewHolder).vLine.setBackgroundColor(item.getColor());
+
+            ((MyViewHolder) viewHolder).btCp.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onSelectRpc(item);
+                }
+            });
+            ((MyViewHolder) viewHolder).btPdf.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onSelectScheda(item);
+
+                }
+            });
 
         }
     }
@@ -86,9 +101,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
         }
     }
 
-    public class MyViewHolder extends MyHolder implements View.OnClickListener {
+    public class MyViewHolder extends MyHolder  {
 
 
+        public View vLine;
         public TextView tvProductname;
         public TextView tvProductSubname;
         public TextView tvNoInside;
@@ -98,6 +114,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
          Button btCp;
         public MyViewHolder(final View itemView) {
             super(itemView);
+            vLine =  itemView.findViewById(R.id.vLine);
             ivBarCode = (ImageView) itemView.findViewById(R.id.ivBarCode);
             tvProductname = (TextView) itemView.findViewById(R.id.tvProductname);
             tvProductSubname = (TextView) itemView.findViewById(R.id.tvProductSubname);
@@ -105,29 +122,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
             tvNoInside = (TextView) itemView.findViewById(R.id.tvNoInside);
             btPdf = (Button) itemView.findViewById(R.id.btPdf);
             btCp = (Button) itemView.findViewById(R.id.btCp);
-           btCp.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    mItemClickListener.onItemClick(itemView, getAdapterPosition());
-                }
-            });
-            btPdf.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    mItemClickListener.onItemClick(itemView, getAdapterPosition());
-
-                }
-            });
         }
 
-        @Override
-        public void onClick(View view) {
-            if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(view, getAdapterPosition());
-            }
-        }
+
     }
 
     public class MyViewHolderHeader extends MyHolder {

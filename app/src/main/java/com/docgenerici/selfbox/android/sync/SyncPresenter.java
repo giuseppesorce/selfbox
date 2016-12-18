@@ -12,8 +12,16 @@ public interface SyncPresenter extends Presenter {
 
     void setup();
 
+    void startSync();
+
+    void stopSync();
+
     interface SyncView extends BaseView {
 
         void setup();
+
+        void onStartSync();
+
+        void onStopSync();
     }
 }

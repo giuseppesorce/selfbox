@@ -13,9 +13,10 @@ public class FilterProduct implements Parcelable {
     public String name;
     public boolean select;
 
-    public FilterProduct(int color, String name){
+    public FilterProduct(int color, String name, boolean select){
         this.color= color;
         this.name= name;
+        this.select= true;
     }
 
     @Override

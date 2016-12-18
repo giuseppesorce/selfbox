@@ -16,20 +16,28 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.ContentsActivity;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
+import com.docgenerici.selfbox.android.home.medical.MedicalDialogFragment;
 import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
+import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
+import com.docgenerici.selfbox.models.products.Product;
 
 import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView , HomeActivityInterface{
+public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView, HomeActivityInterface {
 
 
-    private static final int WRITE_PERMISSION =124 ;
+    private static final int WRITE_PERMISSION = 124;
     private HomePresenter presenter;
     @BindColor(R.color.grey_filter)
     int grey;
@@ -43,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         presenter.setView(this);
         changeStatusBar(grey);
         checkWritePermission();
+
     }
 
     @OnClick(R.id.rlISF)
@@ -77,21 +86,22 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void showISF() {
-       Intent intent= new Intent(this, ContentsActivity.class);
+        Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "isf");
         startActivity(intent);
     }
 
     @Override
-    public void showMedico() {
-        Intent intent= new Intent(this, ContentsActivity.class);
+    public void showMedico(MedicoDto lastMedicoUser) {
+        Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "medico");
+        intent.putExtra("medico", "lastMedicoUser");
         startActivity(intent);
     }
 
     @Override
     public void showDialogPharmaSearch() {
-        ArrayList<FarmaciaDto>  pharmaList= presenter.getPharmaList();
+        ArrayList<FarmaciaDto> pharmaList = presenter.getPharmaList();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         PharmaDialogFragment pharmaDialog = PharmaDialogFragment.createInstance(pharmaList);
         pharmaDialog.show(ft, "pharmaDialog");
@@ -119,6 +129,15 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         infoDialogFragment.show(ft, "infoDialogFragment");
     }
 
+    @Override
+    public void showDialogMedicalSearch() {
+        ArrayList<MedicoDto> presenterMedicalList = presenter.getMedicalList();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        MedicalDialogFragment pharmaDialog = MedicalDialogFragment.createInstance(presenterMedicalList);
+        pharmaDialog.show(ft, "medical");
+
+    }
+
     private void changeStatusBar(int color) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -140,15 +159,25 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void onSelectPharmaUser(FarmaciaDto lastPharmaUser) {
-        Intent intent= new Intent(this, ContentsActivity.class);
+        Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         startActivity(intent);
     }
 
     @Override
-    public void onSelectTraining(FarmaciaDto lastPharmaUser) {
-        Intent intent= new Intent(this, ContentsActivity.class);
+    public void onSelectMedicoUser(MedicoDto lastMedicoUser) {
+        presenter.onSelectMedicoUser(lastMedicoUser);
+    }
+
+    @Override
+    public void onSelectTrainingFamarcia(FarmaciaDto lastPharmaUser) {
+        Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         startActivity(intent);
+    }
+
+    @Override
+    public void onSelectTrainingMedico(MedicoDto lastMedicoUser) {
+
     }
 }

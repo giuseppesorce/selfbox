@@ -24,5 +24,7 @@ public interface StartPresenter extends Presenter {
         void showCodeError(String s);
 
         void showProgressToSend();
+
+        void gotoSyncActivity();
     }
 }

@@ -126,4 +126,11 @@
                 android:text="@string/hom_medico" />
         </RelativeLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="300dp"
+        android:background="@drawable/backhomeinfo"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:layout_height="100dp"></LinearLayout>
 </RelativeLayout>

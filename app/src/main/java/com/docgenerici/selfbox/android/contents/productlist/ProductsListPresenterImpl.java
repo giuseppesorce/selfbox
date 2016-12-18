@@ -1,6 +1,14 @@
 package com.docgenerici.selfbox.android.contents.productlist;
 
 import com.docgenerici.selfbox.BaseView;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.models.products.Product;
+
+import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * @author Giuseppe Sorce
@@ -8,9 +16,11 @@ import com.docgenerici.selfbox.BaseView;
 
 public class ProductsListPresenterImpl implements ProductsListPresenter {
     private PListView view;
-    private final int FILTER_BY_DATE= 1;
+    private final int FILTER_BY_TERAP = 1;
     private final int FILTER_BY_AZ= 2;
     private  int FILTER_NOW= FILTER_BY_AZ;
+    private ArrayList<String> categoriesList;
+
     @Override
     public void setView(BaseView view) {
         if (!(view instanceof PListView)) {
@@ -21,6 +31,12 @@ public class ProductsListPresenterImpl implements ProductsListPresenter {
 
     @Override
     public void setup() {
+        categoriesList= new ArrayList<String>();
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<Product> products2 = realm.where(Product.class).findAllSorted("categoria_farmacologica", Sort.ASCENDING).distinct("categoria_farmacologica");
+        for (int i = 0; i < products2.size(); i++) {
+           categoriesList.add(products2.get(i).categoria_farmacologica);
+        }
         view.setup();
     }
 
@@ -41,8 +57,24 @@ public class ProductsListPresenterImpl implements ProductsListPresenter {
     }
 
     @Override
-    public void selectDate() {
-        FILTER_NOW= FILTER_BY_DATE;
-        view.showSelectDate();
+    public void selectTerapeutica() {
+        FILTER_NOW= FILTER_BY_TERAP;
+        view.showSelectTerapeutica();
+    }
+
+    @Override
+    public ArrayList<String> getCategoriesFilter() {
+        return categoriesList;
+    }
+
+    @Override
+    public void selectLastFilter() {
+
+        if(FILTER_NOW == FILTER_BY_TERAP){
+            view.showSelectTerapeutica();
+        }else{
+            view.showSelectAz();
+        }
+
     }
 }

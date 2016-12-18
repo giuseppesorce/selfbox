@@ -4,6 +4,8 @@ package com.docgenerici.selfbox.android.contents.productlist;
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 
+import java.util.ArrayList;
+
 /**
  * @author Giuseppe Sorce #@copyright xx 22/09/16.
  */
@@ -18,7 +20,11 @@ public interface ProductsListPresenter extends Presenter {
 
     void selectAZ();
 
-    void selectDate();
+    void selectTerapeutica();
+
+    ArrayList<String> getCategoriesFilter();
+
+    void selectLastFilter();
 
     interface PListView extends BaseView {
 
@@ -30,6 +36,6 @@ public interface ProductsListPresenter extends Presenter {
 
         void showSelectAz();
 
-        void showSelectDate();
+        void showSelectTerapeutica();
     }
 }

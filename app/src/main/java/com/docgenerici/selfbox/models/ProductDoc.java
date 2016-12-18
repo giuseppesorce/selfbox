@@ -1,5 +1,7 @@
 package com.docgenerici.selfbox.models;
 
+import android.graphics.Color;
+
 /**
  * @author Giuseppe Sorce
  */
@@ -12,12 +14,19 @@ public class ProductDoc {
     private String subtitle;
     private String classe;
     private String noinside;
-    public ProductDoc(int typerow, String title,String subtitle, String classe, String noinside) {
+    private String scheda;
+    private String rpc;
+    private int color= 0;
+
+    public ProductDoc(int typerow, String title,String subtitle, String classe, String noinside, int color, String scheda, String rpc) {
         this.typerow=typerow;
         this.title= title;
         this.subtitle= subtitle;
         this.classe= classe;
         this.noinside= noinside;
+        this.scheda= scheda;
+        this.rpc= rpc;
+        this.color= color;
     }
 
     public ProductDoc(int typerow, String title) {
@@ -63,5 +72,29 @@ public class ProductDoc {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public String getScheda() {
+        return scheda;
+    }
+
+    public void setScheda(String scheda) {
+        this.scheda = scheda;
+    }
+
+    public String getRpc() {
+        return rpc;
+    }
+
+    public void setRpc(String rpc) {
+        this.rpc = rpc;
     }
 }

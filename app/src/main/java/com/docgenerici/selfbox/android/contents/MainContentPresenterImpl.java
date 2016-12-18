@@ -7,8 +7,12 @@ import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.contents.Folder;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 22/09/16.
@@ -28,8 +32,19 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     }
 
     @Override
-    public void setup() {
+    public void setup(String category) {
+        if(category.equalsIgnoreCase("isf")){
+            createContentsIsf();
+        }
+
         view.setupView();
+    }
+
+    private void createContentsIsf() {
+
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<Folder> folder = realm.where(Folder.class).findAll();
+
     }
 
     @Override

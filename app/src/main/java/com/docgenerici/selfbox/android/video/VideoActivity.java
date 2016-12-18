@@ -53,37 +53,37 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         showHideController(true);
 
-        final Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
-                + R.raw.video);
-        videoView.setVideoURI(video);
-        videoView.requestFocus();
-
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                startTimer();
-            }
-        });
-
-        videoView.start();
-        vProgressPlay.setPivotX(0);
-        videoView.setOnTouchListener(this);
-        backControler.setOnTouchListener(this);
-
-
-        hideCountDown = new CountDownTimer(5000, 5000) {
-
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-                controllerOn = false;
-                showHideController(false);
-            }
-        };
-
-        btPlayPause.setBackgroundResource(R.drawable.ic_pause);
+//        final Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
+//                + R.raw.video);
+//        videoView.setVideoURI(video);
+//        videoView.requestFocus();
+//
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                startTimer();
+//            }
+//        });
+//
+//        videoView.start();
+//        vProgressPlay.setPivotX(0);
+//        videoView.setOnTouchListener(this);
+//        backControler.setOnTouchListener(this);
+//
+//
+//        hideCountDown = new CountDownTimer(5000, 5000) {
+//
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            public void onFinish() {
+//                controllerOn = false;
+//                showHideController(false);
+//            }
+//        };
+//
+//        btPlayPause.setBackgroundResource(R.drawable.ic_pause);
     }
 
 

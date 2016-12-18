@@ -1,6 +1,5 @@
 package com.docgenerici.selfbox.models;
 
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,24 +9,56 @@ import android.os.Parcelable;
 
 public class ContentDoc implements Parcelable {
 
-  //this model is temporaney
+
+    public int id;
     public int type;
     public int typeview;
-    public String title;
+    public String name;
     public int image;
     public boolean shared;
     public String content;
     public boolean  isnew= false;
+    public String cover;
 
 
-    public ContentDoc(int type, String title, int image, String content, int typeview) {
+    public ContentDoc(int type, String title, int image, String content, int typeview, String cover) {
         this.type= type;
-        this.title= title;
+        this.name = title;
         this.image= image;
         this.content= content;
         this.typeview= typeview;
+        this.cover= cover;
     }
 
+
+
+    public ContentDoc() {
+
+    }
+
+    protected ContentDoc(Parcel in) {
+        id = in.readInt();
+        type = in.readInt();
+        typeview = in.readInt();
+        name = in.readString();
+        image = in.readInt();
+        shared = in.readByte() != 0;
+        content = in.readString();
+        isnew = in.readByte() != 0;
+        cover = in.readString();
+    }
+
+    public static final Creator<ContentDoc> CREATOR = new Creator<ContentDoc>() {
+        @Override
+        public ContentDoc createFromParcel(Parcel in) {
+            return new ContentDoc(in);
+        }
+
+        @Override
+        public ContentDoc[] newArray(int size) {
+            return new ContentDoc[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -36,30 +67,14 @@ public class ContentDoc implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.type);
-        dest.writeString(this.title);
-        dest.writeInt(this.image);
-        dest.writeByte(this.shared ? (byte) 1 : (byte) 0);
-        dest.writeString(this.content);
+        dest.writeInt(id);
+        dest.writeInt(type);
+        dest.writeInt(typeview);
+        dest.writeString(name);
+        dest.writeInt(image);
+        dest.writeByte((byte) (shared ? 1 : 0));
+        dest.writeString(content);
+        dest.writeByte((byte) (isnew ? 1 : 0));
+        dest.writeString(cover);
     }
-
-    protected ContentDoc(Parcel in) {
-        this.type = in.readInt();
-        this.title = in.readString();
-        this.image = in.readInt();
-        this.shared = in.readByte() != 0;
-        this.content = in.readString();
-    }
-
-    public static final Parcelable.Creator<ContentDoc> CREATOR = new Parcelable.Creator<ContentDoc>() {
-        @Override
-        public ContentDoc createFromParcel(Parcel source) {
-            return new ContentDoc(source);
-        }
-
-        @Override
-        public ContentDoc[] newArray(int size) {
-            return new ContentDoc[size];
-        }
-    };
 }

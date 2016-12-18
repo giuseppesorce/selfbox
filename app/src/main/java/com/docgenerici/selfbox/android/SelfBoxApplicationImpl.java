@@ -36,13 +36,6 @@ public class SelfBoxApplicationImpl extends Application implements SMApplication
         .build();
   }
 
-  private void initRealmConfiguration() {
-    RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-            .deleteRealmIfMigrationNeeded()
-            .build();
-    Realm.setDefaultConfiguration(realmConfiguration);
-  }
-
 
 
 

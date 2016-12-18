@@ -14,7 +14,8 @@ import android.widget.TextView;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.models.ContentDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,8 +105,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
 
-        ((MyHolder)holder).tvTitle.setText(contentDoc.title);
-        ((MyHolder)holder).ivCover.setImageResource(contentDoc.image);
+        ((MyHolder)holder).tvTitle.setText(contentDoc.name);
+        if(contentDoc.cover !=null && !contentDoc.cover.isEmpty()){
+            Picasso.with(context).load(contentDoc.cover ).resize(700,450).centerCrop().into(  ((MyHolder) holder).ivCover);
+
+
+        }else {
+            ((MyHolder) holder).ivCover.setImageResource(contentDoc.image);
+        }
 
         if(contentDoc.typeview ==  SelfBoxConstants.TypeViewContent.NEW){
             ((MyHolder)holder).vNew.setVisibility(View.VISIBLE);

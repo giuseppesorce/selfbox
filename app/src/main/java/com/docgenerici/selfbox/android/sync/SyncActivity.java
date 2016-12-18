@@ -1,24 +1,20 @@
 package com.docgenerici.selfbox.android.sync;
 
-import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
-import com.docgenerici.selfbox.android.adapters.GalleryAdapter;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.GridSyncAdapter;
-import com.docgenerici.selfbox.debug.Dbg;
-import com.docgenerici.selfbox.models.ContentDoc;
-import com.docgenerici.selfbox.models.SelfBoxConstants;
 import com.docgenerici.selfbox.models.SyncContent;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,9 +24,12 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
     @BindView(R.id.rvGrid)
     RecyclerView rvGrid;
+    @BindView(R.id.progress)
+    ProgressBar progress;
+    @BindView(R.id.tvSend)
+    TextView tvSend;
     private SyncPresenter presenter;
     private GridSyncAdapter gridSyncAdapter;
-    private CountDownTimer timer;
     private ArrayList<SyncContent> syncContents;
 
     @Override
@@ -41,60 +40,16 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         presenter = SelfBoxApplicationImpl.appComponent.syncPresenter();
         presenter.setView(this);
         presenter.setup();
-        timer = new CountDownTimer(30000, 500) {
-
-            public void onTick(long millisUntilFinished) {
-
-                for (int i = 0; i < syncContents.size(); i++) {
-                    SyncContent syncContent = syncContents.get(i);
-                    syncContent.setPercentage(syncContent.getPercentage() + getRandom(1, 7));
-                    Dbg.p("syncContent: " + syncContent.getPercentage());
-                    if (syncContent.getPercentage() > 100) {
-                        syncContent.setPercentage(100);
-                    }
-
-
-                }
-                gridSyncAdapter.notifyDataSetChanged();
-                boolean allThousand = true;
-                for (int i = 0; i < syncContents.size(); i++) {
-                    SyncContent syncContent = syncContents.get(i);
-                    if (syncContent.getPercentage() < 100) {
-                        allThousand = false;
-                    }
-
-
-                }
-                if (allThousand) {
-                    timer.cancel();
-                }
-
-            }
-
-            public void onFinish() {
-
-            }
-        };
-
-
     }
 
     @OnClick(R.id.btCancel)
-    void stopFakeSync(){
-        timer.cancel();
-
-        for (int i = 0; i < syncContents.size(); i++) {
-            SyncContent syncContent = syncContents.get(i);
-            syncContent.setPercentage(0);
-        }
-        gridSyncAdapter.notifyDataSetChanged();
+    void stopSync(){
+        presenter.stopSync();
     }
 
-    @OnClick(R.id.btSend)
-    void startFakeSync() {
-
-        timer.start();
-
+    @OnClick(R.id.tvSend)
+    void startSync() {
+        presenter.startSync();
     }
 
     @OnClick(R.id.ivLogo)
@@ -104,6 +59,8 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
     @Override
     public void setup() {
+
+
         GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
         syncContents = new ArrayList<>();
         syncContents.add(new SyncContent("Contenuti", 0));
@@ -122,11 +79,23 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
     }
 
-    private int getRandom(int min, int max) {
+    @Override
+    public void onStartSync() {
+        progress.setVisibility(View.VISIBLE);
+        tvSend.setEnabled(false);
+        tvSend.setAlpha(0.6f);
+    }
 
-        Random r = new Random();
-        return r.nextInt(max - min + 1) + min;
+    @Override
+    public void onStopSync() {
+        progress.setVisibility(View.GONE);
+        tvSend.setEnabled(true);
+        tvSend.setAlpha(1.0f);
     }
 
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

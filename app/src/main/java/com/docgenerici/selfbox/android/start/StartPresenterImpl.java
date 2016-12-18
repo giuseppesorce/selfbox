@@ -12,6 +12,7 @@ import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
+import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
 
 import java.io.IOException;
@@ -46,17 +47,39 @@ public class StartPresenterImpl implements StartPresenter {
     @Override
     public void chekActivation() {
         if (hereActivation()) {
-            view.showProgressToSend();
-            getAllMedicalData();
+//            view.showProgressToSend();
+//            getAllMedicalData();
+            if(syncronized()){
+                view.gotoHome();
+
+            }else{
+                view.gotoSyncActivity();
+            }
+
         } else {
             view.showActivationInput();
         }
     }
 
+    private boolean syncronized() {
+
+        boolean syncro= false;
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+
+
+        ConfigurationApp configurationApp = realm.where(ConfigurationApp.class).findFirst();
+        if (configurationApp != null) {
+            if (!configurationApp.isSyncronized()) {
+                syncro = true;
+            }
+        }
+        return syncro;
+    }
+
     @Override
     public void setActivation(String isfCode) {
         if (isfCode == null || isfCode.length() < 5) {
-            view.showCodeError("Errore nel caricamento dei dati");
+            view.showCodeError("Inserisci almeno 5 caratteri");
         } else {
             view.showProgressToSend();
             String appVer = SelfBoxUtils.getApplicationVersionName(SelfBoxApplicationImpl.appComponent.context());
@@ -81,9 +104,16 @@ public class StartPresenterImpl implements StartPresenter {
                                 infoApp.selfBoxProductDownloadUrl = loginResponse.selfBoxProductDownloadUrl;
                                 realm.copyToRealmOrUpdate(infoApp);
                                 realm.commitTransaction();
-                                getAllMedicalData();
+                                if(syncronized()){
+                                    view.gotoHome();
+
+                                }else{
+                                    view.gotoSyncActivity();
+                                }
+
                             } else {
-                                view.showCodeError("Errore nel caricamento dei dati");
+                                view.showCodeError("Il codice inserito non è corretto");
+                                view.showActivationInput();
                             }
                         }
                     }, new Action1<Throwable>() {
@@ -102,7 +132,6 @@ public class StartPresenterImpl implements StartPresenter {
 
         String isf = getRepcode();
         if (!isf.isEmpty()) {
-
             apiInteractor.getallMedical(isf)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -111,8 +140,7 @@ public class StartPresenterImpl implements StartPresenter {
                         public void call(MedicalList medialresponse) {
 
                             persistenceMedicalList(medialresponse);
-
-                            view.gotoHome();
+                            getAllContents();
 
                         }
                     }, new Action1<Throwable>() {
@@ -129,6 +157,34 @@ public class StartPresenterImpl implements StartPresenter {
         }
     }
 
+
+    private void getAllContents() {
+
+        String isf = getRepcode();
+        if(!isf.isEmpty()) {
+            apiInteractor.getAllContents(isf)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<List<Folder>>() {
+                        @Override
+                        public void call(List<Folder> folders) {
+                            persistenceContentList(folders);
+
+
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+
+                            Dbg.p("CALL ERRORE getAllcontents");
+
+                        }
+                    });
+        }
+
+    }
+
+
     private void persistenceMedicalList(MedicalList medicalList) {
 
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
@@ -144,66 +200,18 @@ public class StartPresenterImpl implements StartPresenter {
         realm.commitTransaction();
     }
 
-    private void getAllContents() {
+    private void persistenceContentList(List<Folder> folders) {
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
 
-        String isf = "77750";
-        apiInteractor.getAllContents(isf)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Folder>>() {
-                    @Override
-                    public void call(List<Folder> folders) {
-
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                        Dbg.p("CALL ERRORE getAllcontents");
-
-                    }
-                });
-
-
+        realm.beginTransaction();
+        for (int i = 0; i < folders.size(); i++) {
+            realm.copyToRealmOrUpdate(folders.get(i));
+        }
+        realm.commitTransaction();
     }
 
-    private void getProduct() {
 
 
-        Environment environment = SelfBoxApplicationImpl.appComponent.environment();
-        environment.setBaseUrl("http://www.docgenerici.it/app/app.php");
-
-
-        apiInteractor.getProduct("20161010")
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseBody>() {
-                    @Override
-                    public void call(ResponseBody responseBody) {
-                        try {
-                            parseXML(responseBody.string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                        Dbg.p("CALL ERRORE getProduct: " + throwable.getLocalizedMessage());
-
-                    }
-                });
-
-
-    }
-
-    private void parseXML(String xmlString) {
-
-        XmlTaskParse parseTask = new XmlTaskParse();
-        parseTask.execute(xmlString);
-
-    }
 
 
     private boolean hereActivation() {

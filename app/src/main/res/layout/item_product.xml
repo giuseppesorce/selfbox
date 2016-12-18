@@ -20,6 +20,7 @@
                 android:layout_width="16dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
+                android:id="@+id/vLine"
                 android:background="#fff56c" />
 
             <com.docgenerici.selfbox.android.custom.texts.CTextView
@@ -77,6 +78,7 @@
             android:background="@drawable/codice1"
             android:gravity="center"
             android:paddingLeft="10dp"
+            android:visibility="invisible"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
@@ -107,6 +109,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
+                android:alpha="0.5"
                 android:id="@+id/btCamera"
                 android:background="@drawable/ic_cameraimage" />
 

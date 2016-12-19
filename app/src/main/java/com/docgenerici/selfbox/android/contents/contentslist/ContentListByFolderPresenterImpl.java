@@ -1,12 +1,10 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
-import android.support.v4.view.ViewPager;
-
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
-import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.contents.TypeContent;
@@ -22,16 +20,17 @@ import io.realm.RealmResults;
  * @author Giuseppe Sorce #@copyright xx 22/09/16.
  */
 
-public class ContentListPresenterImpl implements ContentListPresenter {
+public class ContentListByFolderPresenterImpl implements ContentListByFolderPresenter {
     private ContentView view;
     private final int FILTER_BY_DATE = 1;
     private final int FILTER_BY_AZ = 2;
     private int FILTER_NOW = FILTER_BY_AZ;
     private ArrayList<ContentDoc> contents = new ArrayList<>();
+    private int sample1;
+    private int sample2;
+    private int sample3;
     private int folderSample;
     private ArrayList<ContentDoc> folderContentList;
-    private int levelView;
-    private ArrayList<ContentDoc> folderContentFolderList;
 
 
     @Override
@@ -60,9 +59,12 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     }
 
     @Override
-    public void setup(int folder) {
+    public void setup(int folder, int sample1, int sample2, int sample3) {
+
+        this.sample1 = sample1;
+        this.sample2 = sample1;
+        this.sample3 = sample1;
         this.folderSample = folder;
-        view.setup();
     }
 
     @Override
@@ -101,7 +103,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                 } else if (typeContent.descr.equalsIgnoreCase("video")) {
                     contentDoc.type = SelfBoxConstants.TypeContent.VISUAL;
                 }
-                contentDoc.content = folderRoot.contents.get(j).getLocalfilePath();
+                contentDoc.content= folderRoot.contents.get(j).getLocalfilePath();
                 if (folderRoot.contents.get(j).getLocalthumbnailPath() == null || folderRoot.contents.get(j).getLocalthumbnailPath().length() < 2 || folderRoot.contents.get(j).getLocalthumbnailPath().contains("error_")) {
                     contentDoc.image = folderSample;
                 } else {
@@ -139,47 +141,41 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         return contentsShared;
     }
 
-
     @Override
-    public ArrayList<ContentDoc> getContentsByFolder(int id) {
-        folderContentFolderList.clear();
-        folderContentFolderList = new ArrayList<ContentDoc>();
+    public ArrayList<ContentDoc> getContentFolder(ContentDoc contentSelect) {
+
+        folderContentList = new ArrayList<ContentDoc>();
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        Folder folder = realm.where(Folder.class).equalTo("id", id).findFirst();
+        RealmResults<Folder> folders = realm.where(Folder.class).findAll();
+        Folder folder = null;
+        for (int i = 0; i < folders.size(); i++) {
+            if (folders.get(i).id == contentSelect.id) {
+                folder = folders.get(i);
+            }
+        }
+
         if (folder != null) {
+            RealmList<ContentBox> folderDocs = folder.contents;
+            for (int i = 0; i < folderDocs.size(); i++) {
 
-            for (int j = 0; j < folder.contents.size(); j++) {
                 ContentDoc contentDoc = new ContentDoc();
-                contentDoc.id = folder.contents.get(j).id;
-                TypeContent typeContent = folder.contents.get(j).type;
-                if (typeContent.descr.equalsIgnoreCase("pdf")) {
-                    contentDoc.type = SelfBoxConstants.TypeContent.PDF;
-                } else if (typeContent.descr.equalsIgnoreCase("video")) {
-                    contentDoc.type = SelfBoxConstants.TypeContent.VISUAL;
-                }
-                contentDoc.content = folder.contents.get(j).getLocalfilePath();
-                if (folder.contents.get(j).getLocalthumbnailPath() == null || folder.contents.get(j).getLocalthumbnailPath().length() < 2 || folder.contents.get(j).getLocalthumbnailPath().contains("error_")) {
-                    contentDoc.image = folderSample;
-                } else {
-                    String uriCover = folder.contents.get(j).getLocalthumbnailPath();
-                    if (uriCover.contains("file://")) {
-                        uriCover = uriCover.replace("file://", "");
-                    }
-                    contentDoc.cover = uriCover;
-                }
-
-                folderContentFolderList.add(contentDoc);
-
+                contentDoc.id = folderDocs.get(i).id;
+                contentDoc.type = getType(folderDocs.get(i).type.name);
+                contentDoc.name = folderDocs.get(i).name;
+//               if(folderDocs.get(i).cover ==null || folder.get(i).cover.length() < 2){
+//                   contentDoc.image= folderSample;
+//               }else{
+//                   contentDoc.cover= folder.get(i).path+folder.get(i).cover;
+//               }
+//               contentDoc.name =folder.get(i).name;
+                contentDoc.image = folderSample;
+                folderContentList.add(contentDoc);
             }
 
-
         }
-        return folderContentFolderList;
-    }
 
-    @Override
-    public void setLevelView(int level) {
-        levelView = level;
+
+        return folderContentList;
     }
 
     private int getType(String name) {

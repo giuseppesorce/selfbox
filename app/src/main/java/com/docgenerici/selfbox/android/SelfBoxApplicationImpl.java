@@ -27,8 +27,6 @@ public class SelfBoxApplicationImpl extends Application implements SMApplication
   public void onCreate() {
     super.onCreate();
 
-
-
     instannce= this;
     appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).
         retrofitModule(new RetrofitModule(new File(getCacheDir() + "/cache"),

@@ -27,6 +27,7 @@ import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.android.video.VideoActivity;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 
@@ -71,6 +72,10 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private String categoryContent;
     private ContentDoc contentSelect;
     private ListContentByFolderFragment listContentByFolderFrag;
+    private GridLayoutManager gridLayout;
+    private int spanCount = 3; // 3 columns
+    private int spacing = 40; // 50px
+    private boolean includeEdge = false;
 
 
     @Nullable
@@ -78,32 +83,32 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_contents_list, container, false);
         ButterKnife.bind(this, view);
-        if(getArguments() !=null){
-            categoryContent= getArguments().getString("category");
+        if (getArguments() != null) {
+            categoryContent = getArguments().getString("category");
         }
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
-        presenter.setup(R.drawable.foldersample,R.drawable.sample1, R.drawable.sample2, R.drawable.sample3);
         presenter.setView(this);
-        createGalleryContentsItems();
+        presenter.setup(R.drawable.foldersample);
+
         presenter.selectAZ();
         etSearch.clearFocus();
-        String category= SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
-        Resources res= getResources();
-        switch ((category)){
+        String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
+        Resources res = getResources();
+        switch ((category)) {
 
             case "isf":
                 btFilter.setBackgroundResource(R.drawable.ic_filter_orange);
-                Drawable ic_search_orange= res.getDrawable(R.drawable.ic_search_orange);
+                Drawable ic_search_orange = res.getDrawable(R.drawable.ic_search_orange);
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_orange, null);
                 break;
             case "medico":
-                Drawable ic_search_blue= res.getDrawable(R.drawable.ic_search_blu);
+                Drawable ic_search_blue = res.getDrawable(R.drawable.ic_search_blu);
                 btFilter.setBackgroundResource(R.drawable.ic_filter_blu);
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_blue, null);
 
                 break;
             case "pharma":
-                Drawable ic_search_green= res.getDrawable(R.drawable.ic_search);
+                Drawable ic_search_green = res.getDrawable(R.drawable.ic_search);
                 btFilter.setBackgroundResource(R.drawable.ic_filter_green);
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_green, null);
                 break;
@@ -113,12 +118,17 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     }
 
     private void createGalleryContentsItems() {
-        GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 3);
         rvGallery.setLayoutManager(gridLayout);
+        presenter.setLevelView(0);
         galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), this);
-        int spanCount = 3; // 3 columns
-        int spacing = 40; // 50px
-        boolean includeEdge = false;
+        rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        rvGallery.setAdapter(galleryAdapter);
+    }
+
+    private void createGalleryContentsItemsFromFolder(int id) {
+        presenter.setLevelView(1);
+        rvGallery.setLayoutManager(gridLayout);
+        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContentsByFolder(id), this);
         rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         rvGallery.setAdapter(galleryAdapter);
     }
@@ -161,9 +171,15 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void refreshContents() {
         galleryAdapter.notifyDataSetChanged();
-        if(activityInterface !=null){
+        if (activityInterface != null) {
             activityInterface.setShared(presenter.getContentsShared());
         }
+    }
+
+    @Override
+    public void setup() {
+        gridLayout = new GridLayoutManager(getActivity(), 3);
+        createGalleryContentsItems();
     }
 
     @Override
@@ -177,19 +193,22 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void onItemClick(View view, int position) {
 
-        contentSelect= galleryAdapter.getItemPosition(position);
+        contentSelect = galleryAdapter.getItemPosition(position);
 
-        if(contentSelect.type ==  SelfBoxConstants.TypeContent.FOLDER){
+        if (contentSelect.type == SelfBoxConstants.TypeContent.FOLDER) {
+            createGalleryContentsItemsFromFolder(contentSelect.id);
 
-           ArrayList<ContentDoc> folderContents= presenter.getContentFolder(contentSelect);
 
-                listContentByFolderFrag=  ListContentByFolderFragment.createInstance(folderContents);
-            //showFragment(listContentByFolderFrag, "list", R.id.folderContainer);
-        }else {
+        } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
                 startActivity(new Intent(getActivity(), VideoActivity.class));
             } else {
-                startActivity(new Intent(getActivity(), PdfActivity.class));
+                Intent intent = new Intent(getActivity(), PdfActivity.class);
+                intent.putExtra("path", contentSelect.content);
+                if (contentSelect.content != null) {
+                    Dbg.p("contentSelect.content: " + contentSelect.content);
+                    startActivity(intent);
+                }
             }
         }
 
@@ -211,26 +230,26 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     private void showFragment(Fragment frag, String tag, int container) {
 
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-        ft.add(container, frag , "fragment");
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(container, frag, "fragment");
 
         try {
-                ft.commitAllowingStateLoss();
-            } catch (Exception ex) {
+            ft.commitAllowingStateLoss();
+        } catch (Exception ex) {
 
-            }
+        }
 
     }
 
     public boolean isFolder() {
-        boolean isfolder= true;
-        if(listContentByFolderFrag !=null){
-            isfolder= false;
+        boolean isfolder = true;
+        if (listContentByFolderFrag != null) {
+            isfolder = false;
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.remove(listContentByFolderFrag);
-            listContentByFolderFrag= null;
+            listContentByFolderFrag = null;
 
         }
         return isfolder;

@@ -17,4 +17,10 @@ public class ContentListModule {
   ContentListPresenter provideContentListPresenter() {
     return new ContentListPresenterImpl();
   }
+
+  @Provides
+  @Singleton
+  ContentListByFolderPresenter provideContentListByFolderPresenter() {
+    return new ContentListByFolderPresenterImpl();
+  }
 }

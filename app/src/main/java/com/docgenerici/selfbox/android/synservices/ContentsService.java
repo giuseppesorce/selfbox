@@ -14,6 +14,7 @@ import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.ContentEasy;
+import com.docgenerici.selfbox.models.contents.Folder;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -27,15 +28,18 @@ import io.realm.RealmResults;
  *         <p>......</p>
  */
 
-public class ContentsService extends IntentService{
+public class ContentsService extends IntentService {
 
     private ArrayList<ContentEasy> contentsEasy;
+    private ArrayList<ContentEasy> folderEasy;
     private DownloaderDoc downloaderContent;
     private int counterContents;
-    private boolean serviceDetroyed= false;
+    private int counterFolders;
+    private boolean serviceDetroyed = false;
     private DownloaderDoc downloaderCover;
-    private boolean bContentDownload= false;
-    private boolean bContentCoverDownload= false;
+    private boolean bContentDownload = false;
+    private boolean bContentCoverDownload = false;
+    private DownloaderDoc downloaderFolderCover;
 
     public ContentsService() {
         super("ContentsService");
@@ -44,7 +48,7 @@ public class ContentsService extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        contentsEasy= new ArrayList<>();
+        contentsEasy = new ArrayList<>();
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
@@ -55,12 +59,12 @@ public class ContentsService extends IntentService{
                     RealmResults<ContentBox> realmResultsContentsBox = realm.where(ContentBox.class).findAll();
                     for (int i = 0; i < realmResultsContentsBox.size(); i++) {
                         ContentEasy contentEasy = new ContentEasy();
-                        contentEasy.id= realmResultsContentsBox.get(i).id;
-                        contentEasy.filename= realmResultsContentsBox.get(i).filename;
-                        contentEasy.lastUpdate= realmResultsContentsBox.get(i).lastUpdate;
-                        contentEasy.resourcePath= realmResultsContentsBox.get(i).resourcePath;
-                        contentEasy.thumbnailCover= realmResultsContentsBox.get(i).thumbnailCover;
-                        contentEasy.thumbnailPath= realmResultsContentsBox.get(i).thumbnailPath;
+                        contentEasy.id = realmResultsContentsBox.get(i).id;
+                        contentEasy.filename = realmResultsContentsBox.get(i).filename;
+                        contentEasy.lastUpdate = realmResultsContentsBox.get(i).lastUpdate;
+                        contentEasy.resourcePath = realmResultsContentsBox.get(i).resourcePath;
+                        contentEasy.thumbnailCover = realmResultsContentsBox.get(i).thumbnailCover;
+                        contentEasy.thumbnailPath = realmResultsContentsBox.get(i).thumbnailPath;
                         contentsEasy.add(contentEasy);
                     }
                 }
@@ -70,27 +74,27 @@ public class ContentsService extends IntentService{
                 realm.close();
             }
         }
-        counterContents= 0;
+        counterContents = 0;
         downloaderContent = DownloaderDoc.newInstance(listenerDownloadContent);
         downloaderCover = DownloaderDoc.newInstance(listenerDownloadContentCover);
-        Dbg.p("CONTENUTI: "+contentsEasy.size());
+        downloaderFolderCover = DownloaderDoc.newInstance(listenerDownloadFolderCover);
+        Dbg.p("CONTENUTI: " + contentsEasy.size());
         downloadContent();
     }
 
 
-
     private void downloadContent() {
-        serviceDetroyed= Hawk.get("contentsServiceDestroy", false);
-        if(serviceDetroyed){
+        serviceDetroyed = Hawk.get("contentsServiceDestroy", false);
+        if (serviceDetroyed) {
             Dbg.p("serviceDetroyed non vado oltre");
             stopSelf();
-        }else {
+        } else {
             if (counterContents < contentsEasy.size()) {
                 if (counterContents > 0) {
                     sendUpdate(counterContents * 100 / contentsEasy.size());
                 }
-               bContentDownload= false;
-                bContentCoverDownload= false;
+                bContentDownload = false;
+                bContentCoverDownload = false;
                 ContentEasy contentEasy = contentsEasy.get(counterContents);
                 //CONTENT
                 String pathContent = contentEasy.resourcePath + contentEasy.filename;
@@ -100,31 +104,93 @@ public class ContentsService extends IntentService{
                 if (file.exists()) {
                     //Dbg.p("FILE ESISTE: "+filenameContent);
                     updateContent(file.getAbsolutePath(), contentEasy.id);
-                    bContentDownload= true;
+                    bContentDownload = true;
                     checkContentDownload();
                 } else {
                     downloaderContent.download(uriContents, "contents", filenameContent, contentEasy.id);
                 }
 
-                String pathCover = contentEasy.thumbnailPath+contentEasy.thumbnailCover;
+                String pathCover = contentEasy.thumbnailPath + contentEasy.thumbnailCover;
                 Uri uriContentCover = Uri.parse(pathCover.replace(" ", "%20"));
                 String filenameContentCover = contentEasy.lastUpdate + "___" + contentEasy.thumbnailCover;
                 File fileCover = new File(getExternalFilesDir("contents"), filenameContentCover);
-                if(fileCover.exists()){
-                    bContentCoverDownload= true;
+                if (fileCover.exists()) {
+                    bContentCoverDownload = true;
                     checkContentDownload();
-                }else{
+                } else {
                     downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
                 }
             } else {
                 Dbg.p("downloadContent finito: ");
-              downloadFolderCover();
+                counterFolders = 0;
+                startDownloadFoldersCover();
             }
         }
     }
 
+    private void startDownloadFoldersCover() {
+        Dbg.p("FOLDER: startDownloadFoldersCover");
+        folderEasy = new ArrayList<>();
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    RealmResults<Folder> realmResultsContentsBox = realm.where(Folder.class).findAll();
+                    for (int i = 0; i < realmResultsContentsBox.size(); i++) {
+                        ContentEasy contentEasy = new ContentEasy();
+                        contentEasy.id = realmResultsContentsBox.get(i).id;
+                        contentEasy.filename = realmResultsContentsBox.get(i).cover;
+                        contentEasy.lastUpdate = realmResultsContentsBox.get(i).creationDate;
+                        contentEasy.thumbnailCover = realmResultsContentsBox.get(i).cover;
+                        contentEasy.thumbnailPath = realmResultsContentsBox.get(i).path;
+                        folderEasy.add(contentEasy);
+                    }
+                }
+            });
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+        downloadFolderCover();
+
+
+    }
+
     private void downloadFolderCover() {
 
+        if (counterFolders < folderEasy.size()) {
+            Dbg.p("FOLDER: sdownloadFolderCover");
+            ContentEasy contentEasy= folderEasy.get(counterFolders);
+            //CONTENT
+            String pathContentCover = contentEasy.thumbnailPath + contentEasy.filename;
+            Uri uriContentsFolderCover = Uri.parse(pathContentCover.replace(" ", "%20"));
+            String filenameContent = contentEasy.lastUpdate + "___" + contentEasy.filename;
+            File file = new File(getExternalFilesDir("contents"), filenameContent);
+            Dbg.p("FOLDER: pathContentCover: "+pathContentCover);
+            Dbg.p("FOLDER: filenameContent: "+filenameContent);
+
+            if (file.exists()) {
+                Dbg.p("FOLDER: esiste");
+                updateContentCover(file.getAbsolutePath(), contentEasy.id);
+                counterFolders++;
+                downloadFolderCover();
+            } else {
+                Dbg.p("FOLDER: scarico");
+                downloaderFolderCover.download(uriContentsFolderCover, "contents", filenameContent, contentEasy.id);
+            }
+
+
+
+        } else {
+            Dbg.p("FOLDER: finito");
+            stopSelf();
+            sendUpdate(100);
+            sendUpdate("end");
+        }
 
     }
 
@@ -150,15 +216,15 @@ public class ContentsService extends IntentService{
     private ListenerDowloadDoc listenerDownloadContent = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
-            Dbg.p("FILE SCARICATO: " + uri+ "ID: "+id);
+            Dbg.p("FILE SCARICATO: " + uri + "ID: " + id);
             updateContent(uri.toString(), id);
-            bContentDownload= true;
+            bContentDownload = true;
             checkContentDownload();
         }
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            Dbg.p("FILE ERRROR: "+id);
+            Dbg.p("FILE ERRROR: " + id);
 
         }
 
@@ -169,25 +235,25 @@ public class ContentsService extends IntentService{
     };
 
     private void checkContentDownload() {
-        if(bContentCoverDownload && bContentDownload){
+        if (bContentCoverDownload && bContentDownload) {
             counterContents++;
             downloadContent();
         }
     }
 
-    private ListenerDowloadDoc listenerDownloadContentCover= new ListenerDowloadDoc() {
+    private ListenerDowloadDoc listenerDownloadContentCover = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
-            Dbg.p("FILE SCARICATO: " + uri+ "ID: "+id);
+            Dbg.p("FILE SCARICATO: " + uri + "ID: " + id);
             updateContentCover(uri.toString(), id);
-            bContentCoverDownload= true;
+            bContentCoverDownload = true;
             checkContentDownload();
 
         }
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            Dbg.p("FILE ERRROR: "+id);
+            Dbg.p("FILE ERRROR: " + id);
 
         }
 
@@ -196,6 +262,52 @@ public class ContentsService extends IntentService{
             return getApplicationContext();
         }
     };
+
+
+    private ListenerDowloadDoc listenerDownloadFolderCover = new ListenerDowloadDoc() {
+        @Override
+        public void fileDownloaded(Uri uri, String mimeType, int id) {
+            Dbg.p("FOLDER: FILE SCARICATO: " + uri + "ID: " + id);
+            updateFolderCover(uri.toString(), id);
+            counterFolders++;
+            downloadFolderCover();
+        }
+
+        @Override
+        public void downloadError(String error, int errortype, int id) {
+            Dbg.p("FILE ERRROR: " + id);
+            updateFolderCover("error_"+errortype, id);
+            counterFolders++;
+            downloadFolderCover();
+
+        }
+
+        @Override
+        public Context getContext() {
+            return getApplicationContext();
+        }
+    };
+
+    private void updateFolderCover(final String uri, final int id) {
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    Folder model = realm.where(Folder.class).equalTo("id", id).findFirst();
+                    if (model != null) {
+                        model.setCoverUri(uri);
+                    }
+                }
+            });
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+    }
 
     private void updateContentCover(final String uri, final int id) {
         Realm realm = null;
@@ -216,7 +328,6 @@ public class ContentsService extends IntentService{
                 realm.close();
             }
         }
-
     }
 
     private void updateContent(final String uri, final int id) {

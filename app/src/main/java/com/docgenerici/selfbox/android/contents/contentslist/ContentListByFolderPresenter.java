@@ -1,8 +1,6 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
 
-import android.graphics.drawable.Drawable;
-
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
@@ -14,7 +12,7 @@ import java.util.List;
  * @author Giuseppe Sorce
  */
 
-public interface ContentListPresenter extends Presenter {
+public interface ContentListByFolderPresenter extends Presenter {
 
     void selectAZ();
 
@@ -22,8 +20,7 @@ public interface ContentListPresenter extends Presenter {
 
     void onSelecteFilter();
 
-    void setup(int folderdraw);
-
+    void setup(int folderdraw, int sample1, int sample2, int sample3);
 
     List<ContentDoc> getContents(String categoryContent);
 
@@ -31,9 +28,7 @@ public interface ContentListPresenter extends Presenter {
 
     ArrayList<ContentDoc> getContentsShared();
 
-    List<ContentDoc> getContentsByFolder(int id);
-
-    void setLevelView(int i);
+    ArrayList<ContentDoc> getContentFolder(ContentDoc contentSelect);
 
     interface ContentView extends BaseView {
 
@@ -44,7 +39,5 @@ public interface ContentListPresenter extends Presenter {
         void openFilterDialog();
 
         void refreshContents();
-
-        void setup();
     }
 }

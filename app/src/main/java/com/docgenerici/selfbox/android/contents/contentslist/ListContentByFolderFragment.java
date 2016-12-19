@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.GalleryAdapter;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
  * @uthor giuseppesorce
  */
 
-public class ListContentByFolderFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener {
+public class ListContentByFolderFragment extends Fragment implements ContentListByFolderPresenter.ContentView, OnItemContentClickListener {
 
 
     @BindView(R.id.etSearch)
@@ -42,25 +43,18 @@ public class ListContentByFolderFragment extends Fragment implements ContentList
     LinearLayout llAZ;
     @BindView(R.id.rvGallery)
     RecyclerView rvGallery;
-//    @BindColor(R.color.grey_filter)
-//    int grey_filter;
-//    @BindDrawable(R.drawable.sample1)
-//    Drawable sample1;
-//    @BindDrawable(R.drawable.sample2)
-//    Drawable sample2;
-//    @BindDrawable(R.drawable.sample3)
-//    Drawable sample3;
-//    @BindView(R.id.btFilter)
+
 
     private String categoryContent;
     private ArrayList<ContentDoc> contentsByFolder;
     private GalleryAdapter galleryAdapter;
+    private int idFolder;
+    private ContentListByFolderPresenter presenter;
 
-    public static ListContentByFolderFragment createInstance(ArrayList<ContentDoc> contents) {
+    public static ListContentByFolderFragment createInstance(int id) {
         ListContentByFolderFragment frag = new ListContentByFolderFragment();
         Bundle init = new Bundle();
-        Dbg.p("contents: "+contents.size());
-        init.putParcelableArrayList("contents", contents);
+        init.putInt("id", id);
         frag.setArguments(init);
         return frag;
     }
@@ -71,13 +65,14 @@ public class ListContentByFolderFragment extends Fragment implements ContentList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_contents_list, container, false);
         ButterKnife.bind(this, view);
+        presenter= SelfBoxApplicationImpl.appComponent.contentListByFolderPresenter();
         if (getArguments() != null) {
-            contentsByFolder = getArguments().getParcelableArrayList("contents");
+            idFolder = getArguments().getInt("id");
 
 
         }
 
-       createGalleryContentsItems();
+
         return  view;
     }
 

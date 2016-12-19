@@ -19,6 +19,7 @@ public class ContentDoc implements Parcelable {
     public String content;
     public boolean  isnew= false;
     public String cover;
+    public boolean isFolder;
 
 
     public ContentDoc(int type, String title, int image, String content, int typeview, String cover) {
@@ -30,7 +31,15 @@ public class ContentDoc implements Parcelable {
         this.cover= cover;
     }
 
-
+    public ContentDoc(int type, String title, int image, String content, int typeview, String cover, boolean isFolder) {
+        this.type= type;
+        this.name = title;
+        this.image= image;
+        this.content= content;
+        this.typeview= typeview;
+        this.cover= cover;
+        this.isFolder= isFolder;
+    }
 
     public ContentDoc() {
 

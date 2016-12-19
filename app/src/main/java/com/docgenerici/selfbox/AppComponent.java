@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import com.docgenerici.selfbox.android.AppModule;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.contents.MaintContentModule;
+import com.docgenerici.selfbox.android.contents.contentslist.ContentListByFolderPresenter;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentListModule;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentListPresenter;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListModule;
@@ -49,6 +50,7 @@ public interface AppComponent {
     MainContentPresenter mainContentPresenter();
 
     ContentListPresenter contentListPresenter();
+    ContentListByFolderPresenter contentListByFolderPresenter();
     ProductsListPresenter productsListPresenter();
     SyncPresenter syncPresenter();
     Environment environment();

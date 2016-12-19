@@ -20,7 +20,15 @@ public class Folder extends RealmObject{
     public String cover;
     public String coverPath;
     public long creationDate;
+    private String coverUri;
     public RealmList<ContentBox> contents;
 
 
+    public String getCoverUri() {
+        return coverUri;
+    }
+
+    public void setCoverUri(String coverUri) {
+        this.coverUri = coverUri;
+    }
 }

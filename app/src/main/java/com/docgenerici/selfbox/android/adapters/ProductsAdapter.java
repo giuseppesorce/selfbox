@@ -74,6 +74,21 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyHold
                 }
             });
 
+            if(item.getUriPdf() ==null || item.getUriPdf().length() < 2 || item.getUriPdf().contains("error_")){
+                ((MyViewHolder) viewHolder).btCp.setEnabled(false);
+                ((MyViewHolder) viewHolder).btCp.setAlpha(0.6f);
+            }else{
+                ((MyViewHolder) viewHolder).btCp.setEnabled(true);
+                ((MyViewHolder) viewHolder).btCp.setAlpha(1.0f);
+            }
+            if(item.getUriSchedaPdf() ==null || item.getUriSchedaPdf().length() < 2 || item.getUriSchedaPdf().contains("error_")){
+                ((MyViewHolder) viewHolder).btPdf.setEnabled(false);
+                ((MyViewHolder) viewHolder).btPdf.setAlpha(0.6f);
+            }else{
+                ((MyViewHolder) viewHolder).btPdf.setEnabled(true);
+                ((MyViewHolder) viewHolder).btPdf.setAlpha(1.0f);
+            }
+
         }
     }
 

@@ -46,6 +46,13 @@
             android:screenOrientation="landscape">
         </activity>
         <activity android:name=".android.pdf.PdfViewerActivity"></activity>
+        <service android:name=".android.synservices.ProductSyncService"
+            android:exported="false"
+            />
+        <service android:name=".android.synservices.ContentsService"
+            android:exported="false"
+
+            />
     </application>
 
 </manifest>

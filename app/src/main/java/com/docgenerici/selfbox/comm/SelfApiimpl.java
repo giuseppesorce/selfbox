@@ -47,6 +47,6 @@ class SelfApiImpl implements SelfApi {
 
     @Override
     public Single<ResponseBody> getProduct(String date) {
-             return selfBoxUserApi.getProducts("http://www.docgenerici.it/app/app.php",date);
+        return selfBoxUserApi.getProducts("http://www.docgenerici.it/app/app.php",date);
     }
 }

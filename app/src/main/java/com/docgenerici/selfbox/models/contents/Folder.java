@@ -1,8 +1,5 @@
 package com.docgenerici.selfbox.models.contents;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -21,6 +18,7 @@ public class Folder extends RealmObject{
     public String name;
     public String path;
     public String cover;
+    public String coverPath;
     public long creationDate;
     public RealmList<ContentBox> contents;
 

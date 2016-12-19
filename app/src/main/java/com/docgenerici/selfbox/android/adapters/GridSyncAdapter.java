@@ -43,6 +43,15 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return viewHolder;
     }
 
+    public SyncContent getSyncContentByType(int type){
+        for (int i = 0; i < syncContents.size(); i++) {
+            if(syncContents.get(i).getType() == type){
+                return  syncContents.get(i);
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SyncContent syncContent= syncContents.get(position);

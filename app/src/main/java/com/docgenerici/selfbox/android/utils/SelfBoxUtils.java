@@ -5,6 +5,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 
+import com.docgenerici.selfbox.debug.Dbg;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @uthor giuseppesorce
  */
@@ -26,5 +32,21 @@ public class SelfBoxUtils {
             return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException ex) {} catch(Exception e){}
         return "";
+    }
+
+    public static long dateConvertNumber(final String dateStr){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date convertedDate = null;
+        try {
+            convertedDate = dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+         if(convertedDate !=null){
+            return  convertedDate.getTime();
+        }else{
+            return  new Date().getTime();
+        }
     }
 }

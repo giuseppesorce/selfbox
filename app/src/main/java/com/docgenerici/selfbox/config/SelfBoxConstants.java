@@ -7,6 +7,7 @@ package com.docgenerici.selfbox.config;
 public class SelfBoxConstants {
 
     public static String pathProduct="http://www.docgenerici.it";
+    public static String pathDataProduct="http://www.docgenerici.it/app/app.php";
 
     public class TypeContent{
         public static final int PDF= 1;
@@ -36,4 +37,11 @@ public class SelfBoxConstants {
         public static final int LOGS= 5;
         public static final int PRODUCTS= 6;
     }
+
+
+    public static final String BROADCAST_ACTION ="it.docgenerici.BROADCAST";
+
+    // Defines the key for the status "extra" in an Intent
+    public static final String EXTENDED_DATA_STATUS =
+            "it.docgenerici.STATUS";
 }

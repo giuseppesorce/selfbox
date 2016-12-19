@@ -37,6 +37,7 @@
             android:layout_height="50dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
+            android:text="77750"
             android:background="@drawable/back_rounded_search" />
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView

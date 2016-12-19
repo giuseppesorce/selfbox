@@ -12,6 +12,7 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.home.HomeActivity;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
+import com.orhanobut.hawk.Hawk;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +38,7 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        Hawk.init(this).build();
         presenter= SelfBoxApplicationImpl.appComponent.startPresenter();
         presenter.setView(this);
         presenter.chekActivation();

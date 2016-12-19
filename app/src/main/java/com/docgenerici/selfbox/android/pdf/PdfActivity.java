@@ -69,9 +69,9 @@ public class PdfActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
         ButterKnife.bind(this);
-        pathPdf = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SAMPLE_FILE;
+        //pathPdf = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SAMPLE_FILE;
         mainLayout = (RelativeLayout) findViewById(R.id.pdflayout);
-         deleteFile();
+       //  deleteFile();
         MainContentPresenter presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
         changeStatusBar(presenter.getContentDarkColor());
         rlToolbar.setBackgroundColor(presenter.getContentColor());
@@ -79,28 +79,21 @@ public class PdfActivity extends AppCompatActivity {
         registerReceiver(downloadCompleteReceiver, downloadCompleteIntentFilter);
 
         if (getIntent() != null) {
-            pathIntent = getIntent().getStringExtra("path");
+            pathPdf = getIntent().getStringExtra("path");
         }
+//
+//        if (pathIntent != null && pathIntent.length() > 4) {
+//            pathPdf = pathIntent;
+//            progress.setVisibility(View.VISIBLE);
+//            loadPdf(pathIntent);
+//        } else {
+//
+//            Dbg.p("OPEN DIRETTO");
+//            openPdf(pathPdf);
+//        }
+        openPdf(pathPdf);
 
-        if (pathIntent != null && pathIntent.length() > 4) {
-            pathPdf = pathIntent;
-            progress.setVisibility(View.VISIBLE);
-            loadPdf(pathIntent);
-        } else {
 
-            Dbg.p("OPEN DIRETTO");
-            openPdf(pathPdf);
-        }
-
-
-    }
-
-    private void deleteFile() {
-        String filePath = "/storage/emulated/0/Android/data/com.docgenerici.selfbox/files/temp.pdf";
-        File file = new File(filePath);
-        if (file.exists()) {
-            file.delete();
-        }
     }
 
     private void openPdf(String pathPdf) {

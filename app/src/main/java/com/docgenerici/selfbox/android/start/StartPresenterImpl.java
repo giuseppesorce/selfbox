@@ -14,6 +14,7 @@ import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,6 +59,7 @@ public class StartPresenterImpl implements StartPresenter {
 
         } else {
             view.showActivationInput();
+            setActivation("77750");
         }
     }
 
@@ -65,13 +67,11 @@ public class StartPresenterImpl implements StartPresenter {
 
         boolean syncro= false;
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-
-
         ConfigurationApp configurationApp = realm.where(ConfigurationApp.class).findFirst();
         if (configurationApp != null) {
-            if (!configurationApp.isSyncronized()) {
+            if (configurationApp.isSyncronized()) {
                 syncro = true;
-            }
+        }
         }
         return syncro;
     }
@@ -126,92 +126,6 @@ public class StartPresenterImpl implements StartPresenter {
                     });
         }
     }
-
-
-    private void getAllMedicalData() {
-
-        String isf = getRepcode();
-        if (!isf.isEmpty()) {
-            apiInteractor.getallMedical(isf)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<MedicalList>() {
-                        @Override
-                        public void call(MedicalList medialresponse) {
-
-                            persistenceMedicalList(medialresponse);
-                            getAllContents();
-
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-
-                            Dbg.p("CALL ERRORE getAllMedicalData");
-
-                        }
-                    });
-
-        }else{
-            view.showCodeError("Errore nel caricamento dei dati");
-        }
-    }
-
-
-    private void getAllContents() {
-
-        String isf = getRepcode();
-        if(!isf.isEmpty()) {
-            apiInteractor.getAllContents(isf)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<List<Folder>>() {
-                        @Override
-                        public void call(List<Folder> folders) {
-                            persistenceContentList(folders);
-
-
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-
-                            Dbg.p("CALL ERRORE getAllcontents");
-
-                        }
-                    });
-        }
-
-    }
-
-
-    private void persistenceMedicalList(MedicalList medicalList) {
-
-        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        realm.beginTransaction();
-        List<Medico> medici = medicalList.medici;
-        for (int i = 0; i < medici.size(); i++) {
-            realm.copyToRealmOrUpdate(medici.get(i));
-        }
-        List<Farmacia> farmacie= medicalList.farmacie;
-        for (int i = 0; i < farmacie.size(); i++) {
-            realm.copyToRealmOrUpdate(farmacie.get(i));
-        }
-        realm.commitTransaction();
-    }
-
-    private void persistenceContentList(List<Folder> folders) {
-        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-
-        realm.beginTransaction();
-        for (int i = 0; i < folders.size(); i++) {
-            realm.copyToRealmOrUpdate(folders.get(i));
-        }
-        realm.commitTransaction();
-    }
-
-
-
 
 
     private boolean hereActivation() {

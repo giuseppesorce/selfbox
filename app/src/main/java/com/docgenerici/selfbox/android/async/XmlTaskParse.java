@@ -2,11 +2,13 @@ package com.docgenerici.selfbox.android.async;
 
 import com.artifex.mupdfdemo.AsyncTask;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.android.sync.OnSyncData;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.products.Formulazione;
 import com.docgenerici.selfbox.models.products.Prodotto;
 import com.docgenerici.selfbox.models.products.Product;
 import com.docgenerici.selfbox.models.products.Risorsa;
+import com.docgenerici.selfbox.models.products.RisorsaDb;
 import com.docgenerici.selfbox.models.products.Scheda;
 
 import org.w3c.dom.Document;
@@ -30,8 +32,13 @@ import io.realm.Realm;
  */
 
 public class XmlTaskParse extends AsyncTask<String, Void, Void> {
+    private OnSyncData onSyncData;
     private Prodotto prodotto;
     private ArrayList<Prodotto> products;
+
+    public XmlTaskParse(OnSyncData onSyncData) {
+        this.onSyncData= onSyncData;
+    }
 
     @Override
     protected Void doInBackground(String... params) {
@@ -160,6 +167,7 @@ public class XmlTaskParse extends AsyncTask<String, Void, Void> {
                                     risorsa.status = risorsaTag.getAttribute("status");
                                     risorsa.uri = risorsaTag.getAttribute("uri");
                                     risorsa.tipo = risorsaTag.getAttribute("tipo");
+                                    risorsa.published = risorsaTag.getAttribute("published");
                                     prodotto.risorse.add(risorsa);
 
                                 }
@@ -206,36 +214,17 @@ public class XmlTaskParse extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        realm.beginTransaction();
-        for (int i = 0; i < products.size(); i++) {
-            Prodotto prodotto = products.get(i);
-            Scheda scheda = new Scheda();
-            Risorsa risorsaScheda= prodotto.risorse.get(0);
-            scheda.published= risorsaScheda.published;
-            scheda.uri= risorsaScheda.uri;
-            scheda.status= risorsaScheda.status;
-            scheda.tipo= risorsaScheda.tipo;
-            ArrayList<Formulazione> formulazioni= prodotto.formulazioni;
-            for (int j = 0; j < formulazioni.size(); j++) {
-                Product product= new Product();
-                product.nome= prodotto.nome;
-                product.scheda= scheda;
-                product.denominazione_en= formulazioni.get(j).denominazione_en;
-                product.denominazione_it= formulazioni.get(j).denominazione_it;
-                product.rcp= formulazioni.get(j).risorse.get(0).uri;
-                product.originatore= formulazioni.get(j).originatore;
-                product.noFCDL= formulazioni.get(j).noFCDL;
-                product.classeSnn= formulazioni.get(j).classeSSN;
-                product.aic= formulazioni.get(j).aic;
-                product.categoria_farmacologica= prodotto.categoria_farmacologica;
-                realm.copyToRealmOrUpdate(product);
-            }
-
-
-        }
-        realm.commitTransaction();
-        super.onPostExecute(result);
+         super.onPostExecute(result);
+//        for (int i = 0; i < products.size(); i++) {
+//            Prodotto prodotto= products.get(i);
+//            Dbg.p("**********Prodotto["+i+"]= "+prodotto.nome);
+//            Risorsa scheda= prodotto.risorse.get(0);
+//            Dbg.p("Scheda: "+scheda.filename);
+//            if(scheda.filename.length() < 1){
+//                Dbg.p("ERRORE:_ "+prodotto.nome);
+//            }
+//        }
+       onSyncData.onXmlParsed(products);
 
     }
 }

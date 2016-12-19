@@ -1,24 +1,43 @@
 package com.docgenerici.selfbox.android.sync;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.GridSyncAdapter;
+import com.docgenerici.selfbox.android.home.HomeActivity;
+import com.docgenerici.selfbox.android.synservices.ContentsService;
+import com.docgenerici.selfbox.android.synservices.ProductSyncService;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncContent;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class SyncActivity extends AppCompatActivity implements SyncPresenter.SyncView{
 
@@ -31,6 +50,13 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
     private SyncPresenter presenter;
     private GridSyncAdapter gridSyncAdapter;
     private ArrayList<SyncContent> syncContents;
+    private static final String[] PERMISSIONS = new String[]{
+            WRITE_EXTERNAL_STORAGE,
+            READ_EXTERNAL_STORAGE,
+            INTERNET
+    };
+    private Intent intentContent;
+    private Intent intentProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +66,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         presenter = SelfBoxApplicationImpl.appComponent.syncPresenter();
         presenter.setView(this);
         presenter.setup();
+
     }
 
     @OnClick(R.id.btCancel)
@@ -59,24 +86,53 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
     @Override
     public void setup() {
+        if(Build.VERSION.SDK_INT >= 23) {
+            checkPermissions();
+        }else{
+            createGridSync();
+        }
+    }
 
+    private void checkPermissions() {
+        for (String permission : PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
+                return;
+            }
+        }
+    }
 
-        GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
-        syncContents = new ArrayList<>();
-        syncContents.add(new SyncContent("Contenuti", 0));
-        syncContents.add(new SyncContent("Briefcase", 0));
-        syncContents.add(new SyncContent("Anagrafiche", 0));
-        syncContents.add(new SyncContent("Logs", 0));
-        syncContents.add(new SyncContent("Informazioni personali", 0));
-        syncContents.add(new SyncContent("Catalogo prodotti", 0));
-        gridSyncAdapter = new GridSyncAdapter(this, syncContents);
-        int spanCount = 2; // 3 columns
-        int spacing = 50; // 50px
-        boolean includeEdge = false;
-        rvGrid.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-        rvGrid.setLayoutManager(gridLayout);
-        rvGrid.setAdapter(gridSyncAdapter);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (!areAllPermissionsGranted(requestCode, grantResults)) {
+            Toast.makeText(this, "Devi accettare tutti i permessi per poter usare l' applicazione", Toast.LENGTH_SHORT).show();
+        }else{
+            createGridSync();
+        }
+    }
 
+private void createGridSync(){
+    GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
+    syncContents= presenter.getContents();
+    gridSyncAdapter = new GridSyncAdapter(this, syncContents);
+    int spanCount = 2; // 3 columns
+    int spacing = 50; // 50px
+    boolean includeEdge = false;
+    rvGrid.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+    rvGrid.setLayoutManager(gridLayout);
+    rvGrid.setAdapter(gridSyncAdapter);
+}
+
+    private boolean areAllPermissionsGranted(int requestCode, @NonNull int[] grantResults) {
+        if (requestCode == 1 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -84,6 +140,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         progress.setVisibility(View.VISIBLE);
         tvSend.setEnabled(false);
         tvSend.setAlpha(0.6f);
+
     }
 
     @Override
@@ -91,11 +148,70 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         progress.setVisibility(View.GONE);
         tvSend.setEnabled(true);
         tvSend.setAlpha(1.0f);
+
+        if(intentProduct !=null){
+            stopService(intentProduct);
+        }  if(intentContent !=null){
+            stopService(intentContent);
+        }
     }
 
+    @Override
+    public void startProductService() {
+       intentProduct= new Intent(this, ProductSyncService.class);
+        startService(intentProduct);
+    }
+
+    @Override
+    public void updatePercentage() {
+        gridSyncAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showCodeError(String error) {
+
+    }
+
+    @Override
+    public void startContentsService() {
+        intentContent= new Intent(this, ContentsService.class);
+        startService(intentContent);
+    }
+
+    @Override
+    public void gotoHome() {
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
+    }
 
     @Override
     public void onBackPressed() {
         finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+    }
+
+    //Defining broadcast receiver
+    private BroadcastReceiver MyReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            int type = intent.getIntExtra("type", 0);
+            int percentage = intent.getIntExtra("percentage", 0);
+            presenter.onSyncMessage(type, percentage, message);
+
+        }
+    };
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
+        super.onStop();
+
+    }
+
 }

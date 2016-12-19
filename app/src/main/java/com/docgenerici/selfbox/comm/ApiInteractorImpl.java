@@ -17,10 +17,8 @@ class ApiInteractorImpl implements ApiInteractor {
 
     private CommApi api;
 
-
     public ApiInteractorImpl(CommApi api) {
         this.api = api;
-
     }
 
     @Override
@@ -42,6 +40,4 @@ class ApiInteractorImpl implements ApiInteractor {
     public Single<ResponseBody> getProduct(String date) {
         return api.getProduct(date);
     }
-
-
 }

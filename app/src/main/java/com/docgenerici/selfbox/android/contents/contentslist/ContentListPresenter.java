@@ -27,13 +27,15 @@ public interface ContentListPresenter extends Presenter {
 
     List<ContentDoc> getContents(String categoryContent);
 
-    void setShare(int position);
+    void setShare(ContentDoc position);
 
     ArrayList<ContentDoc> getContentsShared();
 
     List<ContentDoc> getContentsByFolder(int id);
 
     void setLevelView(int i);
+
+    int getLevelView();
 
     interface ContentView extends BaseView {
 

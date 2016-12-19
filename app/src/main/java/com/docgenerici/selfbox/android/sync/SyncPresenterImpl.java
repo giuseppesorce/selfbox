@@ -7,6 +7,7 @@ import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.SyncContent;
 import com.docgenerici.selfbox.models.contents.Folder;
@@ -74,7 +75,6 @@ public class SyncPresenterImpl implements SyncPresenter {
         allDownloads.put(SelfBoxConstants.ContentSyncType.CONTENTS, false);
         allDownloads.put(SelfBoxConstants.ContentSyncType.PRODUCTS, false);
         checkEndSync();
-
         SyncContent syncContent = null;
         syncContent = getContentByType(SelfBoxConstants.ContentSyncType.PERSONAL);
         if (syncContent != null) {
@@ -91,10 +91,13 @@ public class SyncPresenterImpl implements SyncPresenter {
         }
         view.updatePercentage();
         getAllMedicalData();
-        getProduct();
+       getProduct();
         getAllContents();
 
+
     }
+
+
 
     @Override
     public void stopSync() {
@@ -352,6 +355,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                     .subscribe(new Action1<List<Folder>>() {
                         @Override
                         public void call(List<Folder> folders) {
+
                             persistenceContentList(folders);
 
                         }

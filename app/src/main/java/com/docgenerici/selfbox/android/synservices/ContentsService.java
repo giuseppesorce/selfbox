@@ -225,6 +225,9 @@ public class ContentsService extends IntentService {
         @Override
         public void downloadError(String error, int errortype, int id) {
             Dbg.p("FILE ERRROR: " + id);
+            updateContent("error_"+error, id);
+            bContentDownload = true;
+            checkContentDownload();
 
         }
 
@@ -254,6 +257,9 @@ public class ContentsService extends IntentService {
         @Override
         public void downloadError(String error, int errortype, int id) {
             Dbg.p("FILE ERRROR: " + id);
+            updateContentCover("error_"+error, id);
+            bContentCoverDownload = true;
+            checkContentDownload();
 
         }
 

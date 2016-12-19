@@ -13,6 +13,7 @@ public class ConfigurationApp extends RealmObject {
     @PrimaryKey
     private int id;
     private boolean syncronized;
+    private String mailText;
 
     public boolean isSyncronized() {
         return syncronized;
@@ -20,5 +21,13 @@ public class ConfigurationApp extends RealmObject {
 
     public void setSyncronized(boolean syncronized) {
         this.syncronized = syncronized;
+    }
+
+    public String getMailText() {
+        return mailText;
+    }
+
+    public void setMailText(String mailText) {
+        this.mailText = mailText;
     }
 }

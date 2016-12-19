@@ -1,6 +1,8 @@
 package com.docgenerici.selfbox.android.contents;
 
 
+import com.docgenerici.selfbox.comm.ApiInteractor;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +16,7 @@ public class MaintContentModule {
 
   @Provides
   @Singleton
-  MainContentPresenter provideMainContentPresenter() {
-    return new MainContentPresenterImpl();
+  MainContentPresenter provideMainContentPresenter(ApiInteractor apiInteractor) {
+    return new MainContentPresenterImpl(apiInteractor);
   }
 }

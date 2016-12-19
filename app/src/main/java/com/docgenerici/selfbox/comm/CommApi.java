@@ -1,9 +1,11 @@
 package com.docgenerici.selfbox.comm;
 
 
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
 import java.util.List;
 
@@ -32,4 +34,6 @@ public interface CommApi {
     Single<ResponseBody> getProduct(String date);
 
 
+    Single<EmailText> getEmailText();
+     Single<ResponseBody> shareData(ShareDataSend shareDataSend);
 }

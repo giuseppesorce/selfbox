@@ -19,6 +19,7 @@ import android.widget.VideoView;
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.debug.Dbg;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +45,7 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
     private boolean controllerOn = false;
     private float pixelMoveHide = 1650.0f;
     private CountDownTimer hideCountDown;
+    private String pathVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,37 +55,50 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         showHideController(true);
 
-//        final Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
-//                + R.raw.video);
-//        videoView.setVideoURI(video);
-//        videoView.requestFocus();
-//
-//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                startTimer();
-//            }
-//        });
-//
-//        videoView.start();
-//        vProgressPlay.setPivotX(0);
-//        videoView.setOnTouchListener(this);
-//        backControler.setOnTouchListener(this);
-//
-//
-//        hideCountDown = new CountDownTimer(5000, 5000) {
-//
-//            public void onTick(long millisUntilFinished) {
-//
-//            }
-//
-//            public void onFinish() {
-//                controllerOn = false;
-//                showHideController(false);
-//            }
-//        };
-//
-//        btPlayPause.setBackgroundResource(R.drawable.ic_pause);
+        if (getIntent() != null) {
+            pathVideo= getIntent().getStringExtra("path");
+        }
+        if(pathVideo !=null && !pathVideo.isEmpty()){
+            File file= new File(pathVideo);
+            if(file.exists()){
+                final Uri video = Uri.fromFile(new File(pathVideo));
+                videoView.setVideoURI(video);
+                videoView.requestFocus();
+
+                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        startTimer();
+                    }
+                });
+                //
+                videoView.start();
+                vProgressPlay.setPivotX(0);
+                videoView.setOnTouchListener(this);
+                backControler.setOnTouchListener(this);
+
+
+                hideCountDown = new CountDownTimer(5000, 5000) {
+
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    public void onFinish() {
+                        controllerOn = false;
+                        showHideController(false);
+                    }
+                };
+
+                btPlayPause.setBackgroundResource(R.drawable.ic_pause);
+
+            }
+        }
+
+        Dbg.p("pathVideo: "+pathVideo);
+
+
+
     }
 
 

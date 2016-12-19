@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.BindDrawable;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,16 +64,17 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @BindDrawable(R.drawable.sample3)
     Drawable sample3;
     @BindView(R.id.btFilter)
-
-
     Button btFilter;
+    @BindView(R.id.tvTitle)
+    TextView tvTitle;
+    @BindString(R.string.contenuti)
+    String strContenuti;
     private ContentListPresenter presenter;
     private GalleryAdapter galleryAdapter;
     private FilterDialog filtersDialog;
     private ContentActivityInterface activityInterface;
     private String categoryContent;
     private ContentDoc contentSelect;
-    private ListContentByFolderFragment listContentByFolderFrag;
     private GridLayoutManager gridLayout;
     private int spanCount = 3; // 3 columns
     private int spacing = 40; // 50px
@@ -118,6 +121,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     }
 
     private void createGalleryContentsItems() {
+        tvTitle.setText(strContenuti);
         rvGallery.setLayoutManager(gridLayout);
         presenter.setLevelView(0);
         galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), this);
@@ -194,19 +198,18 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public void onItemClick(View view, int position) {
 
         contentSelect = galleryAdapter.getItemPosition(position);
-
         if (contentSelect.type == SelfBoxConstants.TypeContent.FOLDER) {
+            tvTitle.setText(strContenuti + " / " + contentSelect.name);
             createGalleryContentsItemsFromFolder(contentSelect.id);
-
-
         } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
-                startActivity(new Intent(getActivity(), VideoActivity.class));
+               Intent intentVideo= new Intent(getActivity(), VideoActivity.class);
+                intentVideo.putExtra("path", contentSelect.content);
+                startActivity(intentVideo);
             } else {
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", contentSelect.content);
                 if (contentSelect.content != null) {
-                    Dbg.p("contentSelect.content: " + contentSelect.content);
                     startActivity(intent);
                 }
             }
@@ -224,34 +227,18 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     @Override
     public void onSelectShare(int position) {
-        presenter.setShare(position);
-
+        ContentDoc contentSelectShare = galleryAdapter.getItemPosition(position);
+        presenter.setShare(contentSelectShare);
     }
 
-    private void showFragment(Fragment frag, String tag, int container) {
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(container, frag, "fragment");
-
-        try {
-            ft.commitAllowingStateLoss();
-        } catch (Exception ex) {
-
+    public boolean canBack() {
+        if (presenter.getLevelView() == 0) {
+            return true;
+        } else if (presenter.getLevelView() == 1) {
+            createGalleryContentsItems();
+            return false;
         }
+        return true;
 
-    }
-
-    public boolean isFolder() {
-        boolean isfolder = true;
-        if (listContentByFolderFrag != null) {
-            isfolder = false;
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.remove(listContentByFolderFrag);
-            listContentByFolderFrag = null;
-
-        }
-        return isfolder;
     }
 }

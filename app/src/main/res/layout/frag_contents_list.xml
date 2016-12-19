@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
-            android:text="Contenuti"
+            android:text="@string/contenuti"
             android:textColor="#6b6a6a"
             android:textSize="26sp" />
 

@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import com.docgenerici.selfbox.android.AppModule;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.contents.MaintContentModule;
-import com.docgenerici.selfbox.android.contents.contentslist.ContentListByFolderPresenter;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentListModule;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentListPresenter;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListModule;
@@ -32,7 +31,7 @@ import io.realm.Realm;
  * @author Giuseppe Sorce
  */
 @Singleton
-@Component(modules = {AppModule.class, RetrofitModule.class,SyncModule.class, SelfApiModule.class,EnvironmentModule.class,
+@Component(modules = {AppModule.class, RetrofitModule.class, SyncModule.class, SelfApiModule.class, EnvironmentModule.class,
         StartModule.class, HomeModule.class, MaintContentModule.class, ContentListModule.class, ProductListModule.class, ApiModule.class
 })
 public interface AppComponent {
@@ -50,8 +49,10 @@ public interface AppComponent {
     MainContentPresenter mainContentPresenter();
 
     ContentListPresenter contentListPresenter();
-    ContentListByFolderPresenter contentListByFolderPresenter();
+
     ProductsListPresenter productsListPresenter();
+
     SyncPresenter syncPresenter();
+
     Environment environment();
 }

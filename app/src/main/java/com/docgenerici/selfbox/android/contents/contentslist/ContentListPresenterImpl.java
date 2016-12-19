@@ -1,13 +1,10 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
-import android.support.v4.view.ViewPager;
-
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
-import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.contents.TypeContent;
 
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -31,7 +27,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     private int folderSample;
     private ArrayList<ContentDoc> folderContentList;
     private int levelView;
-    private ArrayList<ContentDoc> folderContentFolderList;
+    private ArrayList<ContentDoc> folderContentFolderList=new ArrayList<>();
 
 
     @Override
@@ -98,8 +94,10 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                 TypeContent typeContent = folderRoot.contents.get(j).type;
                 if (typeContent.descr.equalsIgnoreCase("pdf")) {
                     contentDoc.type = SelfBoxConstants.TypeContent.PDF;
-                } else if (typeContent.descr.equalsIgnoreCase("video")) {
+                } else if (typeContent.descr.equalsIgnoreCase("evisual")) {
                     contentDoc.type = SelfBoxConstants.TypeContent.VISUAL;
+                } else if (typeContent.descr.equalsIgnoreCase("video")) {
+                    contentDoc.type = SelfBoxConstants.TypeContent.VIDEO;
                 }
                 contentDoc.content = folderRoot.contents.get(j).getLocalfilePath();
                 if (folderRoot.contents.get(j).getLocalthumbnailPath() == null || folderRoot.contents.get(j).getLocalthumbnailPath().length() < 2 || folderRoot.contents.get(j).getLocalthumbnailPath().contains("error_")) {
@@ -123,17 +121,25 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     }
 
     @Override
-    public void setShare(int position) {
-        contents.get(position).shared = !contents.get(position).shared;
+    public void setShare(ContentDoc contentDoc) {
+        contentDoc.shared = !contentDoc.shared;
         view.refreshContents();
     }
 
     @Override
     public ArrayList<ContentDoc> getContentsShared() {
         ArrayList<ContentDoc> contentsShared = new ArrayList<>();
-        for (int i = 0; i < contents.size(); i++) {
-            if (contents.get(i).shared) {
-                contentsShared.add(contents.get(i));
+        if(levelView ==0) {
+            for (int i = 0; i < contents.size(); i++) {
+                if (contents.get(i).shared) {
+                    contentsShared.add(contents.get(i));
+                }
+            }
+        }else  if(levelView== 1){
+            for (int i = 0; i < folderContentFolderList.size(); i++) {
+                if (folderContentFolderList.get(i).shared) {
+                    contentsShared.add(folderContentFolderList.get(i));
+                }
             }
         }
         return contentsShared;
@@ -143,7 +149,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public ArrayList<ContentDoc> getContentsByFolder(int id) {
         folderContentFolderList.clear();
-        folderContentFolderList = new ArrayList<ContentDoc>();
+         folderContentFolderList = new ArrayList<ContentDoc>();
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         Folder folder = realm.where(Folder.class).equalTo("id", id).findFirst();
         if (folder != null) {
@@ -151,13 +157,18 @@ public class ContentListPresenterImpl implements ContentListPresenter {
             for (int j = 0; j < folder.contents.size(); j++) {
                 ContentDoc contentDoc = new ContentDoc();
                 contentDoc.id = folder.contents.get(j).id;
+
+                contentDoc.name = folder.contents.get(j).name;
                 TypeContent typeContent = folder.contents.get(j).type;
-                if (typeContent.descr.equalsIgnoreCase("pdf")) {
+                  if (typeContent.descr.equalsIgnoreCase("pdf")) {
                     contentDoc.type = SelfBoxConstants.TypeContent.PDF;
-                } else if (typeContent.descr.equalsIgnoreCase("video")) {
+                } else if (typeContent.descr.equalsIgnoreCase("evisual")) {
                     contentDoc.type = SelfBoxConstants.TypeContent.VISUAL;
+                } else if (typeContent.descr.equalsIgnoreCase("video")) {
+                    contentDoc.type = SelfBoxConstants.TypeContent.VIDEO;
                 }
                 contentDoc.content = folder.contents.get(j).getLocalfilePath();
+                Dbg.p("getContentsByFolder contentDoc.content: "+contentDoc.content);
                 if (folder.contents.get(j).getLocalthumbnailPath() == null || folder.contents.get(j).getLocalthumbnailPath().length() < 2 || folder.contents.get(j).getLocalthumbnailPath().contains("error_")) {
                     contentDoc.image = folderSample;
                 } else {
@@ -180,6 +191,11 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void setLevelView(int level) {
         levelView = level;
+    }
+
+    @Override
+    public int getLevelView() {
+        return levelView;
     }
 
     private int getType(String name) {

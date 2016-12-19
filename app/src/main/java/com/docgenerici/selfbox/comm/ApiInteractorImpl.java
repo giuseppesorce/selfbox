@@ -1,9 +1,11 @@
 package com.docgenerici.selfbox.comm;
 
 
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
 import java.util.List;
 
@@ -39,5 +41,15 @@ class ApiInteractorImpl implements ApiInteractor {
     @Override
     public Single<ResponseBody> getProduct(String date) {
         return api.getProduct(date);
+    }
+
+    @Override
+    public Single<EmailText> getEmailText() {
+        return api.getEmailText();
+    }
+
+    @Override
+    public Single<ResponseBody> shareData(ShareDataSend shareDataSend) {
+        return api.shareData(shareDataSend);
     }
 }

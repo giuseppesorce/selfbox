@@ -1,15 +1,13 @@
 package com.docgenerici.selfbox.comm;
 
 
-
-import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.comm.storage.Environment;
-import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.shares.ShareDataSend;
 import com.docgenerici.selfbox.retrofit.SelfBoxUserApi;
-
 
 import java.util.List;
 
@@ -48,5 +46,15 @@ class SelfApiImpl implements SelfApi {
     @Override
     public Single<ResponseBody> getProduct(String date) {
         return selfBoxUserApi.getProducts("http://www.docgenerici.it/app/app.php",date);
+    }
+
+    @Override
+    public Single<EmailText> getEmailText() {
+        return selfBoxUserApi.getEmailText("http://docportal-staging.docgenerici.it/mail-template/");
+    }
+
+    @Override
+    public Single<ResponseBody> shareData(ShareDataSend shareDataSend) {
+        return selfBoxUserApi.shareData(shareDataSend);
     }
 }

@@ -7,6 +7,7 @@ import com.docgenerici.selfbox.android.utils.SelfBoxUtils;
 import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
@@ -50,28 +51,28 @@ public class StartPresenterImpl implements StartPresenter {
         if (hereActivation()) {
 //            view.showProgressToSend();
 //            getAllMedicalData();
-            if(syncronized()){
+            if (syncronized()) {
                 view.gotoHome();
 
-            }else{
+            } else {
                 view.gotoSyncActivity();
             }
 
         } else {
             view.showActivationInput();
-            setActivation("77750");
+            getEmailText();
+
         }
     }
 
     private boolean syncronized() {
-
-        boolean syncro= false;
+        boolean syncro = false;
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         ConfigurationApp configurationApp = realm.where(ConfigurationApp.class).findFirst();
         if (configurationApp != null) {
             if (configurationApp.isSyncronized()) {
                 syncro = true;
-        }
+            }
         }
         return syncro;
     }
@@ -97,6 +98,7 @@ public class StartPresenterImpl implements StartPresenter {
                                 InfoApp infoApp = new InfoApp();
                                 infoApp.line = loginResponse.line;
                                 infoApp.name = loginResponse.name;
+                                infoApp.surname = loginResponse.surname;
                                 infoApp.repCode = loginResponse.repCode;
                                 infoApp.result = loginResponse.result;
                                 infoApp.selfBoxContentDownloadUrl = loginResponse.selfBoxContentDownloadUrl;
@@ -104,10 +106,10 @@ public class StartPresenterImpl implements StartPresenter {
                                 infoApp.selfBoxProductDownloadUrl = loginResponse.selfBoxProductDownloadUrl;
                                 realm.copyToRealmOrUpdate(infoApp);
                                 realm.commitTransaction();
-                                if(syncronized()){
+                                if (syncronized()) {
                                     view.gotoHome();
 
-                                }else{
+                                } else {
                                     view.gotoSyncActivity();
                                 }
 
@@ -138,19 +140,47 @@ public class StartPresenterImpl implements StartPresenter {
                 activated = true;
             }
         }
-        Dbg.p("activated: " + activated);
         return activated;
     }
 
-    private String getRepcode() {
-        String repCode = "";
-        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        InfoApp appInfo = realm.where(InfoApp.class).findFirst();
-        if (appInfo != null) {
-            if (!appInfo.repCode.isEmpty()) {
-                repCode = appInfo.repCode;
-            }
-        }
-        return repCode;
+    private void getEmailText() {
+        Dbg.p("getEmailText");
+        apiInteractor.getEmailText()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<EmailText>() {
+                    @Override
+                    public void call(EmailText emailText) {
+                        if(emailText !=null){
+                            Dbg.p("getEmailText ok");
+                            storeEmailText(emailText.mailTemplateDefaultText);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                        Dbg.p("CALL ERRORE getProduct: " + throwable.getLocalizedMessage());
+
+                    }
+                });
     }
+
+    private void storeEmailText(String text) {
+        Dbg.p("getEmailText: "+text);
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        ConfigurationApp configurationApp = realm.where(ConfigurationApp.class).findFirst();
+        realm.beginTransaction();
+        if(configurationApp ==null){
+            configurationApp = new ConfigurationApp();
+            configurationApp.setMailText(text);
+            realm.copyToRealmOrUpdate(configurationApp);
+        }
+
+        realm.commitTransaction();
+
+        setActivation("77750");
+
+    }
+
 }

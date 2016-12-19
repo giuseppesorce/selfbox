@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -22,8 +23,11 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.contentslist.ContentsListFragment;
 import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
+import com.docgenerici.selfbox.android.contents.share.ShareInterface;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.shares.ShareData;
 
 import java.util.ArrayList;
 
@@ -164,7 +168,13 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
         shareDialog = ShareContentsDialogFragment.createInstance(contentsShared);
+        shareDialog.setShare(new ShareInterface() {
 
+            @Override
+            public void onShareData(ShareData shareData) {
+                presenter.shareData(shareData);
+            }
+        });
         shareDialog.show(ft, "shareDialog");
     }
 
@@ -218,6 +228,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
 
     }
 
+
     private class ContentsAdapter extends FragmentStatePagerAdapter {
 
 
@@ -229,7 +240,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                   contentFrag= ContentsListFragment.createInstance(category);
+                    contentFrag = ContentsListFragment.createInstance(category);
                     return contentFrag;
                 case 1:
                     return ProductListFragment.createInstance();
@@ -255,7 +266,8 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         if (vPager.getCurrentItem() == 1) {
             vPager.setCurrentItem(0);
         } else {
-            if(contentFrag !=null && contentFrag.isFolder()) {
+
+            if (contentFrag != null && contentFrag.canBack()) {
                 finish();
             }
         }

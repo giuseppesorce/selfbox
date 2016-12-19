@@ -1,12 +1,16 @@
 package com.docgenerici.selfbox.retrofit;
 
+import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.shares.ShareData;
+import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -37,5 +41,11 @@ public interface SelfBoxUserApi {
     @GET
     Single<ResponseBody> getProducts(@Url String url ,  @Query("DT_RIF") String date);
 
+    @GET
+    Single<EmailText> getEmailText(@Url String url);
+
+
+    @POST("/share-contents/")
+    Single<ResponseBody> shareData(@Body ShareDataSend shareDataSend);
 
 }

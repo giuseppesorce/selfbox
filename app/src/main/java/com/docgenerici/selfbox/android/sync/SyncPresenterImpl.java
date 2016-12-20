@@ -7,9 +7,9 @@ import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
-import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.SyncContent;
+import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
@@ -66,6 +66,7 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     @Override
     public void startSync() {
+        configSyncData();
         Hawk.put("contentsServiceDestroy", false);
         Hawk.put("productServiceDestroy", false);
         view.onStartSync();
@@ -97,6 +98,21 @@ public class SyncPresenterImpl implements SyncPresenter {
 
 
     }
+
+    private void configSyncData() {
+        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        realm.beginTransaction();
+        SyncDataCheck syncData= new SyncDataCheck();
+        syncData.anagraphic=0;
+        syncData.contents=0;
+        syncData.id=1;
+        syncData.products=0;
+        syncData.started= true;
+        realm.copyToRealmOrUpdate(syncData);
+        realm.commitTransaction();
+    }
+
+
 
     private void donwloadListinoPrezzi() {
         view.loadPricelist();
@@ -176,6 +192,26 @@ public class SyncPresenterImpl implements SyncPresenter {
         }
 
         return syncContents;
+    }
+
+    @Override
+    public void checkSyncData() {
+        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+
+        SyncDataCheck syncData= realm.where(SyncDataCheck.class).findFirst();
+        if(syncData !=null && syncData.started){
+            if(syncData.contents ==1 && syncData.products==1){
+                realm.beginTransaction();
+                syncData.contents=0;
+                syncData.products=0;
+                syncData.started=false;
+                realm.copyToRealmOrUpdate(syncData);
+                realm.commitTransaction();
+                syncContents=null;
+                getContents();
+                view.gotoHome();
+            }
+        }
     }
 
 

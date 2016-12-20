@@ -23,6 +23,8 @@ public interface SyncPresenter extends Presenter {
 
     ArrayList<SyncContent> getContents();
 
+    void checkSyncData();
+
     interface SyncView extends BaseView {
 
         void setup();

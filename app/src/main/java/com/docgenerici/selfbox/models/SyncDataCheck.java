@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
  *         <p>......</p>
  */
 
-public class SyncDataObj extends RealmObject {
+public class SyncDataCheck extends RealmObject {
 
 
     @PrimaryKey
@@ -16,6 +16,7 @@ public class SyncDataObj extends RealmObject {
     public int contents;
     public int products;
     public int anagraphic;
+    public boolean started;
 
 
 }

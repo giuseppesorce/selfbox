@@ -1,6 +1,7 @@
 package com.docgenerici.selfbox.android.contents.share;
 
 import android.app.DialogFragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,8 @@ import com.docgenerici.selfbox.android.adapters.ListContentShareAdapter;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.adapters.SimpleDividerItemDecoration;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
 import com.docgenerici.selfbox.models.shares.ShareData;
@@ -58,16 +61,24 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
     EditText etText;
     String doctorCode="6969";
     String doctorName="";
+    String category="";
 
     private ArrayList<ContentDoc> contentsShared;
     private ListContentShareAdapter adapter;
     private InfoApp infoApp;
     private ShareInterface shareInterface;
+    private MedicoDto medicoSelected;
+    private FarmaciaDto lastPharmaUser;
 
-    public static ShareContentsDialogFragment createInstance(ArrayList<ContentDoc> contentsShared) {
+    public static ShareContentsDialogFragment createInstance(ArrayList<ContentDoc> contentsShared, String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser) {
         ShareContentsDialogFragment frag = new ShareContentsDialogFragment();
         Bundle init = new Bundle();
         init.putParcelableArrayList("contentsShared", contentsShared);
+        init.putParcelable("medicoSelected", medicoSelected);
+        init.putParcelable("lastPharmaUser", lastPharmaUser);
+        init.putString("category", category);
+
+
         frag.setArguments(init);
         return frag;
     }
@@ -87,6 +98,11 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
         if(getArguments() !=null){
             contentsShared= getArguments().getParcelableArrayList("contentsShared");
+            medicoSelected= getArguments().getParcelable("medicoSelected");
+            lastPharmaUser= getArguments().getParcelable("lastPharmaUser");
+            category= getArguments().getString("category");
+
+
         }
         npDay.setMinValue(1);
         npDay.setMaxValue(31);
@@ -149,14 +165,45 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
                     }else{
                         surname="";
                     }
-                    email= email.replace("[fullname]", doctorName);
+                    email= email.replace("[fullname]", getToName());
                    tvFrom.setText(name +" "+surname);
                 }
                 etText.setText(Html.fromHtml(email));
 
             }
         }
+
         return root;
+    }
+
+    private String getToName(){
+        String name="";
+        switch ((category)) {
+
+            case "isf":
+name="Utente";
+                doctorCode="6969";
+
+                break;
+            case "medico":
+            if(medicoSelected !=null){
+                name= medicoSelected.name+ " "+medicoSelected.surname;
+                doctorCode= ""+medicoSelected.id;
+
+            }
+
+
+
+                break;
+            case "pharma":
+                if(lastPharmaUser !=null){
+                    name= lastPharmaUser.fullname;
+                    doctorCode=""+lastPharmaUser.id;
+
+                }
+                break;
+        }
+        return  name;
     }
 
     @OnClick(R.id.btSend)

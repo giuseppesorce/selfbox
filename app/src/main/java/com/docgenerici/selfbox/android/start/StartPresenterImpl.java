@@ -49,8 +49,7 @@ public class StartPresenterImpl implements StartPresenter {
     @Override
     public void chekActivation() {
         if (hereActivation()) {
-//            view.showProgressToSend();
-//            getAllMedicalData();
+
             if (syncronized()) {
                 view.gotoHome();
 

@@ -171,7 +171,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     public void showShareContents(ArrayList<ContentDoc> contentsShared) {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared);
+        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared, category,medicoSelected, lastPharmaUser);
         shareDialog.setShare(new ShareInterface() {
 
             @Override
@@ -180,6 +180,11 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
             }
         });
         shareDialog.show(ft, "shareDialog");
+        /*
+         category = getIntent().getStringExtra("category");
+            medicoSelected = getIntent().getParcelableExtra("medico");
+            lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
+         */
     }
 
     private void setNavigation(int nav) {

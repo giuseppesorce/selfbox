@@ -3,15 +3,14 @@ package com.docgenerici.selfbox.android.synservices;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.docgenerici.selfbox.android.downloader.DownloaderDoc;
 import com.docgenerici.selfbox.android.downloader.ListenerDowloadDoc;
-import com.docgenerici.selfbox.android.sync.StopReceiver;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.ContentEasy;
 import com.docgenerici.selfbox.models.contents.Folder;
@@ -187,9 +186,34 @@ public class ContentsService extends IntentService {
 
         } else {
             Dbg.p("FOLDER: finito");
+            updateContentSyncData();
             stopSelf();
             sendUpdate(100);
             sendUpdate("end");
+        }
+
+    }
+
+    private void updateContentSyncData() {
+        Dbg.p("SYNCDATA modifico contenuti");
+
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    SyncDataCheck model = realm.where(SyncDataCheck.class).equalTo("id", 1).findFirst();
+                    if (model != null) {
+                        model.contents=1;
+                    }
+                }
+            });
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
         }
 
     }

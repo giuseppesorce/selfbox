@@ -11,6 +11,7 @@ import com.docgenerici.selfbox.android.downloader.ListenerDowloadDoc;
 import com.docgenerici.selfbox.android.utils.SelfBoxUtils;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.docgenerici.selfbox.models.products.Product;
 
 import java.io.File;
@@ -159,11 +160,36 @@ public class ProductSyncService extends IntentService {
                 downloadContent();
             }
         } else {
+            updateProducSyncData();
             Dbg.p("FINITO");
             stopSelf();
             sendUpdate(100);
             sendUpdate("end");
         }
+    }
+
+    private void updateProducSyncData() {
+        Dbg.p("SYNCDATA modifico prodotti");
+
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    SyncDataCheck model = realm.where(SyncDataCheck.class).equalTo("id", 1).findFirst();
+                    if (model != null) {
+                        model.products=1;
+                    }
+                }
+            });
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+
     }
 
 

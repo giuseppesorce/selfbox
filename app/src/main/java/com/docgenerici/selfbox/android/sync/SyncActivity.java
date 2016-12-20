@@ -194,7 +194,7 @@ private void createGridSync(){
         downloaderPrice = DownloaderDoc.newInstance(new ListenerDowloadDoc() {
             @Override
             public void fileDownloaded(Uri uri, String mimeType, int id) {
-                Dbg.p("LISTINO CARICATO");
+                Dbg.p("LISTINO CARICATO: "+uri.toString());
             }
 
             @Override
@@ -227,6 +227,9 @@ private void createGridSync(){
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+        presenter.checkSyncData();
+
+
     }
 
     //Defining broadcast receiver
@@ -247,5 +250,7 @@ private void createGridSync(){
         super.onStop();
 
     }
+
+
 
 }

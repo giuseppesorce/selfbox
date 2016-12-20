@@ -40,5 +40,7 @@ public interface SyncPresenter extends Presenter {
         void startContentsService();
 
         void gotoHome();
+
+        void loadPricelist();
     }
 }

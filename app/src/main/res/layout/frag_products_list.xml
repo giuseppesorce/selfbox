@@ -10,7 +10,7 @@
         android:id="@+id/llheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlHeaderFunc"
+        android:layout_below="@+id/rlPrice"
 
         android:orientation="horizontal"
         android:layout_marginTop="30dp"
@@ -136,6 +136,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_az" />
+
+
+
         </LinearLayout>
 
 
@@ -167,6 +170,51 @@
             android:paddingRight="30dp"
             android:text="@string/legenda"
             android:textSize="18sp" />
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+    android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/rlPrice"
+
+       android:layout_below="@+id/rlHeaderFunc"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:background="#c8b6b6b6"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:background="#f3f3f3"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_type_pdf"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content" />
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:layout_width="wrap_content"
+                android:textColor="#ff4444"
+                android:text="Ultimo listino prezzi"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content" />
+            
+        </LinearLayout>
+
+
+
+
     </RelativeLayout>
 
 </RelativeLayout>

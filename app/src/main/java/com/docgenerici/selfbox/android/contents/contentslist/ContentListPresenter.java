@@ -37,6 +37,12 @@ public interface ContentListPresenter extends Presenter {
 
     int getLevelView();
 
+    void selectFilter(String filterText);
+
+    void selectLastFilter();
+
+    void setCategory(String categoryContent);
+
     interface ContentView extends BaseView {
 
         void showSelectAz();
@@ -48,5 +54,7 @@ public interface ContentListPresenter extends Presenter {
         void refreshContents();
 
         void setup();
+
+        void applyFilter(ArrayList<ContentDoc> filtered);
     }
 }

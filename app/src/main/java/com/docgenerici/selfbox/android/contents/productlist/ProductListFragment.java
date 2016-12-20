@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -33,6 +34,7 @@ import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.models.products.Product;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,6 +55,8 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
 
     @BindView(R.id.rvProduct)
     RecyclerView rvProduct;
+    @BindView(R.id.rlPrice)
+    RelativeLayout rlPrice;
     private ProductsListPresenter presenter;
     private ProductsAdapter adapter;
     private FilterProductDialog filtersDialog;
@@ -80,7 +84,6 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         presenter = SelfBoxApplicationImpl.appComponent.productsListPresenter();
         presenter.setView(this);
         presenter.setup();
-
         if (getArguments() != null) {
 
         }
@@ -110,6 +113,21 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         etSearch.addTextChangedListener(this);
         return view;
 
+    }
+
+    @OnClick(R.id.rlPrice)
+    void onSelectMenuPrice(){
+        File file= new File(getActivity().getExternalFilesDir("contents"),  "listinoprezzi.pdf");
+        if(file.exists()) {
+            String path = file.getAbsolutePath();
+            Dbg.p(" file.getAbsoluteFile(): "+file.getAbsoluteFile());
+//            if (path.contains("file://")) {
+//                path = path.replace("file://", "");
+//            }
+            Intent intent = new Intent(getActivity(), PdfActivity.class);
+            intent.putExtra("path", path);
+            getActivity().startActivity(intent);
+        }
     }
 
 

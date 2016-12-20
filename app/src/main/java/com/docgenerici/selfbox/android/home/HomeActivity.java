@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     public void showMedico(MedicoDto lastMedicoUser) {
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "medico");
-        intent.putExtra("medico", "lastMedicoUser");
+        intent.putExtra("medico", lastMedicoUser);
         startActivity(intent);
     }
 
@@ -161,6 +161,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     public void onSelectPharmaUser(FarmaciaDto lastPharmaUser) {
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
+        intent.putExtra("lastPharmaUser", lastPharmaUser);
         startActivity(intent);
     }
 

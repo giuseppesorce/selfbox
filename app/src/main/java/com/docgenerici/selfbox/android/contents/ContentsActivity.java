@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,8 +24,9 @@ import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareInterface;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
-import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.shares.ShareData;
 
 import java.util.ArrayList;
@@ -77,6 +77,8 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     private ShareContentsDialogFragment shareDialog;
     private String category;
     private ContentsListFragment contentFrag;
+    private MedicoDto medicoSelected;
+    private FarmaciaDto lastPharmaUser;
 
 
     @Override
@@ -90,7 +92,9 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         vPager.addOnPageChangeListener(this);
         if (getIntent() != null) {
             category = getIntent().getStringExtra("category");
-            presenter.setCategory(category);
+            medicoSelected = getIntent().getParcelableExtra("medico");
+            lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
+            presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }
         presenter.setup(category);
 

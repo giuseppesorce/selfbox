@@ -56,7 +56,7 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
     TextView tvFrom;
     @BindView(R.id.etText)
     EditText etText;
-    String doctorCode="";
+    String doctorCode="6969";
     String doctorName="";
 
     private ArrayList<ContentDoc> contentsShared;

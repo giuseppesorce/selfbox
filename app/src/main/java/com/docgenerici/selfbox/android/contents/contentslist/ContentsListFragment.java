@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,7 @@ import butterknife.OnClick;
  * @author Giuseppe Sorce
  */
 
-public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener {
+public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener ,TextWatcher {
 
     @BindView(R.id.etSearch)
     EditText etSearch;
@@ -91,6 +93,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
         presenter.setView(this);
+        presenter.setCategory(categoryContent);
         presenter.setup(R.drawable.foldersample);
 
         presenter.selectAZ();
@@ -116,6 +119,8 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_search_green, null);
                 break;
         }
+
+        etSearch.addTextChangedListener(this);
 
         return view;
     }
@@ -187,6 +192,13 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     }
 
     @Override
+    public void applyFilter(ArrayList<ContentDoc> filtered) {
+        if(galleryAdapter !=null){
+            galleryAdapter.changeItems(filtered);
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
@@ -240,5 +252,30 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
         return true;
 
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String filterText = etSearch.getText().toString().toLowerCase();
+        searchText(filterText);
+    }
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+
+    private void searchText(String filterText) {
+
+        if(filterText.length() > 2){
+           presenter.selectFilter(filterText);
+        }else{
+            presenter.selectLastFilter();
+        }
     }
 }

@@ -91,12 +91,17 @@ public class SyncPresenterImpl implements SyncPresenter {
         }
         view.updatePercentage();
         getAllMedicalData();
-       getProduct();
+        getProduct();
         getAllContents();
+        donwloadListinoPrezzi();
 
 
     }
 
+    private void donwloadListinoPrezzi() {
+        view.loadPricelist();
+
+    }
 
 
     @Override
@@ -300,7 +305,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                         @Override
                         public void call(Throwable throwable) {
 
-                            Dbg.p("CALL ERRORE getAllMedicalData");
+                            Dbg.p("CALL ERRORE getAllMedicalData: "+throwable.getLocalizedMessage());
 
                         }
                     });
@@ -363,7 +368,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                         @Override
                         public void call(Throwable throwable) {
 
-                            Dbg.p("CALL ERRORE getAllcontents");
+                            Dbg.p("CALL ERRORE getAllcontents "+throwable.getLocalizedMessage());
 
                         }
                     });

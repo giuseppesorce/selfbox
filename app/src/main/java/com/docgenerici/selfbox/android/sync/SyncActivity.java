@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.GridSyncAdapter;
+import com.docgenerici.selfbox.android.downloader.DownloaderDoc;
+import com.docgenerici.selfbox.android.downloader.ListenerDowloadDoc;
 import com.docgenerici.selfbox.android.home.HomeActivity;
 import com.docgenerici.selfbox.android.synservices.ContentsService;
 import com.docgenerici.selfbox.android.synservices.ProductSyncService;
@@ -29,6 +32,7 @@ import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncContent;
 import com.orhanobut.hawk.Hawk;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -57,6 +61,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
     };
     private Intent intentContent;
     private Intent intentProduct;
+    private DownloaderDoc downloaderPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +187,35 @@ private void createGridSync(){
     public void gotoHome() {
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+    }
+
+    @Override
+    public void loadPricelist() {
+        downloaderPrice = DownloaderDoc.newInstance(new ListenerDowloadDoc() {
+            @Override
+            public void fileDownloaded(Uri uri, String mimeType, int id) {
+                Dbg.p("LISTINO CARICATO");
+            }
+
+            @Override
+            public void downloadError(String error, int errortype, int id) {
+                Dbg.p("LISTINO ERRORE");
+            }
+
+            @Override
+            public Context getContext() {
+                return getApplicationContext();
+            }
+        });
+        File file= new File(getExternalFilesDir("contents"),  "listinoprezzi.pdf");
+        File backup= new File(getExternalFilesDir("contents"),  "delete_listinoprezzi.pdf");
+        if(file.exists()){
+            file.renameTo(backup);
+        }
+        Uri uri= Uri.parse("http://www.docgenerici.it/xpdf/examples/listino_prezzi.php");
+        downloaderPrice.download(uri, "contents", "listinoprezzi.pdf", 12234);
+
+       // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
     }
 
     @Override

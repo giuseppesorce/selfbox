@@ -168,6 +168,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return contentDocs.get(position);
     }
 
+    public void changeItems(ArrayList<ContentDoc> filtered) {
+        contentDocs.clear();
+        contentDocs.addAll(filtered);
+        Dbg.p("changeItems: "+filtered.size());
+        notifyDataSetChanged();
+
+    }
+
     public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View vNew;
         ImageView ivImageBackground;

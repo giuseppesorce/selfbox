@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.shares.ShareData;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public interface MainContentPresenter extends Presenter {
 
     ArrayList<ContentDoc> getContentsShared();
 
-    void setCategory(String category);
+    void setCategories(String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser);
 
     int getContentColor();
 

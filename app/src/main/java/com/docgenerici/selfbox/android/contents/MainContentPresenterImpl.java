@@ -10,6 +10,8 @@ import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.contents.Folder;
+import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
+import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.shares.ShareData;
 import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
@@ -91,7 +93,7 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     }
 
     @Override
-    public void setCategory(String category) {
+    public void setCategories(String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser) {
        category_content= category;
     }
 

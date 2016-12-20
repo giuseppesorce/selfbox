@@ -110,6 +110,7 @@
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:alpha="0.5"
+                android:visibility="gone"
                 android:id="@+id/btCamera"
                 android:background="@drawable/ic_cameraimage" />
 

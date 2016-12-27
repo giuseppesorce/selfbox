@@ -141,7 +141,7 @@
         android:layout_height="150dp">
         <ImageView
             android:layout_width="70dp"
-            android:src="@drawable/cellular"
+            android:src="@drawable/email"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
             android:layout_height="70dp" />
@@ -155,18 +155,18 @@
             android:layout_height="wrap_content">
             <com.docgenerici.selfbox.android.custom.texts.CTextView
                 android:layout_width="wrap_content"
-                android:text="Per assistenza tecnica chiamare"
+                android:text="Per assistenza tecnica contatta:"
                 android:layout_marginTop="5dp"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:layout_height="wrap_content" />
         <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:layout_width="match_parent"
-            android:text="089 30 61 447"
+            android:text="Helpdesk"
             android:textColor="#ffffff"
             android:gravity="center"
             android:textStyle="bold"
-            android:textSize="37dp"
+            android:textSize="40sp"
             anytext:font="robotobold"
             android:layout_height="wrap_content" />
             <com.docgenerici.selfbox.android.custom.texts.CTextView

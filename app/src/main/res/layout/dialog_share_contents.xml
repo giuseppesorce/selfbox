@@ -4,9 +4,9 @@
     android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#9b000000"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:background="#9b000000"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -67,11 +67,11 @@
                     anytext:font="robotobold" />
 
                 <com.docgenerici.selfbox.android.custom.texts.CTextView
+                    android:id="@+id/tvFrom"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_toRightOf="@+id/tvLabelFrom"
                     android:gravity="center_vertical"
-                    android:id="@+id/tvFrom"
                     android:text="Nome Farmacista"
                     android:textColor="#7b7b7b"
                     android:textSize="20sp" />
@@ -108,10 +108,10 @@
                     android:background="@color/color_text_home" />
 
                 <EditText
+                    android:id="@+id/etText"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:layout_below="@+id/vLine2"
-                    android:id="@+id/etText"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/back_square_share_insertmessage"
                     android:gravity="top"
@@ -124,6 +124,7 @@
                 android:layout_height="500dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+
                 android:orientation="vertical">
 
                 <com.docgenerici.selfbox.android.custom.texts.CTextView
@@ -145,19 +146,21 @@
                 <com.docgenerici.selfbox.android.custom.texts.CTextView
                     android:id="@+id/tvSendAfter"
                     android:layout_width="wrap_content"
+
                     android:layout_height="30dp"
                     android:layout_above="@+id/llPickers"
                     android:text="Invio differito"
                     android:textSize="20sp"
                     android:textStyle="italic"
+                    android:visibility="gone"
                     anytext:font="robotoitalic" />
 
                 <LinearLayout
                     android:id="@+id/llPickers"
                     android:layout_width="match_parent"
-
                     android:layout_height="160dp"
                     android:orientation="horizontal"
+                    android:visibility="invisible"
                     android:weightSum="100">
 
                     <NumberPicker

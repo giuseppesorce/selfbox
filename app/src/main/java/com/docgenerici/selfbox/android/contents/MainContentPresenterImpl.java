@@ -48,23 +48,13 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
     @Override
     public void setup(String category) {
-        if(category.equalsIgnoreCase("isf")){
-            createContentsIsf();
-        }
-
+        category_content= category;
         view.setupView();
-    }
-
-    private void createContentsIsf() {
-
-        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        RealmResults<Folder> folder = realm.where(Folder.class).findAll();
-
     }
 
     @Override
     public float getScale(int width, int width1) {
-        return (float)width1 /(float)(width);
+        return (float) width1 / (float) (width);
     }
 
     @Override
@@ -84,7 +74,7 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
     @Override
     public void setShareContents(ArrayList<ContentDoc> contentsShared) {
-        this.contentsShared= contentsShared;
+        this.contentsShared = contentsShared;
     }
 
     @Override
@@ -94,22 +84,22 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
     @Override
     public void setCategories(String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser) {
-       category_content= category;
+        category_content = category;
     }
 
     @Override
     public int getContentColor() {
 
-        int color= 0;
-        Resources res= SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch (category_content){
+        int color = 0;
+        Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
+        switch (category_content) {
 
             case "isf":
-                return  res.getColor(R.color.orange);
+                return res.getColor(R.color.orange);
             case "medico":
-                return  res.getColor(R.color.blu);
+                return res.getColor(R.color.blu);
             case "pharma":
-                return  res.getColor(R.color.green);
+                return res.getColor(R.color.green);
         }
         return color;
 
@@ -117,19 +107,18 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     }
 
 
-
     @Override
     public int getContentDarkColor() {
-        int color= 0;
-        Resources res= SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch ((category_content)){
+        int color = 0;
+        Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
+        switch ((category_content)) {
 
             case "isf":
-                return  res.getColor(R.color.orange_dark);
+                return res.getColor(R.color.orange_dark);
             case "medico":
-                return  res.getColor(R.color.blu_dark);
+                return res.getColor(R.color.blu_dark);
             case "pharma":
-                return  res.getColor(R.color.green_dark);
+                return res.getColor(R.color.green_dark);
         }
         return color;
     }
@@ -142,32 +131,32 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     @Override
     public Drawable getBackGroundhelp() {
 
-        Resources res= SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch ((category_content)){
+        Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
+        switch ((category_content)) {
 
             case "isf":
-                return  res.getDrawable(R.drawable.ic_help_contents_orange);
+                return res.getDrawable(R.drawable.ic_help_contents_orange);
             case "medico":
-                return  res.getDrawable(R.drawable.ic_help_blu);
+                return res.getDrawable(R.drawable.ic_help_blu);
             case "pharma":
-                return  res.getDrawable(R.drawable.ic_help_contents);
+                return res.getDrawable(R.drawable.ic_help_contents);
         }
         return null;
     }
 
     @Override
     public void shareData(ShareData shareData) {
-        ShareDataSend shareDataSend= new ShareDataSend();
-        String[] ids= shareData.contentIds.split(",");
-        shareDataSend.contentIds= new ArrayList<>();
+        ShareDataSend shareDataSend = new ShareDataSend();
+        String[] ids = shareData.contentIds.split(",");
+        shareDataSend.contentIds = new ArrayList<>();
         for (int i = 0; i < ids.length; i++) {
             shareDataSend.contentIds.add(Integer.parseInt(ids[i]));
         }
-        shareDataSend.isfCode= shareData.isfCode;
-        shareDataSend.doctorCode=shareData.doctorCode;
-        shareDataSend.doctorEmail= shareData.doctorEmail;
-        shareDataSend.emailCustomText= shareData.emailCustomText;
-        shareDataSend.requestDate= shareData.requestDate;
+        shareDataSend.isfCode = shareData.isfCode;
+        shareDataSend.doctorCode = shareData.doctorCode;
+        shareDataSend.doctorEmail = shareData.doctorEmail;
+        shareDataSend.emailCustomText = shareData.emailCustomText;
+        shareDataSend.requestDate = shareData.requestDate;
         apiInteractor.shareData(shareDataSend)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

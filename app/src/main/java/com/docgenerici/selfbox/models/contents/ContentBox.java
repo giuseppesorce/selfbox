@@ -33,8 +33,9 @@ public class ContentBox extends RealmObject {
     public boolean alertHighlight;
     //    public boolean approved;
     public boolean visible;
-      public boolean active;
-//    public Editor editor;
+    public boolean approved;
+    public boolean active;
+    //    public Editor editor;
     public TypeContent type;
     public RealmList<Target> targets;
     private String localfilePath;
@@ -55,11 +56,5 @@ public class ContentBox extends RealmObject {
     public void setLocalthumbnailPath(String localthumbnailPath) {
         this.localthumbnailPath = localthumbnailPath;
     }
-
-
-//    public String getType(){
-//        return  type.name;
-//    }
-
 
 }

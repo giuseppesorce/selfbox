@@ -49,14 +49,14 @@ public class StartPresenterImpl implements StartPresenter {
     @Override
     public void chekActivation() {
         if (hereActivation()) {
-
+//
             if (syncronized()) {
                 view.gotoHome();
 
             } else {
                 view.gotoSyncActivity();
             }
-
+//
         } else {
             view.showActivationInput();
             getEmailText();
@@ -99,6 +99,8 @@ public class StartPresenterImpl implements StartPresenter {
                                 infoApp.name = loginResponse.name;
                                 infoApp.surname = loginResponse.surname;
                                 infoApp.repCode = loginResponse.repCode;
+                                infoApp.lineCode = loginResponse.lineCode;
+                                infoApp.lineShortCode = loginResponse.lineShortCode;
                                 infoApp.result = loginResponse.result;
                                 infoApp.selfBoxContentDownloadUrl = loginResponse.selfBoxContentDownloadUrl;
                                 infoApp.selfBoxIsfDrugstoreDownloadUrl = loginResponse.selfBoxIsfDrugstoreDownloadUrl;
@@ -135,7 +137,7 @@ public class StartPresenterImpl implements StartPresenter {
         InfoApp appInfo = realm.where(InfoApp.class).findFirst();
         if (appInfo != null) {
             if (!appInfo.repCode.isEmpty()) {
-                Dbg.p("appInfo.repCode: " + appInfo.repCode);
+
                 activated = true;
             }
         }
@@ -143,15 +145,13 @@ public class StartPresenterImpl implements StartPresenter {
     }
 
     private void getEmailText() {
-        Dbg.p("getEmailText");
         apiInteractor.getEmailText()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<EmailText>() {
                     @Override
                     public void call(EmailText emailText) {
-                        if(emailText !=null){
-                            Dbg.p("getEmailText ok");
+                        if (emailText != null) {
                             storeEmailText(emailText.mailTemplateDefaultText);
                         }
                     }
@@ -166,11 +166,10 @@ public class StartPresenterImpl implements StartPresenter {
     }
 
     private void storeEmailText(String text) {
-        Dbg.p("getEmailText: "+text);
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         ConfigurationApp configurationApp = realm.where(ConfigurationApp.class).findFirst();
         realm.beginTransaction();
-        if(configurationApp ==null){
+        if (configurationApp == null) {
             configurationApp = new ConfigurationApp();
             configurationApp.setMailText(text);
             realm.copyToRealmOrUpdate(configurationApp);
@@ -178,7 +177,6 @@ public class StartPresenterImpl implements StartPresenter {
 
         realm.commitTransaction();
 
-        setActivation("77750");
 
     }
 

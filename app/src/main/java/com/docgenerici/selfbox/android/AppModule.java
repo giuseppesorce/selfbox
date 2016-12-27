@@ -100,8 +100,12 @@ public class AppModule {
 
     @Provides
     Realm provideRealm() {
-
         Realm.init(context);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
         return Realm.getDefaultInstance();
     }
 

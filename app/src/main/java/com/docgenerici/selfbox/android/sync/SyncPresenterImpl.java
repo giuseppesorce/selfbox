@@ -10,6 +10,7 @@ import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.MedicalList;
 import com.docgenerici.selfbox.models.SyncContent;
 import com.docgenerici.selfbox.models.SyncDataCheck;
+import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
@@ -25,12 +26,16 @@ import com.orhanobut.hawk.Hawk;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -417,7 +422,45 @@ public class SyncPresenterImpl implements SyncPresenter {
             realm.copyToRealmOrUpdate(folders.get(i));
         }
         realm.commitTransaction();
-        Dbg.p("persistenceContentList OK");
+        ArrayList<Integer> ids= new ArrayList<>();
+        long dateNow= new Date().getTime();
+        Dbg.p("DATENOW: "+dateNow);
+        for (int i = 0; i < folders.size(); i++) {
+            RealmList<ContentBox> contentBoxs = folders.get(i).contents;
+            for (int j = 0; j < contentBoxs.size(); j++) {
+                ContentBox contentBox = contentBoxs.get(j);
+                if(!contentBox.active || !contentBox.visible || contentBox.approved || (dateNow > contentBox.expirationDate)){
+                    ids.add(contentBox.id);
+                }
+            }
+        }
+        RealmQuery<ContentBox> query = realm.where(ContentBox.class);
+        if (ids.size() == 0) {
+
+            query = query.equalTo("id", -30000);
+        } else {
+            int i = 0;
+            for (int id : ids) {
+
+                if (i++ > 0) {
+                    query = query.or();
+                }
+                query = query.equalTo("id", id);
+            }
+        }
+        final RealmResults<ContentBox> result = query.findAll();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                // Delete all matches
+                result.deleteAllFromRealm();
+            }
+        });
+
+
+
         view.startContentsService();
     }
 

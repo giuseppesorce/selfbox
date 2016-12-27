@@ -27,14 +27,16 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private boolean canShare= true;
     private OnItemContentClickListener onClickListener;
     Context context;
     List<ContentDoc> contentDocs = new ArrayList<>();
 
-    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, OnItemContentClickListener listener) {
+    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, boolean canshare,  OnItemContentClickListener listener) {
         this.context = context;
         this.contentDocs = contentDocList;
         this.onClickListener = listener;
+        this.canShare= canshare;
     }
 
 
@@ -73,6 +75,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((MyHolder) holder).ivType.setImageResource(R.drawable.ic_type_play);
                 break;
         }
+
         if (contentDoc.shared) {
             ((MyHolder) holder).ivShare.setImageResource(R.drawable.ic_share_red);
         } else {
@@ -86,6 +89,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         });
+
 
         String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
 
@@ -119,7 +123,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (contentDoc.isFolder) {
             ((MyHolder) holder).ivShare.setVisibility(View.INVISIBLE);
         } else {
-            ((MyHolder) holder).ivShare.setVisibility(View.VISIBLE);
+
+            if(canShare){
+                ((MyHolder) holder).ivShare.setVisibility(View.VISIBLE);
+            }else{
+                ((MyHolder) holder).ivShare.setVisibility(View.INVISIBLE);
+            }
+
         }
 
         if (contentDoc.typeview == SelfBoxConstants.TypeViewContent.NEW) {
@@ -169,10 +179,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void changeItems(List<ContentDoc> filtered) {
-        contentDocs.clear();
-        contentDocs= filtered;
-        Dbg.p("changeItems: "+filtered.size());
-        notifyDataSetChanged();
+         contentDocs= filtered;
+         notifyDataSetChanged();
 
     }
 

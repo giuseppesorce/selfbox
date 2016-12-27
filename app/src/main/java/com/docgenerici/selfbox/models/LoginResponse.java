@@ -15,5 +15,7 @@ public class LoginResponse {
     public String selfBoxProductDownloadUrl;
     public String selfBoxIsfDrugstoreDownloadUrl;
     public boolean result;
+    public String lineShortCode;
+    public String lineCode;
 
 }

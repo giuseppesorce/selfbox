@@ -13,10 +13,12 @@ public class InfoApp extends RealmObject {
     public String name;
     public String surname;
     public String sessionId;
-    public String line;
     public String selfBoxContentDownloadUrl;
     public String selfBoxProductDownloadUrl;
     public String selfBoxIsfDrugstoreDownloadUrl;
+    public String line;
+    public String lineShortCode;
+    public String lineCode;
     public boolean result;
 
 }

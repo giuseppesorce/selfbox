@@ -34,6 +34,7 @@ import com.docgenerici.selfbox.android.video.VideoActivity;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.docgenerici.selfbox.models.contents.Filters;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ import butterknife.OnClick;
  * @author Giuseppe Sorce
  */
 
-public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener ,TextWatcher {
+public class ContentsListFragment extends Fragment implements ContentListPresenter.ContentView, OnItemContentClickListener, TextWatcher {
 
     @BindView(R.id.etSearch)
     EditText etSearch;
@@ -84,6 +85,14 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private boolean includeEdge = false;
 
 
+    public static ContentsListFragment createInstance(String category) {
+        ContentsListFragment frag = new ContentsListFragment();
+        Bundle init = new Bundle();
+        init.putString("category", category);
+        frag.setArguments(init);
+        return frag;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,8 +105,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         presenter.setView(this);
         presenter.setCategory(categoryContent);
         presenter.setup(R.drawable.foldersample);
-
-        presenter.selectAZ();
         etSearch.clearFocus();
         String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
         Resources res = getResources();
@@ -122,21 +129,25 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
 
         etSearch.addTextChangedListener(this);
-
         return view;
     }
 
     @Override
     public void setup() {
         gridLayout = new GridLayoutManager(getActivity(), 3);
-
-
         rvGallery.setLayoutManager(gridLayout);
-        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), this);
+        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), getCanShare(), this);
         rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         rvGallery.setAdapter(galleryAdapter);
+    }
 
-
+    private boolean getCanShare() {
+        boolean canshare = true;
+        if (categoryContent.equalsIgnoreCase("isf")) {
+            canshare = false;
+        }
+        Dbg.p("canshare: " + canshare);
+        return canshare;
     }
 
     private void createGalleryContentsItems() {
@@ -144,13 +155,13 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         presenter.setLevelView(0);
         galleryAdapter.changeItems(presenter.getContents(categoryContent));
 
-       // rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        // rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
     }
 
     private void createGalleryContentsItemsFromFolder(int id) {
         presenter.setLevelView(1);
-        galleryAdapter.changeItems( presenter.getContentsByFolder(id));
+        galleryAdapter.changeItems(presenter.getContentsByFolder(id));
 
     }
 
@@ -186,6 +197,13 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
         filtersDialog = FilterDialog.createInstance();
+        filtersDialog.setListener(new FilterListener(){
+
+            @Override
+            public void onSelectFilter(Filters filterList) {
+                presenter.filterTypes(filterList);
+            }
+        });
         filtersDialog.show(ft, "filtersDialog");
     }
 
@@ -198,12 +216,17 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     }
 
 
-
     @Override
     public void applyFilter(ArrayList<ContentDoc> filtered) {
-        if(galleryAdapter !=null){
+        if (galleryAdapter != null) {
             galleryAdapter.changeItems(filtered);
         }
+    }
+
+    @Override
+    public void updateContents() {
+        presenter.getUpdateContents();
+
     }
 
     @Override
@@ -223,15 +246,15 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
             createGalleryContentsItemsFromFolder(contentSelect.id);
         } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
-               Intent intentVideo= new Intent(getActivity(), VideoActivity.class);
+                Intent intentVideo = new Intent(getActivity(), VideoActivity.class);
                 intentVideo.putExtra("path", contentSelect.content);
                 startActivity(intentVideo);
-            } else  if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
-                Intent intentVisual= new Intent(getActivity(), EvisualActivity.class);
+            } else if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
+                Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
                 startActivity(intentVisual);
 
-            } else  if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
+            } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", contentSelect.content);
                 if (contentSelect.content != null) {
@@ -242,13 +265,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     }
 
-    public static ContentsListFragment createInstance(String category) {
-        ContentsListFragment frag = new ContentsListFragment();
-        Bundle init = new Bundle();
-        init.putString("category", category);
-        frag.setArguments(init);
-        return frag;
-    }
 
     @Override
     public void onSelectShare(int position) {
@@ -277,17 +293,17 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         String filterText = etSearch.getText().toString().toLowerCase();
         searchText(filterText);
     }
+
     @Override
     public void afterTextChanged(Editable s) {
 
     }
 
-
     private void searchText(String filterText) {
 
-        if(filterText.length() > 2){
-           presenter.selectFilter(filterText);
-        }else{
+        if (filterText.length() > 2) {
+            presenter.selectFilter(filterText);
+        } else {
             presenter.selectLastFilter();
         }
     }

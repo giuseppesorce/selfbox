@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.artifex.mupdfdemo.MuPDFCore;
 import com.artifex.mupdfdemo.MuPDFPageAdapter;
@@ -81,18 +82,11 @@ public class PdfActivity extends AppCompatActivity {
         if (getIntent() != null) {
             pathPdf = getIntent().getStringExtra("path");
         }
-//
-//        if (pathIntent != null && pathIntent.length() > 4) {
-//            pathPdf = pathIntent;
-//            progress.setVisibility(View.VISIBLE);
-//            loadPdf(pathIntent);
-//        } else {
-//
-//            Dbg.p("OPEN DIRETTO");
-//            openPdf(pathPdf);
-//        }
-        openPdf(pathPdf);
-
+        if(new File(pathPdf).exists()) {
+            openPdf(pathPdf);
+        }else{
+            Toast.makeText(this, "Risorsa non disponibile. Prova a rifare la sincronizzazione", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

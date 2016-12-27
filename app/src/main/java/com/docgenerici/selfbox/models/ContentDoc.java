@@ -20,6 +20,9 @@ public class ContentDoc implements Parcelable {
     public boolean  isnew= false;
     public String cover;
     public boolean isFolder;
+    public boolean alertHighlight;
+    public String keywords;
+    public long lastUpdate;
 
 
     public ContentDoc(int type, String title, int image, String content, int typeview, String cover) {

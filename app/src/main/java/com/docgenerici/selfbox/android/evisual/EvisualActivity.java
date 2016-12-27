@@ -31,6 +31,7 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
 
     private String pathVisual;
     private ArrayList<File> filesContent= new ArrayList<>();
+    private Button buttonCliked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
             }
-            Dbg.p("FOLDER: "+filesContent.size());
+
             if(filesContent.size() > 0){
                 createButtons();
                 loadContentHtml(filesContent.get(0));
@@ -78,6 +79,10 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
             llContainerButton.addView(cButton, params);
             cButton.setId(i);
             cButton.setOnClickListener(this);
+            if(i==0){
+                cButton.setAlpha(0.5f);
+                buttonCliked= cButton;
+            }
 
         }
     }
@@ -126,10 +131,13 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if(v instanceof Button){
+            if(buttonCliked !=null){
+                buttonCliked.setAlpha(1.0f);
+            }
             String n = ((Button) v).getText().toString();
-            Dbg.p("N: "+n);
+                    buttonCliked= (Button)v;
+            buttonCliked.setAlpha(0.5f);
             loadVistual(n);
-
         }
     }
 

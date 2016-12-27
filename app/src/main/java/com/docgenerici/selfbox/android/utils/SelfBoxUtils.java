@@ -51,7 +51,6 @@ public class SelfBoxUtils {
     }
 
     public static String  getCategoryColor(String categoria_farmacologica) {
-        Dbg.p("getCategoryColor categoria_farmacologica "+ categoria_farmacologica);
         if(categoria_farmacologica.contains("ltri prodotti terapeutici")){
             return "#c3ab36";
         }else if(categoria_farmacologica.toLowerCase().contains("ardiovascolari")){
@@ -83,7 +82,6 @@ public class SelfBoxUtils {
         }else if(categoria_farmacologica.toLowerCase().contains("sistema muscolo")){
             return "#00708a";
         }else if(categoria_farmacologica.toLowerCase().contains("antiinfettivi")){
-            Dbg.p("antiifettivi ritorno");
             return "#fff68f";
         }
         return "#000000";

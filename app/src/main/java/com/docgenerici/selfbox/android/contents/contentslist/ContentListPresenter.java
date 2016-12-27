@@ -1,11 +1,10 @@
 package com.docgenerici.selfbox.android.contents.contentslist;
 
 
-import android.graphics.drawable.Drawable;
-
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.contents.Filters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,10 @@ public interface ContentListPresenter extends Presenter {
 
     void setCategory(String categoryContent);
 
+void getUpdateContents();
+
+    void filterTypes(Filters filterList);
+
     interface ContentView extends BaseView {
 
         void showSelectAz();
@@ -56,5 +59,7 @@ public interface ContentListPresenter extends Presenter {
         void setup();
 
         void applyFilter(ArrayList<ContentDoc> filtered);
+
+        void updateContents();
     }
 }

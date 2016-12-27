@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.contents.contentslist.FilterListener;
+import com.docgenerici.selfbox.models.contents.Filters;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -46,6 +48,7 @@ public class FilterDialog extends DialogFragment {
     Drawable dwCheck;
     @BindDrawable(R.drawable.ic_check_uncheck)
     Drawable dwUnCheck;
+    private FilterListener filterListener;
 
     public static FilterDialog createInstance() {
         FilterDialog frag = new FilterDialog();
@@ -89,6 +92,20 @@ public class FilterDialog extends DialogFragment {
         } else {
             tvAvvisi.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
+        filterListener.onSelectFilter(getFilterList());
+    }
+
+    private Filters getFilterList() {
+        Filters filters= new Filters();
+        filters.video= filterVideo;
+        filters.alertHighlight= filterAvvisi;
+        filters.videoIntervista= filterVideo;
+        filters.documents= filterDocumenti;
+        filters.eVisual= filterVisual;
+        if(filterVideo && filterAvvisi && filterVideo && filterDocumenti && filterVisual){
+            filters.all= true;
+        }
+        return filters;
     }
 
     @OnClick(R.id.tvDocumenti)
@@ -99,7 +116,7 @@ public class FilterDialog extends DialogFragment {
         } else {
             tvDocumenti.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-
+        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVideo)
@@ -110,7 +127,7 @@ public class FilterDialog extends DialogFragment {
         } else {
             tvVideo.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-
+        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVisual)
@@ -121,7 +138,7 @@ public class FilterDialog extends DialogFragment {
         } else {
             tvVisual.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-
+        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVideoIntervesta)
@@ -132,6 +149,10 @@ public class FilterDialog extends DialogFragment {
         } else {
             tvVideoIntervesta.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
+        filterListener.onSelectFilter(getFilterList());
+    }
 
+    public void setListener(FilterListener filterListener) {
+        this.filterListener= filterListener;
     }
 }

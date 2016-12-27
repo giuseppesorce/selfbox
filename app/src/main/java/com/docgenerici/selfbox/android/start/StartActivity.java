@@ -33,21 +33,22 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
     ProgressBar progress;
     @BindView(R.id.tvError)
     TextView tvError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         Hawk.init(this).build();
-        presenter= SelfBoxApplicationImpl.appComponent.startPresenter();
+        presenter = SelfBoxApplicationImpl.appComponent.startPresenter();
         presenter.setView(this);
         presenter.chekActivation();
 
     }
 
     @OnClick(R.id.tvSend)
-    void onTapSend(){
-        String code= etCode.getText().toString();
+    void onTapSend() {
+        String code = etCode.getText().toString();
         tvError.setText("");
         presenter.setActivation(code);
     }
@@ -68,7 +69,6 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
 
     @Override
     public void showCodeError(String error) {
-//        Toast.makeText(this,error, Toast.LENGTH_SHORT).show();
         tvError.setText(error);
     }
 

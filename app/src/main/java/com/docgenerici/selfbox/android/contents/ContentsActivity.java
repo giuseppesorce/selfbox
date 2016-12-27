@@ -97,8 +97,6 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
             presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }
         presenter.setup(category);
-
-
     }
 
     @OnClick(R.id.ivLogo)
@@ -136,7 +134,6 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         changeStatusBar(presenter.getContentDarkColor());
         rlToolbar.setBackgroundColor(presenter.getContentColor());
         btHelp.setBackground(presenter.getBackGroundhelp());
-
         btContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("NewApi")
             @SuppressWarnings("deprecation")
@@ -171,7 +168,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     public void showShareContents(ArrayList<ContentDoc> contentsShared) {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared, category,medicoSelected, lastPharmaUser);
+        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared, category, medicoSelected, lastPharmaUser);
         shareDialog.setShare(new ShareInterface() {
 
             @Override
@@ -180,11 +177,6 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
             }
         });
         shareDialog.show(ft, "shareDialog");
-        /*
-         category = getIntent().getStringExtra("category");
-            medicoSelected = getIntent().getParcelableExtra("medico");
-            lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
-         */
     }
 
     private void setNavigation(int nav) {
@@ -215,18 +207,15 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
-
         setNavigation(position);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 
     @Override

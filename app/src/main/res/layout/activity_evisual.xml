@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_evisual"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.docgenerici.selfbox.android.evisual.EvisualActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_toolbar_home"
+        android:background="@color/orange">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ivLogo"
+            android:src="@drawable/logo_docgenerici_white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_toLeftOf="@+id/btShare"
+            android:layout_toRightOf="@id/ivLogo"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:gravity="center_vertical"
+            android:id="@+id/llContainerButton"
+            android:layout_height="match_parent"></LinearLayout>
+
+
+
+        <ImageView
+            android:id="@+id/btHelp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_help_contents_orange" />
+
+        <ImageView
+            android:id="@+id/btShare"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/btHelp"
+
+            android:background="@drawable/ic_share_white" />
+    </RelativeLayout>
+
+    <WebView
+        android:layout_width="match_parent"
+        android:id="@+id/webview"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_height="match_parent"></WebView>
+
+</RelativeLayout>

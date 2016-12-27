@@ -28,6 +28,7 @@ import com.docgenerici.selfbox.android.adapters.GridSpacingItemDecoration;
 import com.docgenerici.selfbox.android.adapters.OnItemContentClickListener;
 import com.docgenerici.selfbox.android.contents.ContentActivityInterface;
 import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
+import com.docgenerici.selfbox.android.evisual.EvisualActivity;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.android.video.VideoActivity;
 import com.docgenerici.selfbox.debug.Dbg;
@@ -125,21 +126,32 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         return view;
     }
 
-    private void createGalleryContentsItems() {
-        tvTitle.setText(strContenuti);
+    @Override
+    public void setup() {
+        gridLayout = new GridLayoutManager(getActivity(), 3);
+
+
         rvGallery.setLayoutManager(gridLayout);
-        presenter.setLevelView(0);
         galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), this);
         rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         rvGallery.setAdapter(galleryAdapter);
+
+
+    }
+
+    private void createGalleryContentsItems() {
+        tvTitle.setText(strContenuti);
+        presenter.setLevelView(0);
+        galleryAdapter.changeItems(presenter.getContents(categoryContent));
+
+       // rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+
     }
 
     private void createGalleryContentsItemsFromFolder(int id) {
         presenter.setLevelView(1);
-        rvGallery.setLayoutManager(gridLayout);
-        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContentsByFolder(id), this);
-        rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-        rvGallery.setAdapter(galleryAdapter);
+        galleryAdapter.changeItems( presenter.getContentsByFolder(id));
+
     }
 
     @OnClick(R.id.llAZ)
@@ -185,11 +197,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
     }
 
-    @Override
-    public void setup() {
-        gridLayout = new GridLayoutManager(getActivity(), 3);
-        createGalleryContentsItems();
-    }
+
 
     @Override
     public void applyFilter(ArrayList<ContentDoc> filtered) {
@@ -218,7 +226,12 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                Intent intentVideo= new Intent(getActivity(), VideoActivity.class);
                 intentVideo.putExtra("path", contentSelect.content);
                 startActivity(intentVideo);
-            } else {
+            } else  if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
+                Intent intentVisual= new Intent(getActivity(), EvisualActivity.class);
+                intentVisual.putExtra("path", contentSelect.content);
+                startActivity(intentVisual);
+
+            } else  if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", contentSelect.content);
                 if (contentSelect.content != null) {

@@ -15,6 +15,7 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.adapters.FilterAdapter;
 import com.docgenerici.selfbox.android.adapters.OnItemClickListener;
 import com.docgenerici.selfbox.android.contents.productlist.OnSelectFilter;
+import com.docgenerici.selfbox.android.utils.SelfBoxUtils;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.FilterProduct;
 
@@ -80,16 +81,17 @@ public class FilterProductDialog extends DialogFragment implements OnItemClickLi
     private void createLegendFilter() {
 
         filtersProducts = new ArrayList<>();
-
-        String[] colors = getResources().getStringArray(R.array.categorie_color);
         for (int i = 0; i < categories.size(); i++) {
-            filtersProducts.add(new FilterProduct(Color.parseColor(colors[i]), categories.get(i), true));
+            filtersProducts.add(new FilterProduct(Color.parseColor(SelfBoxUtils.getCategoryColor(categories.get(i))), categories.get(i), true));
         }
         FilterAdapter adapter = new FilterAdapter(getActivity().getApplicationContext(), filtersProducts, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvList.setLayoutManager(linearLayoutManager);
         rvList.setAdapter(adapter);
     }
+
+
+
 
     @OnClick(R.id.tvFiltri)
     void onSelectFiltri() {

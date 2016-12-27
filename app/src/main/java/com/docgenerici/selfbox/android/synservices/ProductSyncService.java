@@ -80,7 +80,7 @@ public class ProductSyncService extends IntentService {
     }
 
     private void downloadContent() {
-        if (counterProducts<  allaicCodes.size()) {
+        if (counterProducts < allaicCodes.size()) {
             float percentage = counterProducts * 100 / allaicCodes.size();
             sendUpdate(percentage);
             aicCode = allaicCodes.get(counterProducts);
@@ -95,9 +95,9 @@ public class ProductSyncService extends IntentService {
 
                         Product nowProduct = realm.where(Product.class).equalTo("aic", aicCode).findFirst();
                         if (nowProduct.getScheda() != null && nowProduct.getScheda().getUri() != null && !nowProduct.getScheda().getUri().isEmpty() && nowProduct.getScheda().getUri().length() > 5) {
-                           pathSchedaDownload = SelfBoxConstants.pathProduct + nowProduct.getScheda().getUri();
+                            pathSchedaDownload = SelfBoxConstants.pathProduct + nowProduct.getScheda().getUri();
                         }
-                        if (nowProduct.rcp != null && !nowProduct.getFilename().isEmpty() ) {
+                        if (nowProduct.rcp != null && !nowProduct.getFilename().isEmpty()) {
                             pathProductDownload = SelfBoxConstants.pathProduct + nowProduct.rcp;
                         }
 
@@ -105,10 +105,10 @@ public class ProductSyncService extends IntentService {
                         schedaFilename = nowProduct.getScheda().filename;
                         productPublished = nowProduct.risorsa.published;
                         productFilename = nowProduct.getFilename();
-                        Dbg.p("pathSchedaDownload: "+pathSchedaDownload);
-                        Dbg.p("schedaFilename: "+schedaFilename);
-                        Dbg.p("pathProductDownload: "+pathProductDownload);
-                        Dbg.p("productFilename: "+productFilename);
+                        Dbg.p("pathSchedaDownload: " + pathSchedaDownload);
+                        Dbg.p("schedaFilename: " + schedaFilename);
+                        Dbg.p("pathProductDownload: " + pathProductDownload);
+                        Dbg.p("productFilename: " + productFilename);
 
                     }
                 });
@@ -117,7 +117,6 @@ public class ProductSyncService extends IntentService {
                     realm.close();
                 }
             }
-
             bSchedaDownload = false;
             bProductDownload = false;
             if (pathSchedaDownload.length() > 5) {
@@ -139,7 +138,7 @@ public class ProductSyncService extends IntentService {
             if (pathProductDownload.length() > 5) {
 
                 Uri uriProduct = Uri.parse(pathProductDownload.replace(" ", "%20"));
-                           String filenameProduct = SelfBoxUtils.dateConvertNumber(productPublished) + "___" + "prod___" + productFilename;
+                String filenameProduct = SelfBoxUtils.dateConvertNumber(productPublished) + "___" + "prod___" + productFilename;
                 File file = new File(getExternalFilesDir("products"), filenameProduct);
 
                 if (file.exists()) {
@@ -152,8 +151,6 @@ public class ProductSyncService extends IntentService {
             } else {
                 bProductDownload = true;
             }
-
-
             if (bSchedaDownload && bProductDownload) {
                 Dbg.p("Salto al prossimo: senza dati");
                 counterProducts++;
@@ -169,8 +166,6 @@ public class ProductSyncService extends IntentService {
     }
 
     private void updateProducSyncData() {
-        Dbg.p("SYNCDATA modifico prodotti");
-
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
@@ -180,7 +175,7 @@ public class ProductSyncService extends IntentService {
 
                     SyncDataCheck model = realm.where(SyncDataCheck.class).equalTo("id", 1).findFirst();
                     if (model != null) {
-                        model.products=1;
+                        model.products = 1;
                     }
                 }
             });
@@ -189,18 +184,16 @@ public class ProductSyncService extends IntentService {
                 realm.close();
             }
         }
-
     }
 
 
     private void sendUpdate(String message) {
 
         Intent myIntent = new Intent("sync");
-         myIntent.putExtra("type", SelfBoxConstants.ContentSyncType.PRODUCTS);
+        myIntent.putExtra("type", SelfBoxConstants.ContentSyncType.PRODUCTS);
         myIntent.putExtra("percentage", 100);
         myIntent.putExtra("message", message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(myIntent);
-
     }
 
     private void sendUpdate(float percentage) {
@@ -212,9 +205,7 @@ public class ProductSyncService extends IntentService {
     }
 
 
-
     private void updateScheda(final String urischeda) {
-        Dbg.p("updateScheda");
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
@@ -237,10 +228,6 @@ public class ProductSyncService extends IntentService {
     }
 
     private void updateProductUri(final String uriproduct) {
-    //    Dbg.p("updateProductUri: "+uriproduct);
-        if(aicCode.equalsIgnoreCase("033551021")){
-            Dbg.p("updateProductUri: "+uriproduct);
-        }
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
@@ -259,14 +246,13 @@ public class ProductSyncService extends IntentService {
                 realm.close();
             }
         }
-
     }
 
     private ListenerDowloadDoc listenerDownloadScheda = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
             Dbg.p("FILE SCHEDA SCARICATO: " + uri);
-             bSchedaDownload = true;
+            bSchedaDownload = true;
             updateScheda(uri.toString());
             checkUpdated();
 
@@ -292,7 +278,7 @@ public class ProductSyncService extends IntentService {
             Dbg.p("FILE PRODOTTO SCARICATO: " + uri);
 
             bProductDownload = true;
-            updateProductUri( uri.toString());
+            updateProductUri(uri.toString());
             checkUpdated();
         }
 
@@ -316,8 +302,6 @@ public class ProductSyncService extends IntentService {
             downloadContent();
 
         }
-
     }
-
 
 }

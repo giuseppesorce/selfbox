@@ -2,6 +2,8 @@ package com.docgenerici.selfbox.android.contents.productlist;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.products.Product;
 
 import java.util.ArrayList;
@@ -77,4 +79,5 @@ public class ProductsListPresenterImpl implements ProductsListPresenter {
         }
 
     }
+
 }

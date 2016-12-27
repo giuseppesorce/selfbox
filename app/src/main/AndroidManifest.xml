@@ -43,16 +43,17 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".android.video.VideoActivity"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity android:name=".android.pdf.PdfViewerActivity"></activity>
-        <service android:name=".android.synservices.ProductSyncService"
-            android:exported="false"
-            />
-        <service android:name=".android.synservices.ContentsService"
-            android:exported="false"
+            android:screenOrientation="landscape"></activity>
+        <activity android:name=".android.pdf.PdfViewerActivity" />
 
-            />
+        <service
+            android:name=".android.synservices.ProductSyncService"
+            android:exported="false" />
+        <service
+            android:name=".android.synservices.ContentsService"
+            android:exported="false" />
+
+        <activity android:name=".android.evisual.EvisualActivity"></activity>
     </application>
 
 </manifest>

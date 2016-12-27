@@ -103,6 +103,9 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
             if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
                 return;
+            }else{
+                createGridSync();
+
             }
         }
     }
@@ -156,8 +159,10 @@ private void createGridSync(){
 
         if(intentProduct !=null){
             stopService(intentProduct);
+            Dbg.p("stopService product");
         }  if(intentContent !=null){
             stopService(intentContent);
+            Dbg.p("stopService intentContent");
         }
     }
 

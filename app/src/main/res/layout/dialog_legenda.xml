@@ -10,8 +10,10 @@
     <RelativeLayout
         android:layout_width="800dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+       android:layout_centerInParent="true"
+
+      >
 
         <com.docgenerici.selfbox.android.custom.texts.CTextView
             android:id="@+id/tvHelp"
@@ -68,7 +70,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#fff05c">
+                            android:background="#fff68f">
 
                         </View>
 
@@ -115,7 +117,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#a77c40">
+                            android:background="#be9b6d">
 
                         </View>
 
@@ -134,7 +136,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#008f76">
+                            android:background="#00a78d">
 
                         </View>
 
@@ -161,7 +163,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#be0f0f">
+                            android:background="#b71b3b">
 
                         </View>
 
@@ -180,7 +182,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#ac308b">
+                            android:background="#a7278d">
 
                         </View>
 
@@ -209,7 +211,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#ada5d0">
+                            android:background="#adb4da">
 
                         </View>
 
@@ -228,7 +230,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#ada5d0">
+                            android:background="#89bee5">
 
                         </View>
 
@@ -255,7 +257,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#f8ab01">
+                            android:background="#fdc461">
 
                         </View>
 
@@ -274,7 +276,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#03a5b0">
+                            android:background="#00708a">
 
                         </View>
 
@@ -302,7 +304,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#67ba8d">
+                            android:background="#00708a">
 
                         </View>
 
@@ -321,7 +323,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_weight="2"
-                            android:background="#f37111">
+                            android:background="#6ec5aa">
 
                         </View>
 

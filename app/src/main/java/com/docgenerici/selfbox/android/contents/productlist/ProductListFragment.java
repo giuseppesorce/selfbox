@@ -28,6 +28,7 @@ import com.docgenerici.selfbox.android.adapters.ProductsAdapter;
 import com.docgenerici.selfbox.android.contents.filters.FilterProductDialog;
 import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialogFragment;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
+import com.docgenerici.selfbox.android.utils.SelfBoxUtils;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.FilterProduct;
 import com.docgenerici.selfbox.models.ProductDoc;
@@ -211,9 +212,11 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
             productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.HEADER, categoria.toUpperCase()));
             RealmResults<Product> products = realm.where(Product.class).equalTo("categoria_farmacologica", categoria).findAll();
             for (int j = 0; j < products.size(); j++) {
-                Product product = products.get(j);
 
-                productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(colors[i]), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                    Product product = products.get(j);
+
+                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+
             }
         }
         adapter.notifyDataSetChanged();
@@ -266,7 +269,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
                     Product product = products.get(j);
                     Dbg.p("PRODOTTO: "+product.getUriPdf());
 
-                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(colors[i]), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
                 }
             }
         }
@@ -297,7 +300,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
             for (int j = 0; j < products.size(); j++) {
                 Product product = products.get(j);
                 if(product.getNome().toLowerCase().contains(filterText.toLowerCase())) {
-                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(categorieColors.get(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
 
                 }}
 

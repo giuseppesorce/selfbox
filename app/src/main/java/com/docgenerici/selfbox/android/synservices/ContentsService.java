@@ -4,7 +4,9 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.android.downloader.DownloaderDoc;
 import com.docgenerici.selfbox.android.downloader.ListenerDowloadDoc;
@@ -15,6 +17,9 @@ import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.ContentEasy;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.orhanobut.hawk.Hawk;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -104,6 +109,7 @@ public class ContentsService extends IntentService {
                     //Dbg.p("FILE ESISTE: "+filenameContent);
                     updateContent(file.getAbsolutePath(), contentEasy.id);
                     bContentDownload = true;
+                    unzipFile(file);
                     checkContentDownload();
                 } else {
                     downloaderContent.download(uriContents, "contents", filenameContent, contentEasy.id);
@@ -124,6 +130,34 @@ public class ContentsService extends IntentService {
                 counterFolders = 0;
                 startDownloadFoldersCover();
             }
+        }
+    }
+
+
+    private void unzipFile(File file) {
+
+
+        if (file.exists() && file.getAbsolutePath().contains(".zip")) {
+              Dbg.p("File name"+ file.getName());
+            try {
+                ZipFile zipFile = new ZipFile(file.getAbsolutePath());
+                 if (zipFile.isValidZipFile()) {
+                     String folder= file.getAbsolutePath().replace(file.getName(), "")+ file.getName().replace(".zip", "");
+                     Dbg.p("folder: "+folder);
+                    zipFile.extractAll(folder);
+                    Dbg.p("OK : "+file.getAbsolutePath());
+                }else{
+                    Dbg.p("ERRORE: unzip");
+                }
+
+            } catch (ZipException e) {
+                e.printStackTrace();
+                Dbg.p("ERRORE: " + e.getLocalizedMessage());
+            }
+
+
+        } else {
+           // Toast.makeText(this, "NON Esiste", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -243,6 +277,9 @@ public class ContentsService extends IntentService {
             Dbg.p("FILE SCARICATO: " + uri + "ID: " + id);
             updateContent(uri.toString(), id);
             bContentDownload = true;
+            if(uri.toString().contains(".zip")){
+                unzipFile(new File(uri.toString()));
+            }
             checkContentDownload();
         }
 

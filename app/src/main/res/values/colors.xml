@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="grey_toolbar">#dddddd</color>
     <color name="white">#ffffff</color>
+    <color name="black">#ff000000</color>
     <color name="color_text_home">#777777</color>
     <color name="green">#97ca00</color>
     <color name="green_dark">#688b02</color>97ca00
@@ -15,6 +16,7 @@
     <color name="blu_dark">#2898c1</color>
     <color name="color_text_tab_button">#525353</color>
     <color name="grey_filter">#b8b8b8</color>
+    <color name="altriprodotti">#c3ab36</color>
 
     <string-array name="categorie_color">
 

@@ -95,8 +95,6 @@ public class SyncPresenterImpl implements SyncPresenter {
         getProduct();
         getAllContents();
         donwloadListinoPrezzi();
-
-
     }
 
     private void configSyncData() {

@@ -49,4 +49,43 @@ public class SelfBoxUtils {
             return  new Date().getTime();
         }
     }
+
+    public static String  getCategoryColor(String categoria_farmacologica) {
+        Dbg.p("getCategoryColor categoria_farmacologica "+ categoria_farmacologica);
+        if(categoria_farmacologica.contains("ltri prodotti terapeutici")){
+            return "#c3ab36";
+        }else if(categoria_farmacologica.toLowerCase().contains("ardiovascolari")){
+            return "#b71b3b";
+        }else if(categoria_farmacologica.toLowerCase().contains("ematologici")){
+
+            return "#fdc461";
+        }else if(categoria_farmacologica.toLowerCase().contains("gastroenterici")){
+            return "#66c298";
+        }else if(categoria_farmacologica.toLowerCase().contains("dermatologici")){
+
+            return "#adb4da";
+        }else if(categoria_farmacologica.toLowerCase().contains("antineoplastici")){
+            return "#be9b6d";
+
+        }else if(categoria_farmacologica.toLowerCase().contains("genito-urinari")){
+            return "#6ec5aa";
+        }else if(categoria_farmacologica.toLowerCase().contains("neurologici")){
+            return "#243c96";
+
+        }else if(categoria_farmacologica.toLowerCase().contains("organi di senso")){
+            return "#00a78d";
+        }else if(categoria_farmacologica.toLowerCase().contains("preparati ormonali")){
+            return "#a7278d";
+
+        }else if(categoria_farmacologica.toLowerCase().contains("respiratori")){
+            return "#89bee5";
+
+        }else if(categoria_farmacologica.toLowerCase().contains("sistema muscolo")){
+            return "#00708a";
+        }else if(categoria_farmacologica.toLowerCase().contains("antiinfettivi")){
+            Dbg.p("antiifettivi ritorno");
+            return "#fff68f";
+        }
+        return "#000000";
+    }
 }

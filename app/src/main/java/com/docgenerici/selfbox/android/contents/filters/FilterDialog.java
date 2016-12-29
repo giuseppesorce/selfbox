@@ -39,20 +39,22 @@ public class FilterDialog extends DialogFragment {
     TextView tvVideo;
     @BindView(R.id.tvVideoIntervesta)
     TextView tvVideoIntervesta;
-    private boolean filterVideo = false;
-    private boolean filterAvvisi = false;
-    private boolean filterVideoIntervista = false;
-    private boolean filterDocumenti = false;
-    private boolean filterVisual = false;
+    private boolean filterVideo = true;
+    private boolean filterAvvisi = true;
+    private boolean filterVideoIntervista = true;
+    private boolean filterDocumenti = true;
+    private boolean filterVisual = true;
     @BindDrawable(R.drawable.ic_check_check)
     Drawable dwCheck;
     @BindDrawable(R.drawable.ic_check_uncheck)
     Drawable dwUnCheck;
     private FilterListener filterListener;
+    private Filters lastFilter;
 
-    public static FilterDialog createInstance() {
+    public static FilterDialog createInstance(Filters lastFilter) {
         FilterDialog frag = new FilterDialog();
         Bundle init = new Bundle();
+        init.putParcelable("lastFilter", lastFilter);
         frag.setArguments(init);
         return frag;
     }
@@ -71,6 +73,20 @@ public class FilterDialog extends DialogFragment {
                 false);
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
+        if (getArguments() != null) {
+            lastFilter = getArguments().getParcelable("lastFilter");
+        }
+        if (lastFilter != null) {
+            filterVideo = lastFilter.video;
+            filterAvvisi = lastFilter.alertHighlight;
+            filterVideoIntervista = lastFilter.videoIntervista;
+            filterDocumenti = lastFilter.documents;
+            filterVisual = lastFilter.eVisual;
+        }
+        checkFilterAvvisi();
+        checkFilterDocumenti();
+        checkFilterVideo();
+        checkFilterEVisual();
         return root;
     }
 
@@ -87,23 +103,27 @@ public class FilterDialog extends DialogFragment {
     @OnClick(R.id.tvAvvisi)
     void onSelectAvvisi() {
         filterAvvisi = !filterAvvisi;
+        checkFilterAvvisi();
+        filterListener.onSelectFilter(getFilterList());
+    }
+
+    private void checkFilterAvvisi() {
         if (filterAvvisi) {
             tvAvvisi.setCompoundDrawablesWithIntrinsicBounds(null, null, dwCheck, null);
         } else {
             tvAvvisi.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-        filterListener.onSelectFilter(getFilterList());
     }
 
     private Filters getFilterList() {
-        Filters filters= new Filters();
-        filters.video= filterVideo;
-        filters.alertHighlight= filterAvvisi;
-        filters.videoIntervista= filterVideo;
-        filters.documents= filterDocumenti;
-        filters.eVisual= filterVisual;
-        if(filterVideo && filterAvvisi && filterVideo && filterDocumenti && filterVisual){
-            filters.all= true;
+        Filters filters = new Filters();
+        filters.video = filterVideo;
+        filters.alertHighlight = filterAvvisi;
+        filters.videoIntervista = filterVideo;
+        filters.documents = filterDocumenti;
+        filters.eVisual = filterVisual;
+        if (filterVideo && filterAvvisi && filterVideo && filterDocumenti && filterVisual) {
+            filters.all = true;
         }
         return filters;
     }
@@ -111,34 +131,46 @@ public class FilterDialog extends DialogFragment {
     @OnClick(R.id.tvDocumenti)
     void onSelectDocumenti() {
         filterDocumenti = !filterDocumenti;
+        checkFilterDocumenti();
+        filterListener.onSelectFilter(getFilterList());
+    }
+
+    private void checkFilterDocumenti() {
         if (filterDocumenti) {
             tvDocumenti.setCompoundDrawablesWithIntrinsicBounds(null, null, dwCheck, null);
         } else {
             tvDocumenti.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVideo)
     void onSelectVideo() {
         filterVideo = !filterVideo;
+        checkFilterVideo();
+        filterListener.onSelectFilter(getFilterList());
+    }
+
+    private void checkFilterVideo() {
         if (filterVideo) {
             tvVideo.setCompoundDrawablesWithIntrinsicBounds(null, null, dwCheck, null);
         } else {
             tvVideo.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVisual)
     void onSelectVisual() {
         filterVisual = !filterVisual;
+        checkFilterEVisual();
+        filterListener.onSelectFilter(getFilterList());
+    }
+
+    private void checkFilterEVisual() {
         if (filterVisual) {
             tvVisual.setCompoundDrawablesWithIntrinsicBounds(null, null, dwCheck, null);
         } else {
             tvVisual.setCompoundDrawablesWithIntrinsicBounds(null, null, dwUnCheck, null);
         }
-        filterListener.onSelectFilter(getFilterList());
     }
 
     @OnClick(R.id.tvVideoIntervesta)
@@ -153,6 +185,6 @@ public class FilterDialog extends DialogFragment {
     }
 
     public void setListener(FilterListener filterListener) {
-        this.filterListener= filterListener;
+        this.filterListener = filterListener;
     }
 }

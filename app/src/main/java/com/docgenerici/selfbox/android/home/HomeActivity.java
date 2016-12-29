@@ -20,6 +20,7 @@ import com.docgenerici.selfbox.android.home.medical.MedicalDialogFragment;
 import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
@@ -117,6 +118,15 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void gotoSync() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
+
+        realm.beginTransaction();
+        syncData.fromhome = true;
+        realm.copyToRealmOrUpdate(syncData);
+        realm.commitTransaction();
+
+
         startActivity(new Intent(this, SyncActivity.class));
     }
 

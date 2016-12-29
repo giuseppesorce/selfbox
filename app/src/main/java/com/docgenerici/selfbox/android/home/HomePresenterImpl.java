@@ -68,6 +68,7 @@ public class HomePresenterImpl implements HomePresenter {
             farmaciaDto.id= farmacie.get(i).id;
             farmaciaDto.fullname= farmacie.get(i).fullname;
             farmaciaDto.type= farmacie.get(i).type;
+            farmaciaDto.ente= farmacie.get(i).ente;
             pharmaList.add(farmaciaDto);
         }
         return pharmaList;
@@ -82,6 +83,8 @@ public class HomePresenterImpl implements HomePresenter {
             MedicoDto farmaciaDto= new MedicoDto();
             farmaciaDto.id= medici.get(i).id;
             farmaciaDto.fullname= medici.get(i).fullname;
+            farmaciaDto.email= medici.get(i).email;
+            farmaciaDto.code= medici.get(i).code;
 
             medicoDtoArrayList.add(farmaciaDto);
         }

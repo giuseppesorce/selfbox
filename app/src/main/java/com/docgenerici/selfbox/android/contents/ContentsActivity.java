@@ -24,6 +24,7 @@ import com.docgenerici.selfbox.android.contents.productlist.ProductListFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareContentsDialogFragment;
 import com.docgenerici.selfbox.android.contents.share.ShareInterface;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
@@ -93,6 +94,9 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         if (getIntent() != null) {
             category = getIntent().getStringExtra("category");
             medicoSelected = getIntent().getParcelableExtra("medico");
+
+            if(medicoSelected !=null){
+               }
             lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
             presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }

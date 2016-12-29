@@ -12,11 +12,13 @@ import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.home.HomeActivity;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
+import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.orhanobut.hawk.Hawk;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class StartActivity extends AppCompatActivity implements StartPresenter.StartView {
 
@@ -82,6 +84,19 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
 
     @Override
     public void gotoSyncActivity() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
+
+
+        realm.beginTransaction();
+        if(syncData ==null){
+            syncData= new SyncDataCheck();
+            syncData.fromhome= false;
+        }
+        realm.copyToRealmOrUpdate(syncData);
+        realm.commitTransaction();
+
+
         startActivity(new Intent(this, SyncActivity.class));
         finish();
     }

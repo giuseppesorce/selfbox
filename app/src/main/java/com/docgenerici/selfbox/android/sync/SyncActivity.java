@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         presenter = SelfBoxApplicationImpl.appComponent.syncPresenter();
         presenter.setView(this);
         presenter.setup();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
 
@@ -122,8 +124,8 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
 private void createGridSync(){
     GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
-    syncContents= presenter.getContents();
-    gridSyncAdapter = new GridSyncAdapter(this, syncContents);
+    syncContents= presenter.getContents();gridSyncAdapter = new GridSyncAdapter(this, syncContents);
+
     int spanCount = 2; // 3 columns
     int spacing = 50; // 50px
     boolean includeEdge = false;
@@ -148,6 +150,11 @@ private void createGridSync(){
         progress.setVisibility(View.VISIBLE);
         tvSend.setEnabled(false);
         tvSend.setAlpha(0.6f);
+        try{
+            LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+        }catch (Exception ex){
+
+        }
 
     }
 
@@ -156,6 +163,14 @@ private void createGridSync(){
         progress.setVisibility(View.GONE);
         tvSend.setEnabled(true);
         tvSend.setAlpha(1.0f);
+        syncContents= presenter.getContents();
+        gridSyncAdapter.changeItems(syncContents);
+        try{
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
+        }catch (Exception ex){
+
+        }
+
 
         if(intentProduct !=null){
             stopService(intentProduct);
@@ -231,7 +246,11 @@ private void createGridSync(){
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+        try{
+            LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+        }catch (Exception ex){
+
+        }
         presenter.checkSyncData();
 
 
@@ -251,7 +270,11 @@ private void createGridSync(){
 
     @Override
     protected void onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
+        try{
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
+        }catch (Exception ex){
+
+        }
         super.onStop();
 
     }

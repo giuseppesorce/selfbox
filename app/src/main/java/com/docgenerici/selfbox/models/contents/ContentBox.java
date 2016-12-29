@@ -20,7 +20,7 @@ public class ContentBox extends RealmObject {
     public String name;
     public String descrFull;
     public String descrShort;
-    //    public String textEmail;
+    public String textEmail;
     public String filename;
     public String resourcePath;
     public String checksum;
@@ -31,8 +31,7 @@ public class ContentBox extends RealmObject {
     public long lastUpdate;
     public long expirationDate;
     public boolean alertHighlight;
-    //    public boolean approved;
-    public boolean visible;
+     public boolean visible;
     public boolean approved;
     public boolean active;
     //    public Editor editor;
@@ -40,6 +39,9 @@ public class ContentBox extends RealmObject {
     public RealmList<Target> targets;
     private String localfilePath;
     private String localthumbnailPath;
+    private boolean viewed;
+    private boolean countViewed;
+    private boolean countSended;
 
     public String getLocalfilePath() {
         return localfilePath;
@@ -57,4 +59,27 @@ public class ContentBox extends RealmObject {
         this.localthumbnailPath = localthumbnailPath;
     }
 
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
+
+    public boolean isCountSended() {
+        return countSended;
+    }
+
+    public void setCountSended(boolean countSended) {
+        this.countSended = countSended;
+    }
+
+    public boolean isCountViewed() {
+        return countViewed;
+    }
+
+    public void setCountViewed(boolean countViewed) {
+        this.countViewed = countViewed;
+    }
 }

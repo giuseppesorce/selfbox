@@ -36,17 +36,17 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.item_sync, parent, false);
-            viewHolder = new MyItemHolder(v);
+        v = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_sync, parent, false);
+        viewHolder = new MyItemHolder(v);
 
         return viewHolder;
     }
 
-    public SyncContent getSyncContentByType(int type){
+    public SyncContent getSyncContentByType(int type) {
         for (int i = 0; i < syncContents.size(); i++) {
-            if(syncContents.get(i).getType() == type){
-                return  syncContents.get(i);
+            if (syncContents.get(i).getType() == type) {
+                return syncContents.get(i);
             }
         }
         return null;
@@ -54,12 +54,12 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        SyncContent syncContent= syncContents.get(position);
+        SyncContent syncContent = syncContents.get(position);
 
         ((MyItemHolder) holder).tvLabel.setText(syncContent.getTitle());
-        ((MyItemHolder) holder).tvPercentage.setText(syncContent.getPercentage()+"%");
-        float percentage= (float) ((float)syncContent.getPercentage()/100.0f);
-           ((MyItemHolder) holder).vRectPercentage.setScaleX(percentage);
+        ((MyItemHolder) holder).tvPercentage.setText(syncContent.getPercentage() + "%");
+        float percentage = (float) ((float) syncContent.getPercentage() / 100.0f);
+        ((MyItemHolder) holder).vRectPercentage.setScaleX(percentage);
         ((MyItemHolder) holder).vRectPercentage.setPivotX(0);
 
     }
@@ -69,7 +69,14 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return syncContents.size();
     }
 
-    public  class MyItemHolder extends RecyclerView.ViewHolder {
+    public void changeItems(ArrayList<SyncContent> contents) {
+
+        this.syncContents= contents;
+        notifyDataSetChanged();
+
+    }
+
+    public class MyItemHolder extends RecyclerView.ViewHolder {
 
         private View vRectPercentage;
         TextView tvLabel;
@@ -79,9 +86,9 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
 
 
-            tvLabel= (TextView) itemView.findViewById(R.id.tvLabel);
-            vRectPercentage=  itemView.findViewById(R.id.vRectPercentage);
-            tvPercentage=  (TextView) itemView.findViewById(R.id.tvPercentage);
+            tvLabel = (TextView) itemView.findViewById(R.id.tvLabel);
+            vRectPercentage = itemView.findViewById(R.id.vRectPercentage);
+            tvPercentage = (TextView) itemView.findViewById(R.id.tvPercentage);
         }
 
 

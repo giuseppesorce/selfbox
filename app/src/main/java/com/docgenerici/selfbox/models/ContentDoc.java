@@ -21,6 +21,7 @@ public class ContentDoc implements Parcelable {
     public String cover;
     public boolean isFolder;
     public boolean alertHighlight;
+    public boolean viewed;
     public String keywords;
     public long lastUpdate;
 
@@ -48,6 +49,7 @@ public class ContentDoc implements Parcelable {
 
     }
 
+
     protected ContentDoc(Parcel in) {
         id = in.readInt();
         type = in.readInt();
@@ -58,23 +60,11 @@ public class ContentDoc implements Parcelable {
         content = in.readString();
         isnew = in.readByte() != 0;
         cover = in.readString();
-    }
-
-    public static final Creator<ContentDoc> CREATOR = new Creator<ContentDoc>() {
-        @Override
-        public ContentDoc createFromParcel(Parcel in) {
-            return new ContentDoc(in);
-        }
-
-        @Override
-        public ContentDoc[] newArray(int size) {
-            return new ContentDoc[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+        isFolder = in.readByte() != 0;
+        alertHighlight = in.readByte() != 0;
+        viewed = in.readByte() != 0;
+        keywords = in.readString();
+        lastUpdate = in.readLong();
     }
 
     @Override
@@ -88,5 +78,27 @@ public class ContentDoc implements Parcelable {
         dest.writeString(content);
         dest.writeByte((byte) (isnew ? 1 : 0));
         dest.writeString(cover);
+        dest.writeByte((byte) (isFolder ? 1 : 0));
+        dest.writeByte((byte) (alertHighlight ? 1 : 0));
+        dest.writeByte((byte) (viewed ? 1 : 0));
+        dest.writeString(keywords);
+        dest.writeLong(lastUpdate);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ContentDoc> CREATOR = new Creator<ContentDoc>() {
+        @Override
+        public ContentDoc createFromParcel(Parcel in) {
+            return new ContentDoc(in);
+        }
+
+        @Override
+        public ContentDoc[] newArray(int size) {
+            return new ContentDoc[size];
+        }
+    };
 }

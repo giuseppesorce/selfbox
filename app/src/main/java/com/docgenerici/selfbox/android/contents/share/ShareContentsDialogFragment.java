@@ -59,9 +59,9 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
     TextView tvFrom;
     @BindView(R.id.etText)
     EditText etText;
-    String doctorCode="6969";
-    String doctorName="";
-    String category="";
+    String doctorCode = "6969";
+    String doctorName = "";
+    String category = "";
 
     private ArrayList<ContentDoc> contentsShared;
     private ListContentShareAdapter adapter;
@@ -96,11 +96,11 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
                 false);
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
-        if(getArguments() !=null){
-            contentsShared= getArguments().getParcelableArrayList("contentsShared");
-            medicoSelected= getArguments().getParcelable("medicoSelected");
-            lastPharmaUser= getArguments().getParcelable("lastPharmaUser");
-            category= getArguments().getString("category");
+        if (getArguments() != null) {
+            contentsShared = getArguments().getParcelableArrayList("contentsShared");
+            medicoSelected = getArguments().getParcelable("medicoSelected");
+            lastPharmaUser = getArguments().getParcelable("lastPharmaUser");
+            category = getArguments().getString("category");
 
 
         }
@@ -108,15 +108,15 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         npDay.setMaxValue(31);
         npMonth.setMinValue(1);
         npMonth.setMaxValue(12);
-        String[] arrayPicker= new String[]{"GEN","FEB","MAR","APR","MAG", "GIU", "LUG", "AGO", "SET", "OTT", "NOV", "DEC"};
-        String[] hours= new String[24];
-        String[] minutes= new String[60];
+        String[] arrayPicker = new String[]{"GEN", "FEB", "MAR", "APR", "MAG", "GIU", "LUG", "AGO", "SET", "OTT", "NOV", "DEC"};
+        String[] hours = new String[24];
+        String[] minutes = new String[60];
         for (int i = 0; i < 60; i++) {
-            minutes[i]=(String.valueOf(i <10 ? "0"+i : i));
+            minutes[i] = (String.valueOf(i < 10 ? "0" + i : i));
         }
         for (int i = 0; i < 24; i++) {
 
-            hours[i]=(String.valueOf(i <10 ? "0"+i : i));
+            hours[i] = (String.valueOf(i < 10 ? "0" + i : i));
         }
         npMonth.setDisplayedValues(arrayPicker);
         npHour.setMinValue(0);
@@ -127,127 +127,149 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         npMinutes.setMaxValue(59);
         npMinutes.setDisplayedValues(minutes);
         Calendar calendar = Calendar.getInstance();
-        int year= calendar.get(Calendar.YEAR);
+        int year = calendar.get(Calendar.YEAR);
         npYear.setMinValue(2016);
-        npYear.setMaxValue(year+1);
+        npYear.setMaxValue(year + 1);
 
         calendar.setTime(new Date());
         npDay.setValue(calendar.get(Calendar.DAY_OF_MONTH));
-        npMonth.setValue(calendar.get(Calendar.MONTH)+1);
+        npMonth.setValue(calendar.get(Calendar.MONTH) + 1);
         npYear.setValue(calendar.get(Calendar.YEAR));
         npHour.setValue(calendar.get(Calendar.HOUR_OF_DAY));
         npMinutes.setValue(calendar.get(Calendar.MINUTE));
-        if(contentsShared !=null && contentsShared.size() > 0){
+        if (contentsShared != null && contentsShared.size() > 0) {
 
-            adapter= new ListContentShareAdapter(contentsShared, this);
+            adapter = new ListContentShareAdapter(contentsShared, this);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             rvList.setLayoutManager(linearLayoutManager);
             rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.margin_divider_decotator)));
             rvList.setAdapter(adapter);
         }
 
-        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         ConfigurationApp appConfig = realm.where(ConfigurationApp.class).findFirst();
-         infoApp = realm.where(InfoApp.class).findFirst();
-        if(appConfig !=null){
-            if(appConfig.getMailText() !=null && !appConfig.getMailText().isEmpty()){
-                String email= appConfig.getMailText();
-                if(infoApp !=null){
-                    String name= infoApp.name;
-                    String surname= infoApp.surname;
-                    if(name !=null) {
+        infoApp = realm.where(InfoApp.class).findFirst();
+        if (appConfig != null) {
+            if (appConfig.getMailText() != null && !appConfig.getMailText().isEmpty()) {
+                String email = appConfig.getMailText();
+                if (infoApp != null) {
+                    String name = infoApp.name;
+                    String surname = infoApp.surname;
+                    if (name != null) {
                         email = email.replace("[isf-name]", name);
-                    }else{
-                        name="";
+                    } else {
+                        name = "";
                     }
-                    if(surname !=null) {
+                    if (surname != null) {
                         email = email.replace("[isf-surname]", surname);
-                    }else{
-                        surname="";
+                    } else {
+                        surname = "";
                     }
-                    email= email.replace("[fullname]", getToName());
-                   tvFrom.setText(name +" "+surname);
+                    email = email.replace("[fullname]", getToName());
+                    tvFrom.setText(name + " " + surname);
                 }
                 etText.setText(Html.fromHtml(email));
 
             }
         }
+        etEmail.setText(getEmail());
 
         return root;
     }
 
-    private String getToName(){
-        String name="";
+    private String getEmail() {
+        String email="";
         switch ((category)) {
-
-            case "isf":
-name="Utente";
-                doctorCode="6969";
-
-                break;
             case "medico":
-            if(medicoSelected !=null){
-                name= medicoSelected.name+ " "+medicoSelected.surname;
-                doctorCode= ""+medicoSelected.id;
-
-            }
-
-
-
+                if (medicoSelected != null) {
+                    email = medicoSelected.email;
+                    doctorCode = "" + medicoSelected.id;
+                }
                 break;
             case "pharma":
-                if(lastPharmaUser !=null){
-                    name= lastPharmaUser.fullname;
-                    doctorCode=""+lastPharmaUser.id;
+                if (lastPharmaUser != null) {
+                    email = lastPharmaUser.email;
+                    doctorCode = "" + lastPharmaUser.id;
 
                 }
                 break;
         }
-        return  name;
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            email="";
+        }
+        return email;
+    }
+
+    private String getToName() {
+        String name = "";
+        switch ((category)) {
+            case "isf":
+                name = "Utente";
+
+
+                break;
+            case "medico":
+                if (medicoSelected != null) {
+                    name = medicoSelected.fullname;
+                    doctorCode = "" + medicoSelected.code;
+
+                }
+
+
+                break;
+            case "pharma":
+                if (lastPharmaUser != null) {
+                    name = lastPharmaUser.fullname;
+                    doctorCode = "" + lastPharmaUser.ente;
+
+                }
+                break;
+        }
+        return name;
     }
 
     @OnClick(R.id.btSend)
-    void sendShare(){
-        String email= etEmail.getText().toString();
+    void sendShare() {
+        String email = etEmail.getText().toString();
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(getActivity(), "Inserisci un'email corretta", Toast.LENGTH_SHORT).show();
             return;
         }
-        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         realm.beginTransaction();
-        ShareData shareData= new ShareData();
-        shareData.id= new Date().getTime();
-        shareData.doctorCode= doctorCode;
-        shareData.isfCode= infoApp.repCode;
-        shareData.doctorEmail= email;
-        shareData.emailCustomText= etText.getText().toString();
-        String idShare= "";
+        ShareData shareData = new ShareData();
+        shareData.id = new Date().getTime();
+        shareData.doctorCode = doctorCode;
+        shareData.isfCode = infoApp.repCode;
+        shareData.doctorEmail = email;
+        shareData.emailCustomText = etText.getText().toString();
+        String idShare = "";
         for (int i = 0; i < contentsShared.size(); i++) {
-            idShare+= contentsShared.get(i).id+",";
+            idShare += contentsShared.get(i).id + ",";
         }
-        shareData.contentIds= idShare;
-        shareData.requestDate= ""+new Date().getTime();
+        shareData.contentIds = idShare;
+        shareData.requestDate = "" + new Date().getTime();
         realm.commitTransaction();
-        if(shareInterface !=null){
+        if (shareInterface != null) {
             shareInterface.onShareData(shareData);
         }
         dismiss();
     }
 
     @OnClick(R.id.btCancel)
-    void cancelShare(){
+    void cancelShare() {
         dismiss();
     }
 
 
     @OnClick(R.id.btClose)
-    void closeDialog(){
+    void closeDialog() {
         dismiss();
     }
 
 
     @OnClick(R.id.rlRoot)
-    void closeHelpDialog(){
+    void closeHelpDialog() {
         dismiss();
     }
 
@@ -258,7 +280,7 @@ name="Utente";
     }
 
     public void setShare(ShareInterface shareInterface) {
-        this.shareInterface= shareInterface;
+        this.shareInterface = shareInterface;
 
     }
 }

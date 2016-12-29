@@ -10,12 +10,14 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class MedicoDto implements Parcelable{
-    @PrimaryKey
+
     public int id;
     public String fullname;
     public String name;
     public String surname;
     public boolean selected;
+    public String email;
+    public String code;
 
     public MedicoDto(){
 
@@ -27,6 +29,8 @@ public class MedicoDto implements Parcelable{
         name = in.readString();
         surname = in.readString();
         selected = in.readByte() != 0;
+        email = in.readString();
+        code = in.readString();
     }
 
     @Override
@@ -36,6 +40,8 @@ public class MedicoDto implements Parcelable{
         dest.writeString(name);
         dest.writeString(surname);
         dest.writeByte((byte) (selected ? 1 : 0));
+        dest.writeString(email);
+        dest.writeString(code);
     }
 
     @Override

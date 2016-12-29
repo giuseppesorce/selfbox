@@ -27,16 +27,18 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private boolean canShare= true;
+    private String category;
+    private boolean canShare = true;
     private OnItemContentClickListener onClickListener;
     Context context;
     List<ContentDoc> contentDocs = new ArrayList<>();
 
-    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, boolean canshare,  OnItemContentClickListener listener) {
+    public GalleryAdapter(Context context, List<ContentDoc> contentDocList, boolean canshare, String category, OnItemContentClickListener listener) {
         this.context = context;
         this.contentDocs = contentDocList;
         this.onClickListener = listener;
-        this.canShare= canshare;
+        this.canShare = canshare;
+        this.category = category;
     }
 
 
@@ -90,28 +92,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
-
-        String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
-
-        switch ((category)) {
-
-            case "isf":
-                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_orange_new);
-                ((MyHolder) holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
-                break;
-            case "medico":
-                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_blue_new);
-                ((MyHolder) holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.blu), PorterDuff.Mode.SRC_ATOP);
-
-                break;
-            case "pharma":
-                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_green_new);
-                ((MyHolder) holder).ivBorder.setColorFilter(context.getResources().getColor(R.color.green), PorterDuff.Mode.SRC_ATOP);
-
-                break;
-        }
-
-
         ((MyHolder) holder).tvTitle.setText(contentDoc.name);
 
 
@@ -124,9 +104,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyHolder) holder).ivShare.setVisibility(View.INVISIBLE);
         } else {
 
-            if(canShare){
+            if (canShare) {
                 ((MyHolder) holder).ivShare.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 ((MyHolder) holder).ivShare.setVisibility(View.INVISIBLE);
             }
 
@@ -139,15 +119,21 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyHolder) holder).ivBorder.setVisibility(View.GONE);
             ((MyHolder) holder).ivImp.setVisibility(View.GONE);
             ((MyHolder) holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
-        } else if (contentDoc.typeview == SelfBoxConstants.TypeViewContent.MPORTANT) {
-            ((MyHolder) holder).rlItem.setAlpha(1.0f);
-            if (category.equalsIgnoreCase("isf")) {
-                ((MyHolder) holder).ivBorder.setVisibility(View.VISIBLE);
-                ((MyHolder) holder).ivImp.setVisibility(View.VISIBLE);
-            }
-
+        } else if (contentDoc.typeview == SelfBoxConstants.TypeViewContent.IMPORTANT) {
             ((MyHolder) holder).vNew.setVisibility(View.GONE);
             ((MyHolder) holder).tvNew.setVisibility(View.GONE);
+            ((MyHolder) holder).rlItem.setAlpha(1.0f);
+
+
+            ((MyHolder) holder).ivBorder.setVisibility(View.VISIBLE);
+            ((MyHolder) holder).ivImp.setVisibility(View.VISIBLE);
+            ((MyHolder) holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
+        } else if (contentDoc.typeview == SelfBoxConstants.TypeViewContent.IMPORTANT_NEW) {
+            ((MyHolder) holder).vNew.setVisibility(View.VISIBLE);
+            ((MyHolder) holder).tvNew.setVisibility(View.VISIBLE);
+            ((MyHolder) holder).rlItem.setAlpha(1.0f);
+            ((MyHolder) holder).ivBorder.setVisibility(View.VISIBLE);
+            ((MyHolder) holder).ivImp.setVisibility(View.VISIBLE);
             ((MyHolder) holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
 
 
@@ -166,6 +152,26 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyHolder) holder).ivImp.setVisibility(View.GONE);
             ((MyHolder) holder).ivImageBackground.setBackgroundResource(R.drawable.bk_item_grid);
         }
+        switch ((category)) {
+
+            case "isf":
+                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_orange_new);
+                ((MyHolder) holder).ivBorder.setBackgroundResource(R.drawable.borderline);
+                ((MyHolder) holder).ivImp.setBackgroundResource(R.drawable.ic_imp_orange);
+                break;
+            case "medico":
+                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_blue_new);
+                ((MyHolder) holder).ivBorder.setBackgroundResource(R.drawable.borderlineblu);
+                ((MyHolder) holder).ivImp.setBackgroundResource(R.drawable.ic_imp_blu);
+
+                break;
+            case "pharma":
+                ((MyHolder) holder).vNew.setBackgroundResource(R.drawable.back_rounded_green_new);
+                ((MyHolder) holder).ivBorder.setBackgroundResource(R.drawable.borderlinegreen);
+                ((MyHolder) holder).ivImp.setBackgroundResource(R.drawable.ic_imp_green);
+
+                break;
+        }
 
     }
 
@@ -179,8 +185,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void changeItems(List<ContentDoc> filtered) {
-         contentDocs= filtered;
-         notifyDataSetChanged();
+        contentDocs = filtered;
+        notifyDataSetChanged();
 
     }
 

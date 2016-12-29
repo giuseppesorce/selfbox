@@ -14,13 +14,11 @@ import com.docgenerici.selfbox.models.persistence.InfoApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -39,7 +37,9 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     private ArrayList<ContentDoc> folderContentFolderList = new ArrayList<>();
     private String categoryContent;
     private String userTarget;
-    private int lastId;
+    private int lastIdFolder;
+    private Filters lastFiltersType;
+    private long lastUpdate = 0;
 
 
     @Override
@@ -53,6 +53,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void selectAZ() {
         FILTER_NOW = FILTER_BY_AZ;
+        lastFiltersType = null;
         view.showSelectAz();
         view.updateContents();
     }
@@ -60,8 +61,9 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void selectDate() {
         FILTER_NOW = FILTER_BY_DATE;
+        lastFiltersType = null;
         view.showSelectDate();
-       view.updateContents();
+        view.updateContents();
     }
 
     @Override
@@ -71,8 +73,16 @@ public class ContentListPresenterImpl implements ContentListPresenter {
 
     @Override
     public void setup(int folder) {
+
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+        if (infoApp != null) {
+            lastUpdate = infoApp.lastUpdate;
+        }
+
+
         this.folderSample = folder;
-        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+
         InfoApp info = realm.where(InfoApp.class).findFirst();
         userTarget = info.lineShortCode;
         view.setup();
@@ -114,8 +124,22 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                 if (checkCategory(allTargets) && contentToView(folderRoot.contents.get(j))) {
                     ContentDoc contentDoc = new ContentDoc();
                     contentDoc.id = folderRoot.contents.get(j).id;
-                    contentDoc.lastUpdate =  folderRoot.contents.get(j).lastUpdate;
+                    contentDoc.lastUpdate = folderRoot.contents.get(j).lastUpdate;
                     contentDoc.keywords = folderRoot.contents.get(j).keywords;
+                    contentDoc.viewed = folderRoot.contents.get(j).isViewed();
+                    if (folderRoot.contents.get(j).lastUpdate > lastUpdate && lastUpdate > 0 && !contentDoc.viewed) {
+                        if (folderRoot.contents.get(j).alertHighlight) {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
+                        } else {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.NEW;
+                        }
+                    } else {
+
+                        if (folderRoot.contents.get(j).alertHighlight) {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
+                        }
+                    }
+
                     contentDoc.alertHighlight = folderRoot.contents.get(j).alertHighlight;
                     TypeContent typeContent = folderRoot.contents.get(j).type;
                     if (typeContent.descr.equalsIgnoreCase("pdf")) {
@@ -147,7 +171,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     return o1.name.compareTo(o2.name);
                 }
             });
-        } else   if (FILTER_NOW == FILTER_BY_DATE) {
+        } else if (FILTER_NOW == FILTER_BY_DATE) {
             Collections.sort(contents, new Comparator<ContentDoc>() {
                 @Override
                 public int compare(ContentDoc o1, ContentDoc o2) {
@@ -161,9 +185,9 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     }
 
     private boolean contentToView(ContentBox contentBox) {
-        boolean visible= true;
-        if(!contentBox.visible || !contentBox.active && !contentBox.approved){
-            visible= false;
+        boolean visible = true;
+        if (!contentBox.visible || !contentBox.active && !contentBox.approved) {
+            visible = false;
         }
         return visible;
     }
@@ -181,7 +205,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         for (int i = 0; i < allTargets.size(); i++) {
             tagetId.add(allTargets.get(i).code.toLowerCase());
         }
-         switch (categoryContent.toLowerCase()) {
+        switch (categoryContent.toLowerCase()) {
 
             case "isf":
                 if (userTarget.equalsIgnoreCase("s")) {
@@ -205,7 +229,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                 }
                 break;
         }
-        Dbg.p("checkCategory inTarget: "+inTarget);
+        Dbg.p("checkCategory inTarget: " + inTarget);
 
         return inTarget;
     }
@@ -237,7 +261,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
 
     @Override
     public ArrayList<ContentDoc> getContentsByFolder(int id) {
-        lastId= id;
+        lastIdFolder = id;
         folderContentFolderList.clear();
         folderContentFolderList = new ArrayList<ContentDoc>();
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
@@ -252,6 +276,21 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     contentDoc.keywords = folder.contents.get(j).keywords;
                     contentDoc.alertHighlight = folder.contents.get(j).alertHighlight;
                     contentDoc.name = folder.contents.get(j).name;
+                    contentDoc.viewed = folder.contents.get(j).isViewed();
+//
+                    if (folder.contents.get(j).lastUpdate > lastUpdate && lastUpdate > 0 && !folder.contents.get(j).isViewed()) {
+                        if (folder.contents.get(j).alertHighlight) {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
+                        } else {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.NEW;
+                        }
+                    } else {
+
+                        if (folder.contents.get(j).alertHighlight) {
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT;
+                        }
+                    }
+
                     TypeContent typeContent = folder.contents.get(j).type;
                     if (typeContent.descr.equalsIgnoreCase("pdf")) {
                         contentDoc.type = SelfBoxConstants.TypeContent.PDF;
@@ -282,7 +321,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     return o1.name.compareTo(o2.name);
                 }
             });
-        } else   if (FILTER_NOW == FILTER_BY_DATE) {
+        } else if (FILTER_NOW == FILTER_BY_DATE) {
             Collections.sort(folderContentFolderList, new Comparator<ContentDoc>() {
                 @Override
                 public int compare(ContentDoc o1, ContentDoc o2) {
@@ -305,6 +344,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
 
     @Override
     public void selectFilter(String filterText) {
+        lastFiltersType = null;
         ArrayList<ContentDoc> filtered = new ArrayList<>();
         if (levelView == 0) {
             if (contents != null) {
@@ -343,7 +383,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
 
     @Override
     public void selectLastFilter() {
-
+        lastFiltersType = null;
         if (levelView == 0) {
             view.applyFilter(contents);
         } else if (levelView == 1) {
@@ -361,10 +401,10 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void getUpdateContents() {
         if (levelView == 0) {
-            contents= (ArrayList<ContentDoc>) getContents(categoryContent);
+            contents = (ArrayList<ContentDoc>) getContents(categoryContent);
             view.applyFilter(contents);
         } else if (levelView == 1) {
-            folderContentFolderList= getContentsByFolder(lastId);
+            folderContentFolderList = getContentsByFolder(lastIdFolder);
             view.applyFilter(folderContentFolderList);
         }
 
@@ -372,42 +412,54 @@ public class ContentListPresenterImpl implements ContentListPresenter {
 
     @Override
     public void filterTypes(Filters filterList) {
-        ArrayList<ContentDoc> contentDocs= new ArrayList<>();
+        ArrayList<ContentDoc> contentDocs = new ArrayList<>();
+        lastFiltersType = filterList;
         if (levelView == 0) {
-          if(filterList.all){
-              view.applyFilter(contents);
-          }else{
-              for (int i = 0; i < contentDocs.size(); i++) {
-                  ContentDoc contentDoc= contentDocs.get(i);
-                  if(contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents){
-                      contentDocs.add(contentDoc);
-                  }else   if(contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual){
-                      contentDocs.add(contentDoc);
-                  }else   if(contentDoc.alertHighlight  && filterList.alertHighlight){
-                      contentDocs.add(contentDoc);
-                  }else   if(contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video){
-                      contentDocs.add(contentDoc);
-                  }
-              }
-              view.applyFilter(contentDocs);
-          }
+            if (filterList.all) {
+                view.applyFilter(contents);
+            } else {
+                for (int i = 0; i < contentDocs.size(); i++) {
+                    ContentDoc contentDoc = contentDocs.get(i);
+                    if (contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents) {
+                        contentDocs.add(contentDoc);
+                    } else if (contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual) {
+                        contentDocs.add(contentDoc);
+                    } else if (contentDoc.alertHighlight && filterList.alertHighlight) {
+                        contentDocs.add(contentDoc);
+                    } else if (contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video) {
+                        contentDocs.add(contentDoc);
+                    }
+                }
+                view.applyFilter(contentDocs);
+            }
 
 
         } else if (levelView == 1) {
-            if(filterList.all){
+            if (filterList.all) {
                 view.applyFilter(folderContentFolderList);
-            }else{
+            } else {
+                Dbg.p("filterList.alertHighlight: "+filterList.alertHighlight);
                 for (int i = 0; i < folderContentFolderList.size(); i++) {
-                    ContentDoc contentDoc= folderContentFolderList.get(i);
-                    if(contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents){
-                        contentDocs.add(contentDoc);
-                    }else   if(contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual){
-                        contentDocs.add(contentDoc);
-                    }else   if(contentDoc.alertHighlight  && filterList.alertHighlight){
-                        contentDocs.add(contentDoc);
-                    }else   if(contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video){
-                        contentDocs.add(contentDoc);
+                    ContentDoc contentDoc = folderContentFolderList.get(i);
+                    if(filterList.alertHighlight){
+                        if (contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents) {
+                            contentDocs.add(contentDoc);
+                        } else if (contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual) {
+                            contentDocs.add(contentDoc);
+                        } else if (contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video) {
+                            contentDocs.add(contentDoc);
+                        }
+                    }else{
+                        if (contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents && !contentDoc.alertHighlight) {
+                            contentDocs.add(contentDoc);
+                        } else if (contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual && !contentDoc.alertHighlight) {
+                            contentDocs.add(contentDoc);
+                        } else if (contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video && !contentDoc.alertHighlight) {
+                            contentDocs.add(contentDoc);
+                        }
                     }
+
+
                 }
                 view.applyFilter(contentDocs);
             }
@@ -416,15 +468,33 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         }
     }
 
-    private int getType(String name) {
-
-        if (name.equalsIgnoreCase("pdf")) {
-            return SelfBoxConstants.TypeContent.PDF;
-        } else if (name.equalsIgnoreCase("video")) {
-            return SelfBoxConstants.TypeContent.VIDEO;
+    @Override
+    public Filters getLastFilter() {
+        if (lastFiltersType != null) {
+            return lastFiltersType;
         }
-        return SelfBoxConstants.TypeContent.PDF;
+        return new Filters(true);
+    }
 
+    @Override
+    public void setContentViewed(int id) {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        ContentBox content = realm.where(ContentBox.class).equalTo("id", id).findFirst();
+        if (content.isViewed()) {
+
+        } else {
+            realm.beginTransaction();
+            content.setViewed(true);
+            realm.copyToRealmOrUpdate(content);
+            realm.commitTransaction();
+            if (levelView == 1) {
+                getContentsByFolder(lastIdFolder);
+                view.applyFilter(folderContentFolderList);
+            } else if (levelView == 0) {
+                getContents(categoryContent);
+                view.applyFilter(contents);
+            }
+        }
     }
 
 

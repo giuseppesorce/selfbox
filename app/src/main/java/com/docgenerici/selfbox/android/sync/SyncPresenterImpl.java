@@ -36,6 +36,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -202,17 +203,25 @@ public class SyncPresenterImpl implements SyncPresenter {
         Realm realm= SelfBoxApplicationImpl.appComponent.realm();
 
         SyncDataCheck syncData= realm.where(SyncDataCheck.class).findFirst();
-        if(syncData !=null && syncData.started){
-            if(syncData.contents ==1 && syncData.products==1){
-                realm.beginTransaction();
-                syncData.contents=0;
-                syncData.products=0;
-                syncData.started=false;
-                realm.copyToRealmOrUpdate(syncData);
-                realm.commitTransaction();
-                syncContents=null;
-                getContents();
-                view.gotoHome();
+        if(syncData.fromhome){
+            realm.beginTransaction();
+            syncData.fromhome= false;
+            realm.copyToRealmOrUpdate(syncData);
+            realm.commitTransaction();
+
+        }else {
+            if (syncData != null && syncData.started) {
+                if (syncData.contents == 1 && syncData.products == 1) {
+                    realm.beginTransaction();
+                    syncData.contents = 0;
+                    syncData.products = 0;
+                    syncData.started = false;
+                    realm.copyToRealmOrUpdate(syncData);
+                    realm.commitTransaction();
+                    syncContents = null;
+                    getContents();
+                    view.gotoHome();
+                }
             }
         }
     }
@@ -412,11 +421,13 @@ public class SyncPresenterImpl implements SyncPresenter {
                         }
                     });
         }
-
     }
 
     private void persistenceContentList(List<Folder> folders) {
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+        long lastUpdate= infoApp.lastUpdate;
+        Dbg.p("lastUpdate: "+lastUpdate);
         realm.beginTransaction();
         for (int i = 0; i < folders.size(); i++) {
             realm.copyToRealmOrUpdate(folders.get(i));
@@ -424,16 +435,21 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.commitTransaction();
         ArrayList<Integer> ids= new ArrayList<>();
         long dateNow= new Date().getTime();
-        Dbg.p("DATENOW: "+dateNow);
-        for (int i = 0; i < folders.size(); i++) {
+        realm.beginTransaction();
+         for (int i = 0; i < folders.size(); i++) {
             RealmList<ContentBox> contentBoxs = folders.get(i).contents;
             for (int j = 0; j < contentBoxs.size(); j++) {
                 ContentBox contentBox = contentBoxs.get(j);
+                if( contentBox.lastUpdate <=0){
+                    contentBox.lastUpdate= contentBox.creationDate;
+                    realm.copyToRealmOrUpdate(contentBox);
+                }
                 if(!contentBox.active || !contentBox.visible || contentBox.approved || (dateNow > contentBox.expirationDate)){
                     ids.add(contentBox.id);
                 }
             }
         }
+        realm.commitTransaction();
         RealmQuery<ContentBox> query = realm.where(ContentBox.class);
         if (ids.size() == 0) {
 
@@ -453,14 +469,16 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-
-                // Delete all matches
                 result.deleteAllFromRealm();
             }
         });
 
-
-
+        RealmResults<ContentBox> allContentBox = realm.where(ContentBox.class).findAllSorted("lastUpdate", Sort.DESCENDING);
+        InfoApp info = realm.where(InfoApp.class).findFirst();
+        realm.beginTransaction();
+        info.lastUpdate= allContentBox.get(0).lastUpdate;
+        realm.copyToRealmOrUpdate(info);
+        realm.commitTransaction();
         view.startContentsService();
     }
 

@@ -61,12 +61,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     RecyclerView rvGallery;
     @BindColor(R.color.grey_filter)
     int grey_filter;
-    @BindDrawable(R.drawable.sample1)
-    Drawable sample1;
-    @BindDrawable(R.drawable.sample2)
-    Drawable sample2;
-    @BindDrawable(R.drawable.sample3)
-    Drawable sample3;
     @BindView(R.id.btFilter)
     Button btFilter;
     @BindView(R.id.tvTitle)
@@ -136,7 +130,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public void setup() {
         gridLayout = new GridLayoutManager(getActivity(), 3);
         rvGallery.setLayoutManager(gridLayout);
-        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), getCanShare(), this);
+        galleryAdapter = new GalleryAdapter(getActivity(), presenter.getContents(categoryContent), getCanShare(), categoryContent, this);
         rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         rvGallery.setAdapter(galleryAdapter);
     }
@@ -146,7 +140,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         if (categoryContent.equalsIgnoreCase("isf")) {
             canshare = false;
         }
-        Dbg.p("canshare: " + canshare);
         return canshare;
     }
 
@@ -154,9 +147,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         tvTitle.setText(strContenuti);
         presenter.setLevelView(0);
         galleryAdapter.changeItems(presenter.getContents(categoryContent));
-
-        // rvGallery.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-
     }
 
     private void createGalleryContentsItemsFromFolder(int id) {
@@ -196,7 +186,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public void openFilterDialog() {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        filtersDialog = FilterDialog.createInstance();
+        filtersDialog = FilterDialog.createInstance(presenter.getLastFilter());
         filtersDialog.setListener(new FilterListener(){
 
             @Override
@@ -215,7 +205,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         }
     }
 
-
     @Override
     public void applyFilter(ArrayList<ContentDoc> filtered) {
         if (galleryAdapter != null) {
@@ -226,7 +215,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void updateContents() {
         presenter.getUpdateContents();
-
     }
 
     @Override
@@ -246,15 +234,18 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
             createGalleryContentsItemsFromFolder(contentSelect.id);
         } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
+                presenter.setContentViewed(contentSelect.id);
                 Intent intentVideo = new Intent(getActivity(), VideoActivity.class);
                 intentVideo.putExtra("path", contentSelect.content);
                 startActivity(intentVideo);
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
+                presenter.setContentViewed(contentSelect.id);
                 Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
                 startActivity(intentVisual);
 
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
+                presenter.setContentViewed(contentSelect.id);
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", contentSelect.content);
                 if (contentSelect.content != null) {
@@ -262,9 +253,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 }
             }
         }
-
     }
-
 
     @Override
     public void onSelectShare(int position) {
@@ -280,7 +269,6 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
             return false;
         }
         return true;
-
     }
 
     @Override

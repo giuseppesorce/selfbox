@@ -71,13 +71,13 @@
         android:background="@drawable/back_rounded_orange_new"
         android:layout_marginRight="14dp"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="2dp"
         android:visibility="gone"
         android:layout_height="36dp"/>
     <com.docgenerici.selfbox.android.custom.texts.CTextView
         android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:textColor="@color/white"
         android:text="NEW"
         android:id="@+id/tvNew"
@@ -88,23 +88,20 @@
         android:layout_height="wrap_content" />
     <ImageView
         android:layout_width="match_parent"
-        android:background="@drawable/borderline"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:id="@+id/ivBorder"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="20dp"
         android:visibility="gone"
         android:layout_centerInParent="true"
         android:layout_height="match_parent" />
     <ImageView
         android:layout_width="wrap_content"
         android:id="@+id/ivImp"
-        android:src="@drawable/ic_imp_orange"
         android:layout_alignParentRight="true"
         android:layout_marginRight="14dp"
         android:visibility="gone"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="11dp"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

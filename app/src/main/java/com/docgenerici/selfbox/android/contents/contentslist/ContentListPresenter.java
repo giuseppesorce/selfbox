@@ -42,9 +42,13 @@ public interface ContentListPresenter extends Presenter {
 
     void setCategory(String categoryContent);
 
-void getUpdateContents();
+    void getUpdateContents();
 
     void filterTypes(Filters filterList);
+
+    Filters getLastFilter();
+
+    void setContentViewed(int id);
 
     interface ContentView extends BaseView {
 

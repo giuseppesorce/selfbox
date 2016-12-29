@@ -19,6 +19,7 @@ public class InfoApp extends RealmObject {
     public String line;
     public String lineShortCode;
     public String lineCode;
+    public long lastUpdate;
     public boolean result;
 
 }

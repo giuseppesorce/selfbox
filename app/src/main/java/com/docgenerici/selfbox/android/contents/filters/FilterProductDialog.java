@@ -71,8 +71,8 @@ public class FilterProductDialog extends DialogFragment implements OnItemClickLi
                 false);
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
-        if(getArguments() !=null){
-            categories= getArguments().getStringArrayList("categoriesList");
+        if (getArguments() != null) {
+            categories = getArguments().getStringArrayList("categoriesList");
         }
         createLegendFilter();
         return root;
@@ -91,8 +91,6 @@ public class FilterProductDialog extends DialogFragment implements OnItemClickLi
     }
 
 
-
-
     @OnClick(R.id.tvFiltri)
     void onSelectFiltri() {
         dismiss();
@@ -106,13 +104,13 @@ public class FilterProductDialog extends DialogFragment implements OnItemClickLi
     @Override
     public void onItemClick(View view, int position) {
         for (int i = 0; i < filtersProducts.size(); i++) {
-           Dbg.p("filtersProducts: "+ filtersProducts.get(i).select);
+            Dbg.p("filtersProducts: " + filtersProducts.get(i).select);
         }
         listener.onChangeFilter(filtersProducts);
     }
 
-    public void setListener(  OnSelectFilter listener) {
-        this.listener= listener;
+    public void setListener(OnSelectFilter listener) {
+        this.listener = listener;
     }
 //
 //    @OnClick(R.id.tvAvvisi)

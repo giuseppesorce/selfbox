@@ -87,7 +87,7 @@
         android:layout_height="wrap_content" />
     <ImageView
         android:layout_width="match_parent"
-        android:background="@drawable/borderline"
+
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:id="@+id/ivBorder"
@@ -99,7 +99,6 @@
     <ImageView
         android:layout_width="wrap_content"
         android:id="@+id/ivImp"
-        android:src="@drawable/ic_imp_orange"
         android:layout_alignParentRight="true"
         android:layout_marginRight="14dp"
         android:visibility="gone"

@@ -17,6 +17,7 @@ public class SyncDataCheck extends RealmObject {
     public int products;
     public int anagraphic;
     public boolean started;
+    public boolean fromhome;
 
 
 }

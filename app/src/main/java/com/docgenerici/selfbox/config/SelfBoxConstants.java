@@ -20,7 +20,8 @@ public class SelfBoxConstants {
         public static final int NEW= 1;
         public static final int READ= 2;
         public static final int NOREAD= 3;
-        public static final int MPORTANT= 4;
+        public static final int IMPORTANT = 4;
+        public static final int IMPORTANT_NEW = 5;
     }
 
     public class TypeProductRow{

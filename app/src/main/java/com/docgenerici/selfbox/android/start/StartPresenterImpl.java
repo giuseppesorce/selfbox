@@ -51,6 +51,7 @@ public class StartPresenterImpl implements StartPresenter {
         if (hereActivation()) {
 //
             if (syncronized()) {
+              //  deleteLastUpdate();
                 view.gotoHome();
 
             } else {
@@ -62,6 +63,23 @@ public class StartPresenterImpl implements StartPresenter {
             getEmailText();
 
         }
+    }
+
+    private void deleteLastUpdate() {
+
+            final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+            InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+             try{
+                realm.beginTransaction();
+                infoApp.lastUpdate=0;
+                realm.copyToRealmOrUpdate(infoApp);
+
+            }catch (Exception ex){
+
+            }finally {
+                realm.commitTransaction();
+            }
+
     }
 
     private boolean syncronized() {

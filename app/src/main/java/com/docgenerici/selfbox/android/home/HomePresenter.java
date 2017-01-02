@@ -31,6 +31,12 @@ public interface HomePresenter extends Presenter {
 
     void onSelectMedicoUser(MedicoDto lastMedicoUser);
 
+    void addMedicalView(MedicoDto lastMedicoUser);
+
+    void addPharmaView(FarmaciaDto lastPharmaUser);
+
+    void setup();
+
     interface HomeView extends BaseView {
 
         void showISF();

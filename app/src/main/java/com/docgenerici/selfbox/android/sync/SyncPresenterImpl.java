@@ -476,6 +476,21 @@ public class SyncPresenterImpl implements SyncPresenter {
 
         if(lastUpdate>0){
             RealmResults<ContentBox> allContentBoxNew = realm.where(ContentBox.class).greaterThan("lastUpdate", lastUpdate).findAll();
+            if(allContentBoxNew !=null  && allContentBoxNew.size() > 0) {
+                try {
+                    realm.beginTransaction();
+                    for (int i = 0; i < allContentBoxNew.size(); i++) {
+                        allContentBoxNew.get(i).setNewcontent(true);
+                        realm.copyToRealmOrUpdate(allContentBoxNew.get(i));
+                    }
+
+                } catch (Exception ex) {
+
+                } finally {
+                    realm.commitTransaction();
+                }
+            }
+
         }
 
 

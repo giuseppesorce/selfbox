@@ -42,6 +42,7 @@ public class ContentBox extends RealmObject {
     private boolean viewed;
     private boolean countViewed;
     private boolean countSended;
+    private boolean newcontent;
 
     public String getLocalfilePath() {
         return localfilePath;
@@ -81,5 +82,13 @@ public class ContentBox extends RealmObject {
 
     public void setCountViewed(boolean countViewed) {
         this.countViewed = countViewed;
+    }
+
+    public boolean isNewcontent() {
+        return newcontent;
+    }
+
+    public void setNewcontent(boolean newcontent) {
+        this.newcontent = newcontent;
     }
 }

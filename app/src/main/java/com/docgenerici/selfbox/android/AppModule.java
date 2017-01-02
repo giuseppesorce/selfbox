@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.inputmethod.InputMethodManager;
 
+import com.docgenerici.selfbox.models.persistence.MyRealmMigration;
 import com.google.gson.Gson;
 
 import javax.inject.Singleton;
@@ -28,11 +29,11 @@ import io.realm.RealmConfiguration;
 public class AppModule {
 
     private final Context context;
-    //private MyRealmMigration myMigration;
+    private MyRealmMigration myMigration;
 
     public AppModule(Context context) {
         this.context = context;
-      //  this.myMigration= new MyRealmMigration();
+       this.myMigration= new MyRealmMigration();
     }
 
     @Provides
@@ -102,20 +103,20 @@ public class AppModule {
 
     @Provides
     Realm provideRealm() {
-//        Realm.init(context);
-//        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-//                .schemaVersion(1)
-//                .migration(myMigration)
-//                .build();
-//        Realm.setDefaultConfiguration(realmConfiguration);
-//        return Realm.getDefaultInstance();
         Realm.init(context);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .migration(myMigration)
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
-
         return Realm.getDefaultInstance();
+//        Realm.init(context);
+//        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+//                .deleteRealmIfMigrationNeeded()
+//                .build();
+//        Realm.setDefaultConfiguration(realmConfiguration);
+//
+//        return Realm.getDefaultInstance();
     }
 
 

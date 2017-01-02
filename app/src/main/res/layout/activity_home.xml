@@ -68,12 +68,13 @@
         android:background="@drawable/back3button">
 
         <RelativeLayout
+            android:id="@+id/rlISF"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/rlISF"
             android:layout_weight="1">
 
             <ImageView
+                android:id="@+id/ivISF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/tvIsf"
@@ -85,16 +86,31 @@
                 style="@style/hometext"
                 android:text="@string/home_isf" />
 
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:id="@+id/tvIsfNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="17dp"
+                android:layout_toRightOf="@+id/ivISF"
+                android:background="@drawable/back_rounded_notification"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="1"
+
+                android:textColor="@color/white"
+                android:textSize="28sp" />
+
 
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlPharma"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/rlPharma"
             android:layout_weight="1">
 
             <ImageView
+                android:id="@+id/ivPharma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/tvPharma"
@@ -106,15 +122,31 @@
                 style="@style/hometext"
                 android:text="@string/home_farmacista" />
 
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:id="@+id/tvPharmaNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="17dp"
+                android:layout_toRightOf="@+id/ivPharma"
+                android:background="@drawable/back_rounded_notification"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="1"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:textSize="28sp" />
+
+
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlMedico"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/rlMedico"
             android:layout_weight="1">
 
             <ImageView
+                android:id="@+id/ivMedico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/tvMedico"
@@ -125,59 +157,78 @@
                 android:id="@+id/tvMedico"
                 style="@style/hometext"
                 android:text="@string/hom_medico" />
+
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:id="@+id/tvMedicalNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="17dp"
+                android:layout_toRightOf="@+id/ivMedico"
+                android:background="@drawable/back_rounded_notification"
+                android:gravity="center"
+                android:visibility="gone"
+                android:padding="10dp"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="28sp" />
         </RelativeLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="350dp"
-        android:background="@drawable/back_rounded_home"
-        android:layout_below="@+id/rlToolbar"
+        android:layout_height="150dp"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="25dp"
+        android:layout_below="@+id/rlToolbar"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/back_rounded_home"
+        android:gravity="center_vertical"
 
 
-        android:layout_height="150dp">
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="70dp"
-            android:src="@drawable/email"
+            android:layout_height="70dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
-            android:layout_height="70dp" />
+            android:src="@drawable/email" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
             <com.docgenerici.selfbox.android.custom.texts.CTextView
                 android:layout_width="wrap_content"
-                android:text="Per assistenza tecnica contatta:"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:text="Per assistenza tecnica contatta:"
                 android:textColor="#ffffff"
-                android:textSize="18sp"
-                android:layout_height="wrap_content" />
-        <com.docgenerici.selfbox.android.custom.texts.CTextView
-            android:layout_width="match_parent"
-            android:text="Helpdesk"
-            android:textColor="#ffffff"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="40sp"
-            anytext:font="robotobold"
-            android:layout_height="wrap_content" />
+                android:textSize="18sp" />
+
             <com.docgenerici.selfbox.android.custom.texts.CTextView
                 android:layout_width="match_parent"
-                android:text="HelpDesk riservato agli ISF"
-                android:layout_marginTop="5dp"
-                android:textColor="#ffffff"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:text="Helpdesk"
+                android:textColor="#ffffff"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                anytext:font="robotobold" />
+
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_height="wrap_content" />
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="HelpDesk riservato agli ISF"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
         </LinearLayout>
 
 

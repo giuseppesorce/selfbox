@@ -52,5 +52,13 @@ public interface HomePresenter extends Presenter {
         void showInfo();
 
         void showDialogMedicalSearch();
+
+        void showIsfNotification(int size);
+        void showPharmaNotification(int size);
+        void showMedicalNotification(int size);
+
+        void hideIsfNotification();
+
+        void hidePharmaNotification();
     }
 }

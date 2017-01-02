@@ -79,10 +79,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         if (infoApp != null) {
             lastUpdate = infoApp.lastUpdate;
         }
-
-
         this.folderSample = folder;
-
         InfoApp info = realm.where(InfoApp.class).findFirst();
         userTarget = info.lineShortCode;
         view.setup();
@@ -127,7 +124,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     contentDoc.lastUpdate = folderRoot.contents.get(j).lastUpdate;
                     contentDoc.keywords = folderRoot.contents.get(j).keywords;
                     contentDoc.viewed = folderRoot.contents.get(j).isViewed();
-                    if (folderRoot.contents.get(j).lastUpdate > lastUpdate && lastUpdate > 0 && !contentDoc.viewed) {
+                    if (folderRoot.contents.get(j).isNewcontent() && !contentDoc.viewed) {
                         if (folderRoot.contents.get(j).alertHighlight) {
                             contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
                         } else {
@@ -278,7 +275,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     contentDoc.name = folder.contents.get(j).name;
                     contentDoc.viewed = folder.contents.get(j).isViewed();
 //
-                    if (folder.contents.get(j).lastUpdate > lastUpdate && lastUpdate > 0 && !folder.contents.get(j).isViewed()) {
+                    if (folder.contents.get(j).isNewcontent() && !folder.contents.get(j).isViewed()) {
                         if (folder.contents.get(j).alertHighlight) {
                             contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
                         } else {
@@ -438,10 +435,10 @@ public class ContentListPresenterImpl implements ContentListPresenter {
             if (filterList.all) {
                 view.applyFilter(folderContentFolderList);
             } else {
-                Dbg.p("filterList.alertHighlight: "+filterList.alertHighlight);
+                Dbg.p("filterList.alertHighlight: " + filterList.alertHighlight);
                 for (int i = 0; i < folderContentFolderList.size(); i++) {
                     ContentDoc contentDoc = folderContentFolderList.get(i);
-                    if(filterList.alertHighlight){
+                    if (filterList.alertHighlight) {
                         if (contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents) {
                             contentDocs.add(contentDoc);
                         } else if (contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual) {
@@ -449,7 +446,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                         } else if (contentDoc.type == SelfBoxConstants.TypeContent.VIDEO && filterList.video) {
                             contentDocs.add(contentDoc);
                         }
-                    }else{
+                    } else {
                         if (contentDoc.type == SelfBoxConstants.TypeContent.PDF && filterList.documents && !contentDoc.alertHighlight) {
                             contentDocs.add(contentDoc);
                         } else if (contentDoc.type == SelfBoxConstants.TypeContent.VISUAL && filterList.eVisual && !contentDoc.alertHighlight) {
@@ -480,21 +477,20 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     public void setContentViewed(int id) {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         ContentBox content = realm.where(ContentBox.class).equalTo("id", id).findFirst();
-        if (content.isViewed()) {
 
-        } else {
-            realm.beginTransaction();
-            content.setViewed(true);
-            realm.copyToRealmOrUpdate(content);
-            realm.commitTransaction();
-            if (levelView == 1) {
-                getContentsByFolder(lastIdFolder);
-                view.applyFilter(folderContentFolderList);
-            } else if (levelView == 0) {
-                getContents(categoryContent);
-                view.applyFilter(contents);
-            }
+        realm.beginTransaction();
+        content.setViewed(true);
+        content.setNewcontent(false);
+        realm.copyToRealmOrUpdate(content);
+        realm.commitTransaction();
+        if (levelView == 1) {
+            getContentsByFolder(lastIdFolder);
+            view.applyFilter(folderContentFolderList);
+        } else if (levelView == 0) {
+            getContents(categoryContent);
+            view.applyFilter(contents);
         }
+
     }
 
 

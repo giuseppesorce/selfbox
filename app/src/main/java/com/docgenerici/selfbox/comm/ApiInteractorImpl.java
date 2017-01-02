@@ -52,4 +52,9 @@ class ApiInteractorImpl implements ApiInteractor {
     public Single<ResponseBody> shareData(ShareDataSend shareDataSend) {
         return api.shareData(shareDataSend);
     }
+
+    @Override
+    public Single<ResponseBody> sendStatistic(ShareDataSend shareDataSend) {
+        return null;
+    }
 }

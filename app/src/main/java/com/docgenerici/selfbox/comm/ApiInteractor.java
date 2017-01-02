@@ -32,6 +32,7 @@ public interface ApiInteractor {
   Single<ResponseBody> getProduct(String date);
   Single<EmailText> getEmailText();
   Single<ResponseBody> shareData(ShareDataSend shareDataSend);
+  Single<ResponseBody> sendStatistic(ShareDataSend shareDataSend);
 
 
 }

@@ -50,6 +50,7 @@ public interface ContentListPresenter extends Presenter {
 
     void setContentViewed(int id);
 
+
     interface ContentView extends BaseView {
 
         void showSelectAz();

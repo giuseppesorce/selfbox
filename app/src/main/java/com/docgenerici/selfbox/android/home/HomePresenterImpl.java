@@ -141,6 +141,16 @@ public class HomePresenterImpl implements HomePresenter {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         RealmResults<ContentBox> newContents = realm.where(ContentBox.class).equalTo("newcontent", true).findAll();
         Dbg.p("CONTENUTI NUOVI:"+newContents.size());
+        int isf=0;
+        int medico=0;
+        int pahrma=0;
+        if(newContents !=null && newContents.size() >0) {
+            view.showIsfNotification(newContents.size());
+        }else{
+            view.hideIsfNotification();
+            view.hidePharmaNotification();
+
+        }
 
     }
 }

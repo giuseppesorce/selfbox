@@ -9,6 +9,7 @@ public class ContentEasy {
 
     public int id;
     public String filename;
+    public String name;
     public String resourcePath;
     public String thumbnailCover;
     public String thumbnailPath;

@@ -237,17 +237,20 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVideo = new Intent(getActivity(), VideoActivity.class);
                 intentVideo.putExtra("path", contentSelect.content);
+
                 startActivity(intentVideo);
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
+
                 startActivity(intentVisual);
 
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
                 presenter.setContentViewed(contentSelect.id);
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", contentSelect.content);
+
                 if (contentSelect.content != null) {
                     startActivity(intent);
                 }

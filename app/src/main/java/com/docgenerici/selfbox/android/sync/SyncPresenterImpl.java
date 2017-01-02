@@ -427,7 +427,7 @@ public class SyncPresenterImpl implements SyncPresenter {
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         InfoApp infoApp = realm.where(InfoApp.class).findFirst();
         long lastUpdate= infoApp.lastUpdate;
-        Dbg.p("lastUpdate: "+lastUpdate);
+        Dbg.p("persistenceContentList lastUpdate: "+lastUpdate);
         realm.beginTransaction();
         for (int i = 0; i < folders.size(); i++) {
             realm.copyToRealmOrUpdate(folders.get(i));
@@ -438,19 +438,28 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.beginTransaction();
          for (int i = 0; i < folders.size(); i++) {
             RealmList<ContentBox> contentBoxs = folders.get(i).contents;
+             if(folders.get(i).name.equalsIgnoreCase("root")){
+                 for (int c = 0; c < folders.get(i).contents.size(); c++) {
+                     Dbg.p("persistenceContentList Content name: "+ folders.get(i).contents.get(c).name);
+                     Dbg.p("persistenceContentList lastUpdate: "+ folders.get(i).contents.get(c).lastUpdate);
+                     Dbg.p("persistenceContentList lastUpdate: "+ (folders.get(i).contents.get(c).lastUpdate >lastUpdate));
+                 }
+             }
             for (int j = 0; j < contentBoxs.size(); j++) {
                 ContentBox contentBox = contentBoxs.get(j);
                 if( contentBox.lastUpdate <=0){
                     contentBox.lastUpdate= contentBox.creationDate;
-                    realm.copyToRealmOrUpdate(contentBox);
+
                 }
-                if(!contentBox.active || !contentBox.visible || contentBox.approved || (dateNow > contentBox.expirationDate)){
+                if(!contentBox.active || !contentBox.visible || !contentBox.approved || (dateNow > contentBox.expirationDate)){
                     ids.add(contentBox.id);
                 }
+                realm.copyToRealmOrUpdate(contentBox);
             }
         }
         realm.commitTransaction();
         RealmQuery<ContentBox> query = realm.where(ContentBox.class);
+        Dbg.p("persistenceContentList ids: "+ids.toString());
         if (ids.size() == 0) {
 
             query = query.equalTo("id", -30000);
@@ -469,14 +478,17 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                Dbg.p("persistenceContentList cancellato tutto");
                 result.deleteAllFromRealm();
             }
         });
 
 
         if(lastUpdate>0){
+            Dbg.p("persistenceContentList lastUpdate cerco quello che è maggiore: "+lastUpdate);
             RealmResults<ContentBox> allContentBoxNew = realm.where(ContentBox.class).greaterThan("lastUpdate", lastUpdate).findAll();
             if(allContentBoxNew !=null  && allContentBoxNew.size() > 0) {
+                Dbg.p("persistenceContentList allContentBoxNew: "+allContentBoxNew.size());
                 try {
                     realm.beginTransaction();
                     for (int i = 0; i < allContentBoxNew.size(); i++) {
@@ -490,10 +502,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                     realm.commitTransaction();
                 }
             }
-
         }
-
-
 
         RealmResults<ContentBox> allContentBox = realm.where(ContentBox.class).findAllSorted("lastUpdate", Sort.DESCENDING);
         InfoApp info = realm.where(InfoApp.class).findFirst();

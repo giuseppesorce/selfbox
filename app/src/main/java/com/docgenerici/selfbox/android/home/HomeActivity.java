@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -30,6 +32,7 @@ import com.docgenerici.selfbox.models.products.Product;
 import java.util.ArrayList;
 
 import butterknife.BindColor;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -42,7 +45,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     private HomePresenter presenter;
     @BindColor(R.color.grey_filter)
     int grey;
-
+    @BindView(R.id.tvIsfNotification)
+    TextView tvIsfNotification;
+    @BindView(R.id.tvMedicalNotification)
+    TextView tvMedicalNotification;
+    @BindView(R.id.tvPharmaNotification)
+    TextView tvPharmaNotification;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +61,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         presenter.setup();
         changeStatusBar(grey);
         checkWritePermission();
-
     }
 
     @OnClick(R.id.rlISF)
@@ -122,7 +129,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     public void gotoSync() {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
-
         realm.beginTransaction();
         syncData.fromhome = true;
         realm.copyToRealmOrUpdate(syncData);
@@ -148,6 +154,29 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         MedicalDialogFragment pharmaDialog = MedicalDialogFragment.createInstance(presenterMedicalList);
         pharmaDialog.show(ft, "medical");
 
+    }
+
+    @Override
+    public void showIsfNotification(int size) {
+        tvIsfNotification.setVisibility(View.VISIBLE);
+        tvIsfNotification.setText(""+size);
+    }
+
+    @Override
+    public void showPharmaNotification(int size) {
+        tvPharmaNotification.setVisibility(View.VISIBLE);
+        tvPharmaNotification.setText(""+size);
+    }
+
+    @Override
+    public void showMedicalNotification(int size) {
+        tvMedicalNotification.setVisibility(View.VISIBLE);
+        tvMedicalNotification.setText(""+size);
+    }
+
+    @Override
+    public void hideIsfNotification() {
+        //tvIsfNotification.setVisibility(View.GONE);
     }
 
     private void changeStatusBar(int color) {

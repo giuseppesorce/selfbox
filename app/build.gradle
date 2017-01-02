@@ -46,12 +46,14 @@ android {
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.release
+            buildConfigField "boolean", "debug", "false"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'BASE_URL', '"http://docportal-staging.docgenerici.it"'
         }
 
         debug {
             minifyEnabled false
+            buildConfigField "boolean", "debug", "true"
             buildConfigField 'String', 'BASE_URL', '"http://docportal-staging.docgenerici.it"'
             signingConfig signingConfigs.release
             shrinkResources false

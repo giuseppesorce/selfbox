@@ -473,6 +473,13 @@ public class SyncPresenterImpl implements SyncPresenter {
             }
         });
 
+
+        if(lastUpdate>0){
+            RealmResults<ContentBox> allContentBoxNew = realm.where(ContentBox.class).greaterThan("lastUpdate", lastUpdate).findAll();
+        }
+
+
+
         RealmResults<ContentBox> allContentBox = realm.where(ContentBox.class).findAllSorted("lastUpdate", Sort.DESCENDING);
         InfoApp info = realm.where(InfoApp.class).findFirst();
         realm.beginTransaction();

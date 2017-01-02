@@ -28,9 +28,11 @@ import io.realm.RealmConfiguration;
 public class AppModule {
 
     private final Context context;
+    //private MyRealmMigration myMigration;
 
     public AppModule(Context context) {
         this.context = context;
+      //  this.myMigration= new MyRealmMigration();
     }
 
     @Provides
@@ -100,6 +102,13 @@ public class AppModule {
 
     @Provides
     Realm provideRealm() {
+//        Realm.init(context);
+//        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+//                .schemaVersion(1)
+//                .migration(myMigration)
+//                .build();
+//        Realm.setDefaultConfiguration(realmConfiguration);
+//        return Realm.getDefaultInstance();
         Realm.init(context);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()

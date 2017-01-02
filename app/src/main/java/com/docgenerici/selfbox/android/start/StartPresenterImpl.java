@@ -159,7 +159,7 @@ public class StartPresenterImpl implements StartPresenter {
                     @Override
                     public void call(Throwable throwable) {
 
-                        Dbg.p("CALL ERRORE getProduct: " + throwable.getLocalizedMessage());
+                        Dbg.p("CALL ERRORE getEmailText : " + throwable.getLocalizedMessage());
 
                     }
                 });

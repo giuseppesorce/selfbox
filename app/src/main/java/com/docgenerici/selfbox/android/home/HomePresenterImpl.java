@@ -2,13 +2,15 @@ package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
-import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
+import com.docgenerici.selfbox.models.persistence.MedicalView;
+import com.docgenerici.selfbox.models.persistence.PharmaView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -95,5 +97,40 @@ public class HomePresenterImpl implements HomePresenter {
     public void onSelectMedicoUser(MedicoDto lastMedicoUser) {
 
         view.showMedico(lastMedicoUser);
+    }
+
+    @Override
+    public void addMedicalView(MedicoDto lastMedicoUser) {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        try{
+            realm.beginTransaction();
+            MedicalView medicalView= new MedicalView();
+            medicalView.setIdadd((int)new Date().getTime());
+            medicalView.setD(new Date());
+            medicalView.setId(lastMedicoUser.code);
+            realm.copyToRealmOrUpdate(medicalView);
+        }catch (Exception ex){
+
+        }finally {
+            realm.commitTransaction();
+        }
+
+    }
+
+    @Override
+    public void addPharmaView(FarmaciaDto lastPharmaUser) {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        try{
+            realm.beginTransaction();
+            PharmaView pharmaView= new PharmaView();
+            pharmaView.setIdadd((int)new Date().getTime());
+            pharmaView.setD(new Date());
+            pharmaView.setId(lastPharmaUser.ente);
+            realm.copyToRealmOrUpdate(pharmaView);
+        }catch (Exception ex){
+
+        }finally {
+            realm.commitTransaction();
+        }
     }
 }

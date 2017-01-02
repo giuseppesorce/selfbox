@@ -97,6 +97,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "medico");
         intent.putExtra("medico", lastMedicoUser);
+        presenter.addMedicalView(lastMedicoUser);
         startActivity(intent);
     }
 
@@ -172,6 +173,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         intent.putExtra("lastPharmaUser", lastPharmaUser);
+        presenter.addPharmaView(lastPharmaUser);
         startActivity(intent);
     }
 
@@ -185,6 +187,11 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

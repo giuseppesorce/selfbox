@@ -249,6 +249,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
                 presenter.setContentViewed(contentSelect.id);
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
+                Dbg.p("contentSelect.content: "+contentSelect.content);
                 intent.putExtra("path", contentSelect.content);
 
                 if (contentSelect.content != null) {

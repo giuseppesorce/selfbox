@@ -103,7 +103,7 @@ public class ContentsService extends IntentService {
                 ContentEasy contentEasy = contentsEasy.get(counterContents);
                 //CONTENT
                 if( contentEasy.name.startsWith("Demo")){
-                    Dbg.p("DEMO scarico demo");
+                    Dbg.p("DEMO scarico demo: "+contentEasy.name);
                 }
 
                 String pathContent = normalizePath(contentEasy.resourcePath) + contentEasy.filename;
@@ -111,8 +111,8 @@ public class ContentsService extends IntentService {
                 Uri uriContents = Uri.parse(pathContent.replace(" ", "%20"));
                 String filenameContent = contentEasy.lastUpdate + "___" + contentEasy.filename;
                 if( contentEasy.name.startsWith("Demo")){
-                    Dbg.p("DEMO uriContents:"+uriContents.toString());
-                    Dbg.p("DEMO filenameContent:"+filenameContent);
+                    Dbg.p("DEMO uriContents : "+contentEasy.name+" u:"+uriContents.toString());
+                    Dbg.p("DEMO filenameContent:"+contentEasy.name+" f:"+filenameContent);
                 }
                 File file = new File(getExternalFilesDir("contents"), filenameContent);
                 if (file.exists()) {
@@ -122,13 +122,13 @@ public class ContentsService extends IntentService {
                     unzipFile(file);
                     checkContentDownload();
                     if( contentEasy.name.startsWith("Demo")){
-                        Dbg.p("DEMO esiste");
-                        Dbg.p("DEMO filenameContent:"+filenameContent);
+                        Dbg.p("DEMO esiste :"+contentEasy.name);
+                        Dbg.p("DEMO filenameContent:"+contentEasy.name+" f:"+filenameContent);
                     }
                 } else {
 
                     if( contentEasy.name.startsWith("Demo")){
-                        Dbg.p("DEMO parte il download");
+                        Dbg.p("DEMO parte il download "+contentEasy.name);
 
                     }
                     downloaderContent.download(uriContents, "contents", filenameContent, contentEasy.id);

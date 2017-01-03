@@ -16,8 +16,8 @@ public class PharmaView extends RealmObject {
 
     @PrimaryKey
     private int idadd;
-    private String id;
-    private Date d;
+    private String code;
+    private Date selectionDate;
 
     public int getIdadd() {
         return idadd;
@@ -27,19 +27,19 @@ public class PharmaView extends RealmObject {
         this.idadd = idadd;
     }
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Date getD() {
-        return d;
+    public Date getSelectionDate() {
+        return selectionDate;
     }
 
-    public void setD(Date d) {
-        this.d = d;
+    public void setSelectionDate(Date selectionDate) {
+        this.selectionDate = selectionDate;
     }
 }

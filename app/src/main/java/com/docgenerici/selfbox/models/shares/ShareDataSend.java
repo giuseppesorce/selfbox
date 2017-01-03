@@ -16,9 +16,10 @@ public class ShareDataSend {
 
     public String isfCode;
     public String doctorCode;
-    public String doctorEmail;
+    public String drugstoreCode;
+    public String email;
     public String emailCustomText;
-    public String requestDate;
+    public long requestDate;
     public ArrayList<Integer> contentIds;
 
 

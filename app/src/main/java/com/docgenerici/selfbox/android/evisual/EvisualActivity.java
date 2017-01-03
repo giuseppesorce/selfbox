@@ -42,6 +42,9 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
         if (getIntent() != null) {
             pathVisual = getIntent().getStringExtra("path");
             Dbg.p("pathVisual: "+pathVisual);
+            if(pathVisual.startsWith("file://")){
+                pathVisual= pathVisual.replace("file://", "");
+            }
             File file= new File(pathVisual);
             if(file.exists()){
                 String fileName= file.getName();

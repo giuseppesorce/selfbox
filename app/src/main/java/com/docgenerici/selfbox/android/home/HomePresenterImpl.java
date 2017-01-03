@@ -4,10 +4,12 @@ import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.contents.ContentBox;
+import com.docgenerici.selfbox.models.contents.Target;
 import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
+import com.docgenerici.selfbox.models.persistence.InfoApp;
 import com.docgenerici.selfbox.models.persistence.MedicalView;
 import com.docgenerici.selfbox.models.persistence.PharmaView;
 
@@ -64,15 +66,15 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public ArrayList<FarmaciaDto> getPharmaList() {
-        ArrayList<FarmaciaDto> pharmaList= new ArrayList<>();
+        ArrayList<FarmaciaDto> pharmaList = new ArrayList<>();
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         RealmResults<Farmacia> farmacie = realm.where(Farmacia.class).findAll();
         for (int i = 0; i < farmacie.size(); i++) {
-            FarmaciaDto farmaciaDto= new FarmaciaDto();
-            farmaciaDto.id= farmacie.get(i).id;
-            farmaciaDto.fullname= farmacie.get(i).fullname;
-            farmaciaDto.type= farmacie.get(i).type;
-            farmaciaDto.ente= farmacie.get(i).ente;
+            FarmaciaDto farmaciaDto = new FarmaciaDto();
+            farmaciaDto.id = farmacie.get(i).id;
+            farmaciaDto.fullname = farmacie.get(i).fullname;
+            farmaciaDto.type = farmacie.get(i).type;
+            farmaciaDto.ente = farmacie.get(i).ente;
             pharmaList.add(farmaciaDto);
         }
         return pharmaList;
@@ -80,15 +82,15 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public ArrayList<MedicoDto> getMedicalList() {
-        ArrayList<MedicoDto> medicoDtoArrayList= new ArrayList<>();
+        ArrayList<MedicoDto> medicoDtoArrayList = new ArrayList<>();
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         RealmResults<Medico> medici = realm.where(Medico.class).findAll();
         for (int i = 0; i < medici.size(); i++) {
-            MedicoDto farmaciaDto= new MedicoDto();
-            farmaciaDto.id= medici.get(i).id;
-            farmaciaDto.fullname= medici.get(i).fullname;
-            farmaciaDto.email= medici.get(i).email;
-            farmaciaDto.code= medici.get(i).code;
+            MedicoDto farmaciaDto = new MedicoDto();
+            farmaciaDto.id = medici.get(i).id;
+            farmaciaDto.fullname = medici.get(i).fullname;
+            farmaciaDto.email = medici.get(i).email;
+            farmaciaDto.code = medici.get(i).code;
 
             medicoDtoArrayList.add(farmaciaDto);
         }
@@ -104,16 +106,16 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void addMedicalView(MedicoDto lastMedicoUser) {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        try{
+        try {
             realm.beginTransaction();
-            MedicalView medicalView= new MedicalView();
-            medicalView.setIdadd((int)new Date().getTime());
-            medicalView.setD(new Date());
-            medicalView.setId(lastMedicoUser.code);
+            MedicalView medicalView = new MedicalView();
+            medicalView.setIdadd((int) new Date().getTime());
+            medicalView.setSelectionDate(new Date());
+            medicalView.setCode(lastMedicoUser.code);
             realm.copyToRealmOrUpdate(medicalView);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
-        }finally {
+        } finally {
             realm.commitTransaction();
         }
 
@@ -122,33 +124,80 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void addPharmaView(FarmaciaDto lastPharmaUser) {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        try{
+        try {
             realm.beginTransaction();
-            PharmaView pharmaView= new PharmaView();
-            pharmaView.setIdadd((int)new Date().getTime());
-            pharmaView.setD(new Date());
-            pharmaView.setId(lastPharmaUser.ente);
+            PharmaView pharmaView = new PharmaView();
+            pharmaView.setIdadd((int) new Date().getTime());
+            pharmaView.setSelectionDate(new Date());
+            pharmaView.setCode(lastPharmaUser.ente);
             realm.copyToRealmOrUpdate(pharmaView);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
-        }finally {
+        } finally {
             realm.commitTransaction();
         }
     }
 
     @Override
-    public void setup() {
+    public void checkNotification() {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         RealmResults<ContentBox> newContents = realm.where(ContentBox.class).equalTo("newcontent", true).findAll();
-        Dbg.p("CONTENUTI NUOVI:"+newContents.size());
-        int isf=0;
-        int medico=0;
-        int pahrma=0;
-        if(newContents !=null && newContents.size() >0) {
-            view.showIsfNotification(newContents.size());
-        }else{
+        InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+
+        InfoApp info = realm.where(InfoApp.class).findFirst();
+        String userTarget = info.lineShortCode;
+        Dbg.p("CONTENUTI NUOVI:" + newContents.size());
+        int isf = 0;
+        int medico = 0;
+        int pharma = 0;
+        if (newContents != null && newContents.size() > 0) {
+            for (ContentBox contentBox : newContents) {
+
+                ArrayList<Target> targetsContents = new ArrayList<Target>(contentBox.targets);
+                for (int i = 0; i < targetsContents.size(); i++) {
+                    String target = targetsContents.get(i).code.toLowerCase();
+                    switch (target) {
+                        case "isf_specia":
+                            if (userTarget.equalsIgnoreCase("s")) {
+                                isf++;
+                            }
+                            break;
+
+                        case "isf":
+                            if (userTarget.equalsIgnoreCase("g")) {
+                                isf++;
+                            } else {
+
+                            }
+                            break;
+                        case "farmacia":
+                            pharma++;
+                            break;
+                        case "medico":
+                            medico++;
+                    }
+                }
+            }
+            if(isf >0){
+                view.showIsfNotification(isf);
+            }else{
+                view.hideIsfNotification();
+            }
+            if(medico >0){
+                view.showMedicalNotification(medico);
+            }else{
+                view.hideMedicalNotification();
+            }
+            if(pharma >0){
+                view.showPharmaNotification(pharma);
+            }else{
+                view.hidePharmaNotification();
+            }
+
+        } else {
             view.hideIsfNotification();
             view.hidePharmaNotification();
+            view.hideMedicalNotification();
 
         }
 

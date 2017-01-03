@@ -35,7 +35,7 @@ public interface HomePresenter extends Presenter {
 
     void addPharmaView(FarmaciaDto lastPharmaUser);
 
-    void setup();
+    void checkNotification();
 
     interface HomeView extends BaseView {
 
@@ -60,5 +60,7 @@ public interface HomePresenter extends Presenter {
         void hideIsfNotification();
 
         void hidePharmaNotification();
+
+        void hideMedicalNotification();
     }
 }

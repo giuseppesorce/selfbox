@@ -24,8 +24,8 @@ public class MyRealmMigration implements RealmMigration {
         Dbg.p("newVersion: "+newVersion);
 
         if(oldVersion ==0){
-           schema.create("MedicalView").addField("idadd", int.class, FieldAttribute.PRIMARY_KEY).addField("id", String.class).addField("d", Date.class);
-            schema.create("PharmaView").addField("idadd", int.class, FieldAttribute.PRIMARY_KEY).addField("id", String.class).addField("d", Date.class);
+           schema.create("MedicalView").addField("idadd", int.class, FieldAttribute.PRIMARY_KEY).addField("code", String.class).addField("selectionDate", Date.class);
+            schema.create("PharmaView").addField("idadd", int.class, FieldAttribute.PRIMARY_KEY).addField("code", String.class).addField("selectionDate", Date.class);
             schema.get("ContentBox").addField("newcontent", boolean.class);
             oldVersion++;
         }

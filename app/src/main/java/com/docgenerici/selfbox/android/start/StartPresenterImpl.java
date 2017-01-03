@@ -48,10 +48,15 @@ public class StartPresenterImpl implements StartPresenter {
 
     @Override
     public void chekActivation() {
+
+        Hawk.init(SelfBoxApplicationImpl.appComponent.context())
+                .build();
+
+
         if (hereActivation()) {
 //
             if (syncronized()) {
-              //  deleteLastUpdate();
+                //  deleteLastUpdate();
                 view.gotoHome();
 
             } else {
@@ -67,18 +72,18 @@ public class StartPresenterImpl implements StartPresenter {
 
     private void deleteLastUpdate() {
 
-            final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-            InfoApp infoApp = realm.where(InfoApp.class).findFirst();
-             try{
-                realm.beginTransaction();
-                infoApp.lastUpdate=0;
-                realm.copyToRealmOrUpdate(infoApp);
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+        try {
+            realm.beginTransaction();
+            infoApp.lastUpdate = 0;
+            realm.copyToRealmOrUpdate(infoApp);
 
-            }catch (Exception ex){
+        } catch (Exception ex) {
 
-            }finally {
-                realm.commitTransaction();
-            }
+        } finally {
+            realm.commitTransaction();
+        }
 
     }
 

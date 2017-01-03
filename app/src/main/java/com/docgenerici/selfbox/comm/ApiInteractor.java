@@ -6,6 +6,8 @@ package com.docgenerici.selfbox.comm;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
+import com.docgenerici.selfbox.models.SessionCounter;
+import com.docgenerici.selfbox.models.SessionCounterResponse;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
@@ -32,7 +34,7 @@ public interface ApiInteractor {
   Single<ResponseBody> getProduct(String date);
   Single<EmailText> getEmailText();
   Single<ResponseBody> shareData(ShareDataSend shareDataSend);
-  Single<ResponseBody> sendStatistic(ShareDataSend shareDataSend);
+  Single<SessionCounterResponse> sendStatistic(SessionCounter sessionCounter);
 
 
 }

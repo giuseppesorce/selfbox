@@ -41,7 +41,6 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     private Filters lastFiltersType;
     private long lastUpdate = 0;
 
-
     @Override
     public void setView(BaseView view) {
         if (!(view instanceof ContentView)) {
@@ -80,8 +79,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
             lastUpdate = infoApp.lastUpdate;
         }
         this.folderSample = folder;
-        InfoApp info = realm.where(InfoApp.class).findFirst();
-        userTarget = info.lineShortCode;
+        userTarget = infoApp.lineShortCode;
         view.setup();
         view.showSelectAz();
     }
@@ -124,6 +122,10 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     contentDoc.lastUpdate = folderRoot.contents.get(j).lastUpdate;
                     contentDoc.keywords = folderRoot.contents.get(j).keywords;
                     contentDoc.viewed = folderRoot.contents.get(j).isViewed();
+                    if(folderRoot.contents.get(j).name.contains("Demo")){
+                        Dbg.p("folderRoot.contents.get(j).isNewcontent(): "+folderRoot.contents.get(j).isNewcontent());
+                        Dbg.p("ontentDoc.viewed: "+contentDoc.viewed);
+                    }
                     if (folderRoot.contents.get(j).isNewcontent() && !contentDoc.viewed) {
                         if (folderRoot.contents.get(j).alertHighlight) {
                             contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
@@ -133,7 +135,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     } else {
 
                         if (folderRoot.contents.get(j).alertHighlight) {
-                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
+                            contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT;
                         }
                     }
 
@@ -384,7 +386,6 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         if (levelView == 0) {
             view.applyFilter(contents);
         } else if (levelView == 1) {
-
             view.applyFilter(folderContentFolderList);
         }
 
@@ -429,8 +430,6 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                 }
                 view.applyFilter(contentDocs);
             }
-
-
         } else if (levelView == 1) {
             if (filterList.all) {
                 view.applyFilter(folderContentFolderList);
@@ -455,13 +454,9 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                             contentDocs.add(contentDoc);
                         }
                     }
-
-
                 }
                 view.applyFilter(contentDocs);
             }
-
-
         }
     }
 
@@ -476,9 +471,8 @@ public class ContentListPresenterImpl implements ContentListPresenter {
     @Override
     public void setContentViewed(int id) {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        ContentBox content = realm.where(ContentBox.class).equalTo("id", id).findFirst();
-
         realm.beginTransaction();
+        ContentBox content = realm.where(ContentBox.class).equalTo("id", id).findFirst();
         content.setViewed(true);
         content.setNewcontent(false);
         realm.copyToRealmOrUpdate(content);
@@ -490,8 +484,5 @@ public class ContentListPresenterImpl implements ContentListPresenter {
             getContents(categoryContent);
             view.applyFilter(contents);
         }
-
     }
-
-
 }

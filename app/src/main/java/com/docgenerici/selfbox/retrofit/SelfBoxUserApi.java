@@ -3,6 +3,8 @@ package com.docgenerici.selfbox.retrofit;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
+import com.docgenerici.selfbox.models.SessionCounter;
+import com.docgenerici.selfbox.models.SessionCounterResponse;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.shares.ShareData;
 import com.docgenerici.selfbox.models.shares.ShareDataSend;
@@ -30,6 +32,8 @@ public interface SelfBoxUserApi {
     @POST("/selfbox-login/")
     Single<LoginResponse> login(@Field("appVer") String appVer, @Field("devId") String devId, @Field("isfCode") String isfCode, @Field("appLicence") String appLicence);
 
+    @POST("/send-counters/")
+    Single<SessionCounterResponse> sendStatistic(@Body SessionCounter sessionCounter);
 
     @POST("/isf/isf-selfbox/{isf}")
     Single<MedicalList> getMedicalData(@Path("isf") String isf);
@@ -47,5 +51,8 @@ public interface SelfBoxUserApi {
 
     @POST("/share-contents/")
     Single<ResponseBody> shareData(@Body ShareDataSend shareDataSend);
+
+
+
 
 }

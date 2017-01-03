@@ -81,6 +81,9 @@ public class PdfActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             pathPdf = getIntent().getStringExtra("path");
+            if(pathPdf.startsWith("file://")){
+                pathPdf= pathPdf.replace("file://", "");
+            }
         }
         if(new File(pathPdf).exists()) {
             openPdf(pathPdf);

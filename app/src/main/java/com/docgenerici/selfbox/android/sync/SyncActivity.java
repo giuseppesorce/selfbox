@@ -31,7 +31,6 @@ import com.docgenerici.selfbox.android.synservices.ContentsService;
 import com.docgenerici.selfbox.android.synservices.ProductSyncService;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncContent;
-import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class SyncActivity extends AppCompatActivity implements SyncPresenter.SyncView{
+public class SyncActivity extends AppCompatActivity implements SyncPresenter.SyncView {
 
     @BindView(R.id.rvGrid)
     RecyclerView rvGrid;
@@ -77,7 +76,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
     }
 
     @OnClick(R.id.btCancel)
-    void stopSync(){
+    void stopSync() {
         presenter.stopSync();
     }
 
@@ -93,9 +92,9 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
 
     @Override
     public void setup() {
-        if(Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
-        }else{
+        } else {
             createGridSync();
         }
     }
@@ -105,7 +104,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
             if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
                 return;
-            }else{
+            } else {
                 createGridSync();
 
             }
@@ -117,22 +116,22 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (!areAllPermissionsGranted(requestCode, grantResults)) {
             Toast.makeText(this, "Devi accettare tutti i permessi per poter usare l' applicazione", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             createGridSync();
         }
     }
 
-private void createGridSync(){
-    GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
-    syncContents= presenter.getContents();gridSyncAdapter = new GridSyncAdapter(this, syncContents);
-
-    int spanCount = 2; // 3 columns
-    int spacing = 50; // 50px
-    boolean includeEdge = false;
-    rvGrid.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-    rvGrid.setLayoutManager(gridLayout);
-    rvGrid.setAdapter(gridSyncAdapter);
-}
+    private void createGridSync() {
+        GridLayoutManager gridLayout = new GridLayoutManager(this, 2);
+        syncContents = presenter.getContents();
+        gridSyncAdapter = new GridSyncAdapter(this, syncContents);
+        int spanCount = 2; // 3 columns
+        int spacing = 50; // 50px
+        boolean includeEdge = false;
+        rvGrid.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        rvGrid.setLayoutManager(gridLayout);
+        rvGrid.setAdapter(gridSyncAdapter);
+    }
 
     private boolean areAllPermissionsGranted(int requestCode, @NonNull int[] grantResults) {
         if (requestCode == 1 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -150,9 +149,9 @@ private void createGridSync(){
         progress.setVisibility(View.VISIBLE);
         tvSend.setEnabled(false);
         tvSend.setAlpha(0.6f);
-        try{
+        try {
             LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
@@ -163,19 +162,20 @@ private void createGridSync(){
         progress.setVisibility(View.GONE);
         tvSend.setEnabled(true);
         tvSend.setAlpha(1.0f);
-        syncContents= presenter.getContents();
+        syncContents = presenter.getContents();
         gridSyncAdapter.changeItems(syncContents);
-        try{
+        try {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
 
-        if(intentProduct !=null){
+        if (intentProduct != null) {
             stopService(intentProduct);
             Dbg.p("stopService product");
-        }  if(intentContent !=null){
+        }
+        if (intentContent != null) {
             stopService(intentContent);
             Dbg.p("stopService intentContent");
         }
@@ -183,7 +183,7 @@ private void createGridSync(){
 
     @Override
     public void startProductService() {
-       intentProduct= new Intent(this, ProductSyncService.class);
+        intentProduct = new Intent(this, ProductSyncService.class);
         startService(intentProduct);
     }
 
@@ -199,7 +199,7 @@ private void createGridSync(){
 
     @Override
     public void startContentsService() {
-        intentContent= new Intent(this, ContentsService.class);
+        intentContent = new Intent(this, ContentsService.class);
         startService(intentContent);
     }
 
@@ -214,7 +214,7 @@ private void createGridSync(){
         downloaderPrice = DownloaderDoc.newInstance(new ListenerDowloadDoc() {
             @Override
             public void fileDownloaded(Uri uri, String mimeType, int id) {
-                Dbg.p("LISTINO CARICATO: "+uri.toString());
+                Dbg.p("LISTINO CARICATO: " + uri.toString());
             }
 
             @Override
@@ -227,15 +227,15 @@ private void createGridSync(){
                 return getApplicationContext();
             }
         });
-        File file= new File(getExternalFilesDir("contents"),  "listinoprezzi.pdf");
-        File backup= new File(getExternalFilesDir("contents"),  "delete_listinoprezzi.pdf");
-        if(file.exists()){
+        File file = new File(getExternalFilesDir("contents"), "listinoprezzi.pdf");
+        File backup = new File(getExternalFilesDir("contents"), "delete_listinoprezzi.pdf");
+        if (file.exists()) {
             file.renameTo(backup);
         }
-        Uri uri= Uri.parse("http://www.docgenerici.it/xpdf/examples/listino_prezzi.php");
+        Uri uri = Uri.parse("http://www.docgenerici.it/xpdf/examples/listino_prezzi.php");
         downloaderPrice.download(uri, "contents", "listinoprezzi.pdf", 12234);
 
-       // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
+        // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
     }
 
     @Override
@@ -246,9 +246,9 @@ private void createGridSync(){
     @Override
     protected void onResume() {
         super.onResume();
-        try{
+        try {
             LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
         presenter.checkSyncData();
@@ -270,15 +270,14 @@ private void createGridSync(){
 
     @Override
     protected void onStop() {
-        try{
+        try {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
         super.onStop();
 
     }
-
 
 
 }

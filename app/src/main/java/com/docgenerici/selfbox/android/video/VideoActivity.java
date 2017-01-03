@@ -57,6 +57,9 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
 
         if (getIntent() != null) {
             pathVideo= getIntent().getStringExtra("path");
+            if(pathVideo.startsWith("file://")){
+                pathVideo= pathVideo.replace("file://", "");
+            }
         }
         if(pathVideo !=null && !pathVideo.isEmpty()){
             File file= new File(pathVideo);

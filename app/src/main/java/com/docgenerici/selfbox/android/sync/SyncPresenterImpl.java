@@ -1,5 +1,7 @@
 package com.docgenerici.selfbox.android.sync;
 
+import android.widget.Toast;
+
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.async.XmlTaskParse;
@@ -7,7 +9,10 @@ import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.CounterView;
 import com.docgenerici.selfbox.models.MedicalList;
+import com.docgenerici.selfbox.models.SessionCounter;
+import com.docgenerici.selfbox.models.SessionCounterResponse;
 import com.docgenerici.selfbox.models.SyncContent;
 import com.docgenerici.selfbox.models.SyncDataCheck;
 import com.docgenerici.selfbox.models.contents.ContentBox;
@@ -16,6 +21,8 @@ import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.docgenerici.selfbox.models.persistence.MedicalView;
+import com.docgenerici.selfbox.models.persistence.PharmaView;
 import com.docgenerici.selfbox.models.products.Formulazione;
 import com.docgenerici.selfbox.models.products.Prodotto;
 import com.docgenerici.selfbox.models.products.Product;
@@ -97,25 +104,24 @@ public class SyncPresenterImpl implements SyncPresenter {
             syncContent.setPercentage(percentsgeRnd);
         }
         view.updatePercentage();
-        getAllMedicalData();
-        getProduct();
-        getAllContents();
         donwloadListinoPrezzi();
+        getAllMedicalData();
+
+
     }
 
     private void configSyncData() {
-        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         realm.beginTransaction();
-        SyncDataCheck syncData= new SyncDataCheck();
-        syncData.anagraphic=0;
-        syncData.contents=0;
-        syncData.id=1;
-        syncData.products=0;
-        syncData.started= true;
+        SyncDataCheck syncData = new SyncDataCheck();
+        syncData.anagraphic = 0;
+        syncData.contents = 0;
+        syncData.id = 1;
+        syncData.products = 0;
+        syncData.started = true;
         realm.copyToRealmOrUpdate(syncData);
         realm.commitTransaction();
     }
-
 
 
     private void donwloadListinoPrezzi() {
@@ -200,16 +206,16 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     @Override
     public void checkSyncData() {
-        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
 
-        SyncDataCheck syncData= realm.where(SyncDataCheck.class).findFirst();
-        if(syncData.fromhome){
+        SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
+        if (syncData.fromhome) {
             realm.beginTransaction();
-            syncData.fromhome= false;
+            syncData.fromhome = false;
             realm.copyToRealmOrUpdate(syncData);
             realm.commitTransaction();
 
-        }else {
+        } else {
             if (syncData != null && syncData.started) {
                 if (syncData.contents == 1 && syncData.products == 1) {
                     realm.beginTransaction();
@@ -247,6 +253,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                     public void call(Throwable throwable) {
 
                         Dbg.p("CALL ERRORE getProduct: " + throwable.getLocalizedMessage());
+                        Toast.makeText(SelfBoxApplicationImpl.appComponent.context(), "Errore caricamento prodotti", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -301,21 +308,10 @@ public class SyncPresenterImpl implements SyncPresenter {
                             product.risorsa.published = risorsaProd.published;
                             product.risorsa.status = risorsaProd.status;
                             product.risorsa.published = risorsaProd.published;
-                            // if (!risorsaProd.uri.equalsIgnoreCase("/pdfxcode/")) {
                             product.risorsa.uri = risorsaProd.uri;
-                            //}
-
-                        }
-                        if (formulazioni.get(j).aic.equalsIgnoreCase("033551021")) {
-                            Dbg.p("XML: " + formulazioni.get(j).risorse.get(0).uri);
-                            Dbg.p("XML: " + product.rcp);
-                            Dbg.p("XML: " + product.getScheda().getUri());
-
                         }
                         realm.copyToRealmOrUpdate(product);
                     }
-
-
                 }
                 realm.commitTransaction();
             } finally {
@@ -332,9 +328,9 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     private void getAllMedicalData() {
         SyncContent syncContent = getContentByType(SelfBoxConstants.ContentSyncType.ANAGRAFICHE);
-        int percentsgeRnd = getRandom(20, 50);
+
         if (syncContent != null) {
-            syncContent.setPercentage(percentsgeRnd);
+            syncContent.setPercentage(100);
         }
         String isf = getRepcode();
         if (!isf.isEmpty()) {
@@ -344,16 +340,16 @@ public class SyncPresenterImpl implements SyncPresenter {
                     .subscribe(new Action1<MedicalList>() {
                         @Override
                         public void call(MedicalList medialresponse) {
-
                             persistenceMedicalList(medialresponse);
-
+                            nextContents();
 
                         }
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {
-
-                            Dbg.p("CALL ERRORE getAllMedicalData: "+throwable.getLocalizedMessage());
+                            Dbg.p("CALL ERRORE getAllMedicalData: " + throwable.getLocalizedMessage());
+                            Toast.makeText(SelfBoxApplicationImpl.appComponent.context(), "Errore caricamento anagrafiche", Toast.LENGTH_SHORT).show();
+                            nextContents();
 
                         }
                     });
@@ -361,6 +357,77 @@ public class SyncPresenterImpl implements SyncPresenter {
         } else {
             view.showCodeError("Errore nel caricamento dei dati");
         }
+    }
+
+    private void nextContents() {
+        sendLogs();
+        getProduct();
+        getAllContents();
+    }
+
+    private void sendLogs() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        InfoApp infoApp = realm.where(InfoApp.class).findFirst();
+        String isfCode = "";
+        if (infoApp != null) {
+            isfCode = infoApp.repCode;
+        }
+        RealmResults<MedicalView> medialLogs = realm.where(MedicalView.class).findAll();
+        RealmResults<PharmaView> pharmaLogs = realm.where(PharmaView.class).findAll();
+        SessionCounter sessionCounter = new SessionCounter();
+        sessionCounter.isfCode = isfCode;
+        if (medialLogs.size() > 0) {
+            sessionCounter.allDoctorSessionList = new ArrayList<>();
+            for (int i = 0; i < medialLogs.size(); i++) {
+                sessionCounter.allDoctorSessionList.add(new CounterView(medialLogs.get(i).getCode(), medialLogs.get(i).getSelectionDate().getTime()));
+            }
+            Dbg.p("sendLogs_ " + sessionCounter.allDoctorSessionList.size());
+        }
+        if (pharmaLogs.size() > 0) {
+            sessionCounter.allDrugtoreSessionList = new ArrayList<>();
+            Dbg.p("sendLogs_ allDrugtoreSessionList: " + sessionCounter.allDrugtoreSessionList.size());
+            for (int i = 0; i < pharmaLogs.size(); i++) {
+                sessionCounter.allDrugtoreSessionList.add(new CounterView(pharmaLogs.get(i).getCode(), pharmaLogs.get(i).getSelectionDate().getTime()));
+            }
+        }
+
+        apiInteractor.sendStatistic(sessionCounter)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<SessionCounterResponse>() {
+                    @Override
+                    public void call(SessionCounterResponse sessionCounterResponse) {
+                        if (sessionCounterResponse.success) {
+                            deleteAllViews();
+                        }
+
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Dbg.p("CALL ERRORE LOGS: " + throwable.getLocalizedMessage());
+                        Toast.makeText(SelfBoxApplicationImpl.appComponent.context(), "Errore caricamento logs", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
+    }
+
+    private void deleteAllViews() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        final RealmResults<MedicalView> medialLogs = realm.where(MedicalView.class).findAll();
+        final RealmResults<PharmaView> pharmaLogs = realm.where(PharmaView.class).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                // Delete all matches
+                medialLogs.deleteAllFromRealm();
+                pharmaLogs.deleteAllFromRealm();
+            }
+        });
+
     }
 
     private void persistenceMedicalList(MedicalList medicalList) {
@@ -382,7 +449,6 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.commitTransaction();
         allDownloads.put(SelfBoxConstants.ContentSyncType.ANAGRAFICHE, true);
         checkEndSync();
-
     }
 
 
@@ -416,7 +482,8 @@ public class SyncPresenterImpl implements SyncPresenter {
                         @Override
                         public void call(Throwable throwable) {
 
-                            Dbg.p("CALL ERRORE getAllcontents "+throwable.getLocalizedMessage());
+                            Dbg.p("CALL ERRORE getAllcontents " + throwable.getLocalizedMessage());
+                            Toast.makeText(SelfBoxApplicationImpl.appComponent.context(), "Errore caricamento contenuti", Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -426,40 +493,34 @@ public class SyncPresenterImpl implements SyncPresenter {
     private void persistenceContentList(List<Folder> folders) {
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         InfoApp infoApp = realm.where(InfoApp.class).findFirst();
-        long lastUpdate= infoApp.lastUpdate;
-        Dbg.p("persistenceContentList lastUpdate: "+lastUpdate);
+        long lastUpdate = infoApp.lastUpdate;
+        Dbg.p("persistenceContentList lastUpdate: " + lastUpdate);
         realm.beginTransaction();
         for (int i = 0; i < folders.size(); i++) {
             realm.copyToRealmOrUpdate(folders.get(i));
         }
         realm.commitTransaction();
-        ArrayList<Integer> ids= new ArrayList<>();
-        long dateNow= new Date().getTime();
+        ArrayList<Integer> ids = new ArrayList<>();
+        long dateNow = new Date().getTime();
         realm.beginTransaction();
-         for (int i = 0; i < folders.size(); i++) {
+        for (int i = 0; i < folders.size(); i++) {
             RealmList<ContentBox> contentBoxs = folders.get(i).contents;
-             if(folders.get(i).name.equalsIgnoreCase("root")){
-                 for (int c = 0; c < folders.get(i).contents.size(); c++) {
-                     Dbg.p("persistenceContentList Content name: "+ folders.get(i).contents.get(c).name);
-                     Dbg.p("persistenceContentList lastUpdate: "+ folders.get(i).contents.get(c).lastUpdate);
-                     Dbg.p("persistenceContentList lastUpdate: "+ (folders.get(i).contents.get(c).lastUpdate >lastUpdate));
-                 }
-             }
             for (int j = 0; j < contentBoxs.size(); j++) {
                 ContentBox contentBox = contentBoxs.get(j);
-                if( contentBox.lastUpdate <=0){
-                    contentBox.lastUpdate= contentBox.creationDate;
+                if (contentBox.lastUpdate <= 0) {
+                    contentBox.lastUpdate = contentBox.creationDate;
 
                 }
-                if(!contentBox.active || !contentBox.visible || !contentBox.approved || (dateNow > contentBox.expirationDate)){
+                if (!contentBox.active || !contentBox.visible || !contentBox.approved || (dateNow > contentBox.expirationDate)) {
                     ids.add(contentBox.id);
                 }
+
                 realm.copyToRealmOrUpdate(contentBox);
             }
         }
         realm.commitTransaction();
         RealmQuery<ContentBox> query = realm.where(ContentBox.class);
-        Dbg.p("persistenceContentList ids: "+ids.toString());
+        Dbg.p("persistenceContentList ids: " + ids.toString());
         if (ids.size() == 0) {
 
             query = query.equalTo("id", -30000);
@@ -478,17 +539,16 @@ public class SyncPresenterImpl implements SyncPresenter {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Dbg.p("persistenceContentList cancellato tutto");
                 result.deleteAllFromRealm();
             }
         });
 
 
-        if(lastUpdate>0){
-            Dbg.p("persistenceContentList lastUpdate cerco quello che è maggiore: "+lastUpdate);
+        if (lastUpdate > 0) {
+            Dbg.p("persistenceContentList lastUpdate cerco quello che è maggiore: " + lastUpdate);
             RealmResults<ContentBox> allContentBoxNew = realm.where(ContentBox.class).greaterThan("lastUpdate", lastUpdate).findAll();
-            if(allContentBoxNew !=null  && allContentBoxNew.size() > 0) {
-                Dbg.p("persistenceContentList allContentBoxNew: "+allContentBoxNew.size());
+            if (allContentBoxNew != null && allContentBoxNew.size() > 0) {
+                Dbg.p("persistenceContentList allContentBoxNew: " + allContentBoxNew.size());
                 try {
                     realm.beginTransaction();
                     for (int i = 0; i < allContentBoxNew.size(); i++) {
@@ -503,11 +563,10 @@ public class SyncPresenterImpl implements SyncPresenter {
                 }
             }
         }
-
         RealmResults<ContentBox> allContentBox = realm.where(ContentBox.class).findAllSorted("lastUpdate", Sort.DESCENDING);
         InfoApp info = realm.where(InfoApp.class).findFirst();
         realm.beginTransaction();
-        info.lastUpdate= allContentBox.get(0).lastUpdate;
+        info.lastUpdate = allContentBox.get(0).lastUpdate;
         realm.copyToRealmOrUpdate(info);
         realm.commitTransaction();
         view.startContentsService();

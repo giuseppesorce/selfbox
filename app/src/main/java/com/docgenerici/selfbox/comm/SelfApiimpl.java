@@ -2,9 +2,12 @@ package com.docgenerici.selfbox.comm;
 
 
 import com.docgenerici.selfbox.comm.storage.Environment;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
+import com.docgenerici.selfbox.models.SessionCounter;
+import com.docgenerici.selfbox.models.SessionCounterResponse;
 import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.shares.ShareDataSend;
 import com.docgenerici.selfbox.retrofit.SelfBoxUserApi;
@@ -46,6 +49,12 @@ class SelfApiImpl implements SelfApi {
     @Override
     public Single<ResponseBody> getProduct(String date) {
         return selfBoxUserApi.getProducts("http://www.docgenerici.it/app/app.php",date);
+    }
+
+    @Override
+    public Single<SessionCounterResponse> sendStatistic(SessionCounter sessionCounter) {
+        Dbg.p("Sendlogs INVIO STATITISCI: "+sessionCounter.toString());
+        return selfBoxUserApi.sendStatistic(sessionCounter);
     }
 
     @Override

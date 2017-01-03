@@ -21,13 +21,9 @@ import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
 import com.docgenerici.selfbox.android.home.medical.MedicalDialogFragment;
 import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
-import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncDataCheck;
-import com.docgenerici.selfbox.models.contents.Folder;
-import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
-import com.docgenerici.selfbox.models.products.Product;
 
 import java.util.ArrayList;
 
@@ -36,9 +32,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView, HomeActivityInterface {
+
 
 
     private static final int WRITE_PERMISSION = 124;
@@ -58,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
-        presenter.setup();
+        presenter.checkNotification();
         changeStatusBar(grey);
         checkWritePermission();
     }
@@ -176,7 +172,17 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
 
     @Override
     public void hideIsfNotification() {
-        //tvIsfNotification.setVisibility(View.GONE);
+        tvIsfNotification.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hidePharmaNotification() {
+        tvPharmaNotification.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideMedicalNotification() {
+        tvMedicalNotification.setVisibility(View.GONE);
     }
 
     private void changeStatusBar(int color) {
@@ -222,6 +228,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     @Override
     protected void onResume() {
         super.onResume();
+        presenter.checkNotification();
     }
 
     @Override

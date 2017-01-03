@@ -15,7 +15,6 @@ import dagger.Provides;
 public class SyncModule {
 
   @Provides
-  @Singleton
   SyncPresenter provideSyncPresenter( ApiInteractor apiInteractor) {
     return new SyncPresenterImpl(apiInteractor);
   }

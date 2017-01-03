@@ -9,7 +9,6 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
-import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.shares.ShareData;
@@ -17,8 +16,6 @@ import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -154,9 +151,9 @@ public class MainContentPresenterImpl implements MainContentPresenter {
         }
         shareDataSend.isfCode = shareData.isfCode;
         shareDataSend.doctorCode = shareData.doctorCode;
-        shareDataSend.doctorEmail = shareData.doctorEmail;
+        shareDataSend.email = shareData.doctorEmail;
         shareDataSend.emailCustomText = shareData.emailCustomText;
-        shareDataSend.requestDate = shareData.requestDate;
+        shareDataSend.requestDate = Long.parseLong(shareData.requestDate);
         apiInteractor.shareData(shareDataSend)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

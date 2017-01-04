@@ -485,4 +485,11 @@ public class ContentListPresenterImpl implements ContentListPresenter {
             view.applyFilter(contents);
         }
     }
+
+    @Override
+    public ContentBox getContentDataFromId(int id) {
+        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+        ContentBox contentBox= realm.where(ContentBox.class).equalTo("id", id).findFirst();
+        return contentBox;
+    }
 }

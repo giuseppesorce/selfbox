@@ -4,6 +4,7 @@ package com.docgenerici.selfbox.android.contents.contentslist;
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Filters;
 
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public interface ContentListPresenter extends Presenter {
     Filters getLastFilter();
 
     void setContentViewed(int id);
+
+    ContentBox getContentDataFromId(int id);
 
 
     interface ContentView extends BaseView {

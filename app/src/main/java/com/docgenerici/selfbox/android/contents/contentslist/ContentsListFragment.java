@@ -31,9 +31,11 @@ import com.docgenerici.selfbox.android.contents.filters.FilterDialog;
 import com.docgenerici.selfbox.android.evisual.EvisualActivity;
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.android.video.VideoActivity;
+import com.docgenerici.selfbox.android.video.VideoDescriptionActivity;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Filters;
 
 import java.util.ArrayList;
@@ -235,8 +237,15 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
                 presenter.setContentViewed(contentSelect.id);
-                Intent intentVideo = new Intent(getActivity(), VideoActivity.class);
-                intentVideo.putExtra("path", contentSelect.content);
+                Intent intentVideo=null;
+                ContentBox contentBox = presenter.getContentDataFromId(contentSelect.id);
+                if(contentBox.descrFull !=null && !contentBox.descrFull.isEmpty() && contentBox.descrFull.length() > 2) {
+                    intentVideo = new Intent(getActivity(), VideoDescriptionActivity.class);
+                    intentVideo.putExtra("id", contentBox.id);
+                }else {
+                     intentVideo = new Intent(getActivity(), VideoActivity.class);
+                    intentVideo.putExtra("path", contentSelect.content);
+                }
 
                 startActivity(intentVideo);
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {

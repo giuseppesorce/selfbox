@@ -9,15 +9,17 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.contents.ContentBox;
 
 import java.io.File;
 import java.util.Timer;
@@ -26,8 +28,9 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
-public class VideoActivity extends AppCompatActivity implements View.OnTouchListener {
+public class VideoDescriptionActivity extends AppCompatActivity implements View.OnTouchListener {
 
     @BindView(R.id.videoView)
     VideoView videoView;
@@ -37,33 +40,50 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
     RelativeLayout rlController;
     @BindView(R.id.btPlayPause)
     Button btPlayPause;
-    @BindView(R.id.backControler)
-    ImageView backControler;
     @BindView(R.id.btVolume)
     Button btVolume;
-    private boolean hasVolume=true;
+    @BindView(R.id.backControler)
+    ImageView backControler;
+    @BindView(R.id.tvTitle)
+    TextView tvTitle;
+    @BindView(R.id.tvDescription)
+    TextView tvDescription;
+
+    private MediaController ctlr;
     private Handler mHandler = new Handler();
     private Timer timer = new Timer();
     private boolean controllerOn = false;
     private float pixelMoveHide = 1650.0f;
     private CountDownTimer hideCountDown;
     private String pathVideo;
+    private int id;
+    private MediaController mediaController;
     private MediaPlayer myMediaPlayer;
+    private boolean hasVolume=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_activiy);
+        setContentView(R.layout.activity_video_description);
         ButterKnife.bind(this);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         showHideController(true);
 
         if (getIntent() != null) {
-            pathVideo= getIntent().getStringExtra("path");
-            if(pathVideo.startsWith("file://")){
-                pathVideo= pathVideo.replace("file://", "");
-            }
+            id= getIntent().getIntExtra("id",0);
+           if(id > 0){
+               Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+               ContentBox contentBox= realm.where(ContentBox.class).equalTo("id", id).findFirst();
+               pathVideo= contentBox.getLocalfilePath();
+               pathVideo= pathVideo.replace("file://", "");
+               if(pathVideo.startsWith("file://")){
+
+               }
+               tvTitle.setText(contentBox.name);
+               tvDescription.setText(contentBox.descrFull);
+           }
         }
+
         if(pathVideo !=null && !pathVideo.isEmpty()){
             File file= new File(pathVideo);
             if(file.exists()){
@@ -76,6 +96,7 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
                     public void onPrepared(MediaPlayer mp) {
                         myMediaPlayer= mp;
                         startTimer();
+                        btVolume.setBackgroundResource(R.drawable.ic_volume3);
                     }
                 });
                 //
@@ -101,23 +122,6 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
             }
         }
     }
-
-
-    @OnClick(R.id.btVolume)
-    void changeVolume(){
-        if(videoView !=null && myMediaPlayer !=null){
-            hasVolume= !hasVolume;
-            if(hasVolume){
-                myMediaPlayer.setVolume(1f, 1f);
-                btVolume.setBackgroundResource(R.drawable.ic_volume3);
-            }else{
-
-                myMediaPlayer.setVolume(0f, 0f);
-                btVolume.setBackgroundResource(R.drawable.ic_volume0);
-            }
-
-        }
-    }
     @OnClick(R.id.btPlayPause)
     void playPauseController() {
         hideCountDown.cancel();
@@ -139,6 +143,22 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
     private void startTimer() {
 
         timer.scheduleAtFixedRate(new  MyTimer(), 100, 100);
+    }
+
+    @OnClick(R.id.btVolume)
+    void changeVolume(){
+        if(videoView !=null && myMediaPlayer !=null){
+            hasVolume= !hasVolume;
+            if(hasVolume){
+                myMediaPlayer.setVolume(1f, 1f);
+                btVolume.setBackgroundResource(R.drawable.ic_volume3);
+            }else{
+
+                myMediaPlayer.setVolume(0f, 0f);
+                btVolume.setBackgroundResource(R.drawable.ic_volume0);
+            }
+
+        }
     }
 
 

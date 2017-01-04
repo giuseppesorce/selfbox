@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_video_activiy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff000000"
+    android:orientation="horizontal"
     tools:context="com.docgenerici.selfbox.android.video.VideoActivity">
 
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
@@ -76,5 +81,35 @@
         </RelativeLayout>
 
     </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:background="@color/white"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <com.docgenerici.selfbox.android.custom.texts.CTextView
+            android:layout_width="match_parent"
+            android:id="@+id/tvTitle"
+            android:text="TITOLO"
+            android:layout_margin="10dp"
+            android:textSize="25sp"
+            android:textColor="#64c095"
+            android:layout_height="wrap_content" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_below="@+id/tvTitle"
+            android:layout_height="match_parent">
+            <com.docgenerici.selfbox.android.custom.texts.CTextView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/tvDescription"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/loreipsum"
+                android:textSize="19sp"
+                android:layout_height="wrap_content" />
 
-</RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>

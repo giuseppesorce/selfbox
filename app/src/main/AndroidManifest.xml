@@ -45,6 +45,9 @@
         <activity
             android:name=".android.video.VideoActivity"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".android.video.VideoDescriptionActivity"
+            android:screenOrientation="landscape"></activity>
         <activity android:name=".android.pdf.PdfViewerActivity" />
 
         <service

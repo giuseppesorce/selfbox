@@ -102,33 +102,34 @@ public class ContentsService extends IntentService {
                 bContentCoverDownload = false;
                 ContentEasy contentEasy = contentsEasy.get(counterContents);
                 //CONTENT
-                if( contentEasy.name.startsWith("Demo")){
-                    Dbg.p("DEMO scarico demo: "+contentEasy.name);
+                if( contentEasy.name.startsWith("Nuovo1")){
+                    Dbg.p("NUOVO scarico nuovo: "+contentEasy.name);
                 }
 
                 String pathContent = normalizePath(contentEasy.resourcePath) + contentEasy.filename;
 
                 Uri uriContents = Uri.parse(pathContent.replace(" ", "%20"));
                 String filenameContent = contentEasy.lastUpdate + "___" + contentEasy.filename;
-                if( contentEasy.name.startsWith("Demo")){
-                    Dbg.p("DEMO uriContents : "+contentEasy.name+" u:"+uriContents.toString());
-                    Dbg.p("DEMO filenameContent:"+contentEasy.name+" f:"+filenameContent);
+                if( contentEasy.name.startsWith("Nuovo1")){
+                    Dbg.p("NUOVO uriContents : "+contentEasy.name+" u:"+uriContents.toString());
+                    Dbg.p("NUOVO filenameContent:"+contentEasy.name+" f:"+filenameContent);
                 }
                 File file = new File(getExternalFilesDir("contents"), filenameContent);
                 if (file.exists()) {
                     //Dbg.p("FILE ESISTE: "+filenameContent);
+                    Dbg.p("NUOVO esiste : "+contentEasy.name+" u:"+uriContents.toString());
                     updateContent(file.getAbsolutePath(), contentEasy.id);
                     bContentDownload = true;
                     unzipFile(file);
                     checkContentDownload();
-                    if( contentEasy.name.startsWith("Demo")){
-                        Dbg.p("DEMO esiste :"+contentEasy.name);
-                        Dbg.p("DEMO filenameContent:"+contentEasy.name+" f:"+filenameContent);
+                    if( contentEasy.name.startsWith("Nuovo1")){
+                        Dbg.p("NUOVO esiste :"+contentEasy.name);
+                        Dbg.p("NUOVO filenameContent:"+contentEasy.name+" f:"+filenameContent);
                     }
                 } else {
 
-                    if( contentEasy.name.startsWith("Demo")){
-                        Dbg.p("DEMO parte il download "+contentEasy.name);
+                    if( contentEasy.name.startsWith("Nuovo1")){
+                        Dbg.p("NUOVO parte il download "+contentEasy.name);
 
                     }
                     downloaderContent.download(uriContents, "contents", filenameContent, contentEasy.id);
@@ -302,7 +303,10 @@ public class ContentsService extends IntentService {
     private ListenerDowloadDoc listenerDownloadContent = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
-            Dbg.p("DEMO FILE SCARICATO: " + uri + "ID: " + id);
+            if(id==217){
+                Dbg.p("NUOVO FILE SCARICATO: " + uri + "ID: " + id);
+            }
+
             updateContent(uri.toString(), id);
             bContentDownload = true;
             if(uri.toString().contains(".zip")){
@@ -313,7 +317,10 @@ public class ContentsService extends IntentService {
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            Dbg.p("DEMO FILE ERRROR: " + id);
+            if(id==217){
+                Dbg.p("NUOVO FILE ERRROR: " + id);
+            }
+
             updateContent("error_"+error, id);
             bContentDownload = true;
             checkContentDownload();
@@ -439,6 +446,10 @@ public class ContentsService extends IntentService {
                     }
                 }
             });
+        } catch (Exception ex){
+          if(id == 217){
+              Dbg.p("NUOVO errire update");
+          }
         } finally {
             if (realm != null) {
                 realm.close();

@@ -6,6 +6,7 @@ package com.docgenerici.selfbox.config;
 
 public class SelfBoxConstants {
 
+    public static final String PATH_LISTINO = "http://www.docgenerici.it/xpdf/examples/listino_prezzi.php";
     public static String pathProduct="http://www.docgenerici.it";
     public static String pathDataProduct="http://www.docgenerici.it/app/app.php";
 

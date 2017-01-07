@@ -11,15 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.custom.buttons.CButton;
 import com.docgenerici.selfbox.android.utils.MathUtils;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.Realm;
 
 public class EvisualActivity extends AppCompatActivity implements View.OnClickListener{
     @BindView(R.id.rlToolbar)
@@ -28,10 +33,16 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
     WebView webView;
     @BindView(R.id.llContainerButton)
     LinearLayout llContainerButton;
-
+    @BindView(R.id.btShare)
+    Button btShare;
+    @BindView(R.id.btHelp)
+    Button btHelp;
     private String pathVisual;
     private ArrayList<File> filesContent= new ArrayList<>();
     private Button buttonCliked;
+    private boolean canShare;
+    private String typeContent;
+    private ContentDoc contentDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,10 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
 
         if (getIntent() != null) {
             pathVisual = getIntent().getStringExtra("path");
+            canShare = getIntent().getBooleanExtra("canShare", false);
+            typeContent = getIntent().getStringExtra("type");
+            contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+            setupShare();
             Dbg.p("pathVisual: "+pathVisual);
             if(pathVisual.startsWith("file://")){
                 pathVisual= pathVisual.replace("file://", "");
@@ -169,6 +184,56 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.loadUrl("file://"+absolutePath);
+
+    }
+
+
+    private void setupShare() {
+        if(contentDoc !=null){
+            String id= String.valueOf(contentDoc.id);
+            Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+            ItemShared itemShared = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if(itemShared !=null){
+                btShare.setBackgroundResource(R.drawable.ic_share_red);
+            }else{
+                btShare.setBackgroundResource(R.drawable.ic_share_white);
+
+            }
+        }
+    }
+
+    @OnClick(R.id.btShare)
+    void addOrDeleteShare(){
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        if(contentDoc !=null) {
+            String id = String.valueOf(contentDoc.id);
+
+            final ItemShared sharedItem = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if (sharedItem != null) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        sharedItem.deleteFromRealm();
+                    }
+                });
+            } else {
+                try {
+
+                    realm.beginTransaction();
+
+                    ItemShared newSharedItem = new ItemShared();
+                    newSharedItem.setId(id);
+                    newSharedItem.setName(contentDoc.name);
+                    newSharedItem.setType("content");
+                    realm.copyToRealmOrUpdate(newSharedItem);
+                } catch (Exception ex) {
+
+                } finally {
+                    realm.commitTransaction();
+                }
+            }
+        }
+        setupShare();
 
     }
 }

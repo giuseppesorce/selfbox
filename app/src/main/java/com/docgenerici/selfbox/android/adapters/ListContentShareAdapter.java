@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.util.ArrayList;
 
@@ -19,10 +20,10 @@ public class ListContentShareAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private OnItemClickListener onClickListener;
 
-    ArrayList<ContentDoc> contentDocs = new ArrayList<>();
+    ArrayList<ItemShared> contentShared = new ArrayList<>();
 
-    public ListContentShareAdapter(ArrayList<ContentDoc> contentDocList, OnItemClickListener listener) {
-        this.contentDocs = contentDocList;
+    public ListContentShareAdapter(ArrayList<ItemShared> contentDocList, OnItemClickListener listener) {
+        this.contentShared = contentDocList;
         this.onClickListener= listener;
     }
 
@@ -40,8 +41,8 @@ public class ListContentShareAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-       ContentDoc contentDoc= contentDocs.get(position);
-        ((MyItemHolder)holder).tvShareTitle.setText(contentDoc.name);
+        ItemShared contentDoc= contentShared.get(position);
+        ((MyItemHolder)holder).tvShareTitle.setText(contentDoc.getName());
         ((MyItemHolder)holder).ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +54,12 @@ public class ListContentShareAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return contentDocs.size();
+        return contentShared.size();
+    }
+
+    public void changeItems(ArrayList<ItemShared> contents) {
+        contentShared= contents;
+        notifyDataSetChanged();
     }
 
     public  class MyItemHolder extends RecyclerView.ViewHolder{

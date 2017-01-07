@@ -3,12 +3,15 @@ package com.docgenerici.selfbox.android.video;
 import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.docgenerici.selfbox.R;
+import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.io.File;
 import java.util.Timer;
@@ -26,6 +33,7 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class VideoActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -41,6 +49,13 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
     ImageView backControler;
     @BindView(R.id.btVolume)
     Button btVolume;
+
+    @BindView(R.id.btShare)
+    Button btShare;
+    @BindView(R.id.rlToolbar)
+    RelativeLayout rlToolbar;
+    @BindView(R.id.btHelp)
+    Button btHelp;
     private boolean hasVolume=true;
     private Handler mHandler = new Handler();
     private Timer timer = new Timer();
@@ -49,6 +64,9 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
     private CountDownTimer hideCountDown;
     private String pathVideo;
     private MediaPlayer myMediaPlayer;
+    private boolean canShare;
+    private String typeContent;
+    private ContentDoc contentDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +75,19 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
         ButterKnife.bind(this);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         showHideController(true);
-
+        MainContentPresenter presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
+        changeStatusBar(presenter.getContentDarkColor());
+        rlToolbar.setBackgroundColor(presenter.getContentColor());
+        btHelp.setBackground(presenter.getBackGroundhelp());
         if (getIntent() != null) {
             pathVideo= getIntent().getStringExtra("path");
             if(pathVideo.startsWith("file://")){
                 pathVideo= pathVideo.replace("file://", "");
             }
+            canShare = getIntent().getBooleanExtra("canShare", false);
+            typeContent = getIntent().getStringExtra("type");
+            contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+            setupShare();
         }
         if(pathVideo !=null && !pathVideo.isEmpty()){
             File file= new File(pathVideo);
@@ -254,6 +279,65 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
         } else {
             rlController.animate().translationY(pixelMoveHide).setDuration(duration);
         }
+    }
+
+    private void changeStatusBar(int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
+    }
+
+
+    private void setupShare() {
+        if(contentDoc !=null){
+            String id= String.valueOf(contentDoc.id);
+            Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+            ItemShared itemShared = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if(itemShared !=null){
+                btShare.setBackgroundResource(R.drawable.ic_share_red);
+            }else{
+                btShare.setBackgroundResource(R.drawable.ic_share_white);
+
+            }
+        }
+    }
+
+    @OnClick(R.id.btShare)
+    void addOrDeleteShare(){
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        if(contentDoc !=null) {
+            String id = String.valueOf(contentDoc.id);
+
+            final ItemShared sharedItem = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if (sharedItem != null) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        sharedItem.deleteFromRealm();
+                    }
+                });
+            } else {
+                try {
+
+                    realm.beginTransaction();
+
+                    ItemShared newSharedItem = new ItemShared();
+                    newSharedItem.setId(id);
+                    newSharedItem.setName(contentDoc.name);
+                    newSharedItem.setType("content");
+                    realm.copyToRealmOrUpdate(newSharedItem);
+                } catch (Exception ex) {
+
+                } finally {
+                    realm.commitTransaction();
+                }
+            }
+        }
+        setupShare();
+
     }
 
 }

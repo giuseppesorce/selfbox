@@ -48,46 +48,14 @@ public class AppModule {
         return context.getResources();
     }
 
-    @Provides
-    @Singleton
-    SharedPreferences provideSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
 
-    @Provides
-    @Singleton
-    LayoutInflater provideLayoutInflater() {
-        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
 
-    @Provides
-    @Singleton
-    NotificationManager provideNotificationManager() {
-        return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    }
     @Provides
     @Singleton
     Gson proviceGson() {
         return new Gson();
     }
 
-    @Provides
-    @Singleton
-    AlarmManager provideAlarmManager() {
-        return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    }
-
-    @Provides
-    @Singleton
-    DownloadManager provideDownloadManager() {
-        return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-    }
-
-    @Provides
-    @Singleton
-    ContentResolver provideContentResolver() {
-        return context.getContentResolver();
-    }
 
     @Provides
     @Singleton
@@ -105,21 +73,11 @@ public class AppModule {
     Realm provideRealm() {
         Realm.init(context);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration(myMigration)
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
         return Realm.getDefaultInstance();
-//        Realm.init(context);
-//        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-//                .deleteRealmIfMigrationNeeded()
-//                .build();
-//        Realm.setDefaultConfiguration(realmConfiguration);
-//
-//        return Realm.getDefaultInstance();
     }
-
-
-
 
 }

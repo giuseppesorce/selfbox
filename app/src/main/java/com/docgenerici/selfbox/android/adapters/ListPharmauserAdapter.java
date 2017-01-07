@@ -51,6 +51,9 @@ public class ListPharmauserAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return pharmaUserArrayList.size();
     }
 
+    public ArrayList<FarmaciaDto> getPharmaUsers() {
+        return pharmaUserArrayList;
+    }
     public FarmaciaDto getPharmaUser(int position) {
         return pharmaUserArrayList.get(position);
     }

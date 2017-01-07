@@ -10,6 +10,7 @@ import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 import com.docgenerici.selfbox.models.persistence.MedicalView;
 import com.docgenerici.selfbox.models.persistence.PharmaView;
 
@@ -178,19 +179,19 @@ public class HomePresenterImpl implements HomePresenter {
                     }
                 }
             }
-            if(isf >0){
+            if (isf > 0) {
                 view.showIsfNotification(isf);
-            }else{
+            } else {
                 view.hideIsfNotification();
             }
-            if(medico >0){
+            if (medico > 0) {
                 view.showMedicalNotification(medico);
-            }else{
+            } else {
                 view.hideMedicalNotification();
             }
-            if(pharma >0){
+            if (pharma > 0) {
                 view.showPharmaNotification(pharma);
-            }else{
+            } else {
                 view.hidePharmaNotification();
             }
 
@@ -201,5 +202,19 @@ public class HomePresenterImpl implements HomePresenter {
 
         }
 
+    }
+
+    @Override
+    public void deleteShareContent() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        final RealmResults<ItemShared> sharedItems = realm.where(ItemShared.class).findAll();
+        if (sharedItems != null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    sharedItems.deleteAllFromRealm();
+                }
+            });
+        }
     }
 }

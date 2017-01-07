@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_video_activiy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff000000"
-    android:orientation="horizontal"
     tools:context="com.docgenerici.selfbox.android.video.VideoActivity">
 
+
+    <RelativeLayout
+        android:id="@+id/rlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_toolbar_home"
+        android:background="@color/orange">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ivLogo"
+            android:src="@drawable/logo_docgenerici_white" />
+
+
+
+        <Button
+            android:id="@+id/btHelp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_help_contents_orange" />
+
+        <Button
+            android:id="@+id/btShare"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/btHelp"
+
+            android:background="@drawable/ic_share_white" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/rlToolbar"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -111,5 +152,6 @@
         </ScrollView>
 
     </RelativeLayout>
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

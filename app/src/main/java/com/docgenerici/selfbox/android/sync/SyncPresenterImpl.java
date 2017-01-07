@@ -361,7 +361,7 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     private void nextContents() {
         sendLogs();
-        getProduct();
+       getProduct();
         getAllContents();
     }
 

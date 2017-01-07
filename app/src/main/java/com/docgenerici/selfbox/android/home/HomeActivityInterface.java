@@ -14,6 +14,6 @@ public interface HomeActivityInterface {
 
     void onSelectMedicoUser(MedicoDto lastPharmaUser);
 
-    void onSelectTrainingFamarcia(FarmaciaDto lastPharmaUser);
-    void onSelectTrainingMedico(MedicoDto lastMedicoUser);
+    void onSelectTrainingFamarcia();
+    void onSelectTrainingMedico();
 }

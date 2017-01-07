@@ -44,6 +44,8 @@ public interface MainContentPresenter extends Presenter {
 
     void shareData(ShareData shareData);
 
+    void refreshContents();
+
 
     interface MainContentView extends BaseView {
 
@@ -54,5 +56,7 @@ public interface MainContentPresenter extends Presenter {
         void showProducts();
 
         void showShareContents(ArrayList<ContentDoc> contentsShared);
+
+        void refreshContentShare(int size);
     }
 }

@@ -37,6 +37,7 @@ import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Filters;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.util.ArrayList;
 
@@ -79,12 +80,14 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     private int spanCount = 3; // 3 columns
     private int spacing = 40; // 50px
     private boolean includeEdge = false;
+    private boolean training;
 
 
-    public static ContentsListFragment createInstance(String category) {
+    public static ContentsListFragment createInstance(String category, boolean training) {
         ContentsListFragment frag = new ContentsListFragment();
         Bundle init = new Bundle();
         init.putString("category", category);
+        init.putBoolean("training", training);
         frag.setArguments(init);
         return frag;
     }
@@ -96,6 +99,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         ButterKnife.bind(this, view);
         if (getArguments() != null) {
             categoryContent = getArguments().getString("category");
+            training = getArguments().getBoolean("training", false);
         }
         presenter = SelfBoxApplicationImpl.appComponent.contentListPresenter();
         presenter.setView(this);
@@ -139,7 +143,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     private boolean getCanShare() {
         boolean canshare = true;
-        if (categoryContent.equalsIgnoreCase("isf")) {
+        if (categoryContent.equalsIgnoreCase("isf") || training) {
             canshare = false;
         }
         return canshare;
@@ -201,6 +205,18 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
 
     @Override
     public void refreshContents() {
+
+        ArrayList<ItemShared> shared = presenter.getItemsShared();
+        ArrayList<ContentDoc> contentDocs= galleryAdapter.getItems();
+        for(ContentDoc conentDoc : contentDocs){
+            conentDoc.shared= false;
+            for (int i=0; i< shared.size(); i++){
+                if(shared.get(i).getId().equalsIgnoreCase(String.valueOf(conentDoc.id))){
+                    conentDoc.shared= true;
+                }
+            }
+        }
+
         galleryAdapter.notifyDataSetChanged();
         if (activityInterface != null) {
             activityInterface.setShared(presenter.getContentsShared());
@@ -239,12 +255,21 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVideo=null;
                 ContentBox contentBox = presenter.getContentDataFromId(contentSelect.id);
-                if(contentBox.descrFull !=null && !contentBox.descrFull.isEmpty() && contentBox.descrFull.length() > 2) {
+                  if(contentBox.descrFull !=null && !contentBox.descrFull.isEmpty() && contentBox.descrFull.length() > 2) {
                     intentVideo = new Intent(getActivity(), VideoDescriptionActivity.class);
                     intentVideo.putExtra("id", contentBox.id);
+                    intentVideo.putExtra("path", contentSelect.content);
+                    intentVideo.putExtra("type", "content");
+                    intentVideo.putExtra("contentSelect", contentSelect);
+                    intentVideo.putExtra("canShare", getCanShare());
                 }else {
                      intentVideo = new Intent(getActivity(), VideoActivity.class);
                     intentVideo.putExtra("path", contentSelect.content);
+                    intentVideo.putExtra("id", contentBox.id);
+                    intentVideo.putExtra("type", "content");
+                    intentVideo.putExtra("contentSelect",contentSelect);
+                    intentVideo.putExtra("canShare", getCanShare());
+
                 }
 
                 startActivity(intentVideo);
@@ -252,7 +277,9 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
-
+                intentVisual.putExtra("type", "content");
+                intentVisual.putExtra("contentSelect", contentSelect);
+                intentVisual.putExtra("canShare", getCanShare());
                 startActivity(intentVisual);
 
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
@@ -260,6 +287,9 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 Dbg.p("contentSelect.content: "+contentSelect.content);
                 intent.putExtra("path", contentSelect.content);
+                intent.putExtra("type", "content");
+                intent.putExtra("contentSelect", contentSelect);
+                intent.putExtra("canShare", getCanShare());
 
                 if (contentSelect.content != null) {
                     startActivity(intent);
@@ -271,6 +301,8 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     @Override
     public void onSelectShare(int position) {
         ContentDoc contentSelectShare = galleryAdapter.getItemPosition(position);
+
+        presenter.addOrDeleteShare(contentSelectShare);
         presenter.setShare(contentSelectShare);
     }
 

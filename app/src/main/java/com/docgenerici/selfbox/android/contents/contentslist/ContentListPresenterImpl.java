@@ -11,6 +11,7 @@ import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.contents.Target;
 import com.docgenerici.selfbox.models.contents.TypeContent;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -491,5 +492,47 @@ public class ContentListPresenterImpl implements ContentListPresenter {
         Realm realm= SelfBoxApplicationImpl.appComponent.realm();
         ContentBox contentBox= realm.where(ContentBox.class).equalTo("id", id).findFirst();
         return contentBox;
+    }
+
+    @Override
+    public void addOrDeleteShare(ContentDoc contentSelectShare) {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        String id= String.valueOf(contentSelectShare.id);
+
+       final ItemShared sharedItem = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+        if(sharedItem !=null){
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    sharedItem.deleteFromRealm();
+                }
+            });
+        }else {
+            try{
+
+            realm.beginTransaction();
+
+                ItemShared  newSharedItem= new ItemShared();
+                newSharedItem.setId(id);
+                newSharedItem.setName(contentSelectShare.name);
+                newSharedItem.setType("content");
+                realm.copyToRealmOrUpdate(newSharedItem);
+        }catch (Exception ex){
+
+            }
+            finally {
+                realm.commitTransaction();
+            }
+        }
+        view.refreshContents();
+
+
+    }
+
+    @Override
+    public ArrayList<ItemShared> getItemsShared() {
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<ItemShared> sharedItems = realm.where(ItemShared.class).findAll();
+        return new ArrayList<>(sharedItems);
     }
 }

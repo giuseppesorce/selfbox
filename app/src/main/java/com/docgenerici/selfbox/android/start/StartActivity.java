@@ -2,6 +2,7 @@ package com.docgenerici.selfbox.android.start;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -87,7 +88,6 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
         SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
 
-
         realm.beginTransaction();
         if(syncData ==null){
             syncData= new SyncDataCheck();
@@ -96,8 +96,21 @@ public class StartActivity extends AppCompatActivity implements StartPresenter.S
         realm.copyToRealmOrUpdate(syncData);
         realm.commitTransaction();
 
+        if(Hawk.isBuilt()) {
 
-        startActivity(new Intent(this, SyncActivity.class));
-        finish();
+
+            startActivity(new Intent(this, SyncActivity.class));
+            finish();
+        }else{
+            Handler handler= new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    startActivity(new Intent(StartActivity.this, SyncActivity.class));
+                    finish();
+                }
+            }, 700);
+        }
     }
 }

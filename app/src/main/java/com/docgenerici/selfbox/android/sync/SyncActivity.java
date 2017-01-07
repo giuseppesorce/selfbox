@@ -29,8 +29,10 @@ import com.docgenerici.selfbox.android.downloader.ListenerDowloadDoc;
 import com.docgenerici.selfbox.android.home.HomeActivity;
 import com.docgenerici.selfbox.android.synservices.ContentsService;
 import com.docgenerici.selfbox.android.synservices.ProductSyncService;
+import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncContent;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -232,7 +234,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         if (file.exists()) {
             file.renameTo(backup);
         }
-        Uri uri = Uri.parse("http://www.docgenerici.it/xpdf/examples/listino_prezzi.php");
+        Uri uri = Uri.parse(SelfBoxConstants.PATH_LISTINO);
         downloaderPrice.download(uri, "contents", "listinoprezzi.pdf", 12234);
 
         // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
@@ -246,8 +248,18 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
     @Override
     protected void onResume() {
         super.onResume();
+        boolean detroyedContent = false;
+        boolean detroyedProduct= false;
+        if(Hawk.isBuilt()) {
+             detroyedContent = Hawk.get("contentsServiceDestroy", false);
+             detroyedProduct = Hawk.get("productServiceDestroy", false);
+        }else{
+            //TODO initializa Hawk;
+        }
         try {
-            LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+            if(!detroyedContent && !detroyedProduct) {
+                LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter("sync"));
+            }
         } catch (Exception ex) {
 
         }

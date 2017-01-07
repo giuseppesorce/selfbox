@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * @author Giuseppe Sorce #@copyright xx 16/10/16.
  */
 
-public class ContentDoc implements Parcelable {
+public class ContentDoc extends  ContentShare implements Parcelable {
 
 
     public int id;
@@ -24,6 +24,7 @@ public class ContentDoc implements Parcelable {
     public boolean viewed;
     public String keywords;
     public long lastUpdate;
+    public String typeShare;
 
 
     public ContentDoc(int type, String title, int image, String content, int typeview, String cover) {
@@ -65,6 +66,7 @@ public class ContentDoc implements Parcelable {
         viewed = in.readByte() != 0;
         keywords = in.readString();
         lastUpdate = in.readLong();
+        typeShare = in.readString();
     }
 
     @Override
@@ -83,6 +85,7 @@ public class ContentDoc implements Parcelable {
         dest.writeByte((byte) (viewed ? 1 : 0));
         dest.writeString(keywords);
         dest.writeLong(lastUpdate);
+        dest.writeString(typeShare);
     }
 
     @Override

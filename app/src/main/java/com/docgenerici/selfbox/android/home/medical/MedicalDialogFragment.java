@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.adapters.ListMedicalUserAdapter;
@@ -98,19 +99,35 @@ public class MedicalDialogFragment extends DialogFragment implements OnItemClick
 
     @OnClick(R.id.btNext)
     void nextMedical() {
-        homeInterface.onSelectMedicoUser(lastMedicoUser);
-        dismiss();
+        if(lastMedicoUser == null || !checkMedialSelected()){
+            Toast.makeText(getActivity(), "Seleziona un medico", Toast.LENGTH_SHORT).show();
+        }else {
+            homeInterface.onSelectMedicoUser(lastMedicoUser);
+            dismiss();
+        }
+    }
+
+    private boolean checkMedialSelected() {
+        boolean selected= false;
+        ArrayList<MedicoDto> medicoUsers = adapter.getMedicoUsers();
+        for(MedicoDto medico : medicoUsers){
+            if(medico.selected){
+                selected= true;
+                break;
+            }
+        }
+        return selected;
     }
 
     @OnClick(R.id.btTraining)
     void selectTraining() {
-        homeInterface.onSelectTrainingMedico(lastMedicoUser);
+        homeInterface.onSelectTrainingMedico();
         dismiss();
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        MedicoDto pharmaSelect = adapter.getPharmaUser(position);
+        MedicoDto pharmaSelect = adapter.getMedicoUser(position);
         if (lastMedicoUser != null && pharmaSelect.fullname.equalsIgnoreCase(lastMedicoUser.fullname)) {
             pharmaSelect.selected = false;
         } else {

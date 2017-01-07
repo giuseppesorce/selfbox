@@ -30,6 +30,8 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.io.File;
 
@@ -37,6 +39,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class PdfActivity extends AppCompatActivity {
 
@@ -64,6 +67,9 @@ public class PdfActivity extends AppCompatActivity {
     private long downloadReference;
     private String downloadCompleteIntentName = DownloadManager.ACTION_DOWNLOAD_COMPLETE;
     private IntentFilter downloadCompleteIntentFilter = new IntentFilter(downloadCompleteIntentName);
+    private String typeContent;
+    private ContentDoc contentDoc;
+    private boolean canShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +78,7 @@ public class PdfActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         //pathPdf = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SAMPLE_FILE;
         mainLayout = (RelativeLayout) findViewById(R.id.pdflayout);
-       //  deleteFile();
+        //  deleteFile();
         MainContentPresenter presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
         changeStatusBar(presenter.getContentDarkColor());
         rlToolbar.setBackgroundColor(presenter.getContentColor());
@@ -81,15 +87,68 @@ public class PdfActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             pathPdf = getIntent().getStringExtra("path");
-            if(pathPdf.startsWith("file://")){
-                pathPdf= pathPdf.replace("file://", "");
+            canShare = getIntent().getBooleanExtra("canShare", false);
+            typeContent = getIntent().getStringExtra("type");
+            contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+            if (pathPdf.startsWith("file://")) {
+                pathPdf = pathPdf.replace("file://", "");
             }
+            setupShare();
         }
-        if(new File(pathPdf).exists()) {
+        if (new File(pathPdf).exists()) {
             openPdf(pathPdf);
-        }else{
+        } else {
             Toast.makeText(this, "Risorsa non disponibile. Prova a rifare la sincronizzazione", Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    private void setupShare() {
+        if(contentDoc !=null){
+            String id= String.valueOf(contentDoc.id);
+            Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+            ItemShared itemShared = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if(itemShared !=null){
+                btShare.setBackgroundResource(R.drawable.ic_share_red);
+            }else{
+                btShare.setBackgroundResource(R.drawable.ic_share_white);
+
+            }
+        }
+    }
+
+    @OnClick(R.id.btShare)
+    void addOrDeleteShare(){
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        if(contentDoc !=null) {
+            String id = String.valueOf(contentDoc.id);
+
+            final ItemShared sharedItem = realm.where(ItemShared.class).equalTo("id", id).findFirst();
+            if (sharedItem != null) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        sharedItem.deleteFromRealm();
+                    }
+                });
+            } else {
+                try {
+
+                    realm.beginTransaction();
+
+                    ItemShared newSharedItem = new ItemShared();
+                    newSharedItem.setId(id);
+                    newSharedItem.setName(contentDoc.name);
+                    newSharedItem.setType("content");
+                    realm.copyToRealmOrUpdate(newSharedItem);
+                } catch (Exception ex) {
+
+                } finally {
+                    realm.commitTransaction();
+                }
+            }
+        }
+        setupShare();
 
     }
 

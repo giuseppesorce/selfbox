@@ -9,6 +9,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
 import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 import com.docgenerici.selfbox.models.shares.ShareData;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * @author Giuseppe Sorce #@copyright xx 18/10/16.
@@ -59,23 +62,27 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
     TextView tvFrom;
     @BindView(R.id.etText)
     EditText etText;
+    @BindView(R.id.btSend)
+    Button btSend;
     String doctorCode = "6969";
     String doctorName = "";
     String category = "";
 
-    private ArrayList<ContentDoc> contentsShared;
+    private ArrayList<ItemShared> contentsShared;
     private ListContentShareAdapter adapter;
     private InfoApp infoApp;
     private ShareInterface shareInterface;
     private MedicoDto medicoSelected;
     private FarmaciaDto lastPharmaUser;
+    private boolean training;
 
-    public static ShareContentsDialogFragment createInstance(ArrayList<ContentDoc> contentsShared, String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser) {
+    public static ShareContentsDialogFragment createInstance(ArrayList<ContentDoc> contentsShared, String category, MedicoDto medicoSelected, FarmaciaDto lastPharmaUser, boolean training) {
         ShareContentsDialogFragment frag = new ShareContentsDialogFragment();
         Bundle init = new Bundle();
         init.putParcelableArrayList("contentsShared", contentsShared);
         init.putParcelable("medicoSelected", medicoSelected);
         init.putParcelable("lastPharmaUser", lastPharmaUser);
+        init.putBoolean("training", training);
         init.putString("category", category);
 
 
@@ -97,49 +104,54 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
         if (getArguments() != null) {
-            contentsShared = getArguments().getParcelableArrayList("contentsShared");
+
             medicoSelected = getArguments().getParcelable("medicoSelected");
             lastPharmaUser = getArguments().getParcelable("lastPharmaUser");
+            training = getArguments().getBoolean("training", false);
             category = getArguments().getString("category");
 
 
         }
-        npDay.setMinValue(1);
-        npDay.setMaxValue(31);
-        npMonth.setMinValue(1);
-        npMonth.setMaxValue(12);
-        String[] arrayPicker = new String[]{"GEN", "FEB", "MAR", "APR", "MAG", "GIU", "LUG", "AGO", "SET", "OTT", "NOV", "DEC"};
-        String[] hours = new String[24];
-        String[] minutes = new String[60];
-        for (int i = 0; i < 60; i++) {
-            minutes[i] = (String.valueOf(i < 10 ? "0" + i : i));
-        }
-        for (int i = 0; i < 24; i++) {
+//        npDay.setMinValue(1);
+//        npDay.setMaxValue(31);
+//        npMonth.setMinValue(1);
+//        npMonth.setMaxValue(12);
+//        String[] arrayPicker = new String[]{"GEN", "FEB", "MAR", "APR", "MAG", "GIU", "LUG", "AGO", "SET", "OTT", "NOV", "DEC"};
+//        String[] hours = new String[24];
+//        String[] minutes = new String[60];
+//        for (int i = 0; i < 60; i++) {
+//            minutes[i] = (String.valueOf(i < 10 ? "0" + i : i));
+//        }
+//        for (int i = 0; i < 24; i++) {
+//
+//            hours[i] = (String.valueOf(i < 10 ? "0" + i : i));
+//        }
+//        npMonth.setDisplayedValues(arrayPicker);
+//        npHour.setMinValue(0);
+//        npHour.setMaxValue(23);
+//        npHour.setDisplayedValues(hours);
+//
+//        npMinutes.setMinValue(0);
+//        npMinutes.setMaxValue(59);
+//        npMinutes.setDisplayedValues(minutes);
+//        Calendar calendar = Calendar.getInstance();
+//        int year = calendar.get(Calendar.YEAR);
+//        npYear.setMinValue(2016);
+//        npYear.setMaxValue(year + 1);
+//
+//        calendar.setTime(new Date());
+//        npDay.setValue(calendar.get(Calendar.DAY_OF_MONTH));
+//        npMonth.setValue(calendar.get(Calendar.MONTH) + 1);
+//        npYear.setValue(calendar.get(Calendar.YEAR));
+//        npHour.setValue(calendar.get(Calendar.HOUR_OF_DAY));
+//        npMinutes.setValue(calendar.get(Calendar.MINUTE));
 
-            hours[i] = (String.valueOf(i < 10 ? "0" + i : i));
-        }
-        npMonth.setDisplayedValues(arrayPicker);
-        npHour.setMinValue(0);
-        npHour.setMaxValue(23);
-        npHour.setDisplayedValues(hours);
-
-        npMinutes.setMinValue(0);
-        npMinutes.setMaxValue(59);
-        npMinutes.setDisplayedValues(minutes);
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        npYear.setMinValue(2016);
-        npYear.setMaxValue(year + 1);
-
-        calendar.setTime(new Date());
-        npDay.setValue(calendar.get(Calendar.DAY_OF_MONTH));
-        npMonth.setValue(calendar.get(Calendar.MONTH) + 1);
-        npYear.setValue(calendar.get(Calendar.YEAR));
-        npHour.setValue(calendar.get(Calendar.HOUR_OF_DAY));
-        npMinutes.setValue(calendar.get(Calendar.MINUTE));
+        contentsShared= getContentShared();
         if (contentsShared != null && contentsShared.size() > 0) {
 
             adapter = new ListContentShareAdapter(contentsShared, this);
+
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             rvList.setLayoutManager(linearLayoutManager);
             rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.margin_divider_decotator)));
@@ -177,6 +189,14 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         return root;
     }
 
+
+
+    private ArrayList<ItemShared> getContentShared(){
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<ItemShared> sharedItem = realm.where(ItemShared.class).findAll();
+        return new ArrayList<>(sharedItem);
+    }
+
     private String getEmail() {
         String email="";
         switch ((category)) {
@@ -194,7 +214,11 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
                 }
                 break;
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if(email !=null && !email.isEmpty() && email.length() >0) {
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                email = "";
+            }
+        }else{
             email="";
         }
         return email;
@@ -245,7 +269,7 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         shareData.emailCustomText = etText.getText().toString();
         String idShare = "";
         for (int i = 0; i < contentsShared.size(); i++) {
-            idShare += contentsShared.get(i).id + ",";
+            idShare += contentsShared.get(i).getId() + ",";
         }
         shareData.contentIds = idShare;
         shareData.requestDate = "" + new Date().getTime();
@@ -275,8 +299,27 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
 
     @Override
     public void onItemClick(View view, int position) {
-        contentsShared.remove(position);
-        adapter.notifyDataSetChanged();
+
+        final ItemShared sharedItem = contentsShared.get(position);
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+
+        if(sharedItem !=null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    sharedItem.deleteFromRealm();
+                }
+            });
+        }
+        contentsShared= new ArrayList<>();
+        contentsShared= getContentShared();
+
+        adapter.changeItems(contentsShared);
+        shareInterface.onChangeShareData();
+        if(contentsShared.size() <0){
+            btSend.setEnabled(false);
+            btSend.setAlpha(0.6f);
+        }
     }
 
     public void setShare(ShareInterface shareInterface) {

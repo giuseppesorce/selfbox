@@ -10,4 +10,6 @@ import com.docgenerici.selfbox.models.shares.ShareData;
 public interface ShareInterface {
 
     void onShareData(ShareData shareData);
+
+    void onChangeShareData();
 }

@@ -101,6 +101,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "medico");
         intent.putExtra("medico", lastMedicoUser);
+        intent.putExtra("training",false);
         presenter.addMedicalView(lastMedicoUser);
         startActivity(intent);
     }
@@ -111,6 +112,15 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         PharmaDialogFragment pharmaDialog = PharmaDialogFragment.createInstance(pharmaList);
         pharmaDialog.show(ft, "pharmaDialog");
+    }
+
+    @Override
+    public void showDialogMedicalSearch() {
+        ArrayList<MedicoDto> presenterMedicalList = presenter.getMedicalList();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        MedicalDialogFragment pharmaDialog = MedicalDialogFragment.createInstance(presenterMedicalList);
+        pharmaDialog.show(ft, "medical");
+
     }
 
     @Override
@@ -143,14 +153,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         infoDialogFragment.show(ft, "infoDialogFragment");
     }
 
-    @Override
-    public void showDialogMedicalSearch() {
-        ArrayList<MedicoDto> presenterMedicalList = presenter.getMedicalList();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        MedicalDialogFragment pharmaDialog = MedicalDialogFragment.createInstance(presenterMedicalList);
-        pharmaDialog.show(ft, "medical");
 
-    }
 
     @Override
     public void showIsfNotification(int size) {
@@ -209,6 +212,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
         intent.putExtra("lastPharmaUser", lastPharmaUser);
+        intent.putExtra("training",false);
         presenter.addPharmaView(lastPharmaUser);
         startActivity(intent);
     }
@@ -219,9 +223,10 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     }
 
     @Override
-    public void onSelectTrainingFamarcia(FarmaciaDto lastPharmaUser) {
+    public void onSelectTrainingFamarcia() {
         Intent intent = new Intent(this, ContentsActivity.class);
         intent.putExtra("category", "pharma");
+        intent.putExtra("training",true);
         startActivity(intent);
     }
 
@@ -229,10 +234,15 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
     protected void onResume() {
         super.onResume();
         presenter.checkNotification();
+        presenter.deleteShareContent();
     }
 
     @Override
-    public void onSelectTrainingMedico(MedicoDto lastMedicoUser) {
+    public void onSelectTrainingMedico() {
+        Intent intent = new Intent(this, ContentsActivity.class);
+        intent.putExtra("category", "medico");
+        intent.putExtra("training",true);
+        startActivity(intent);
 
     }
 }

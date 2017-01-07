@@ -75,18 +75,20 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     private ArrayList<ProductDoc> productDocArrayList = new ArrayList<>();
     private String[] colors;
     private HashMap<String, String> categorieColors = new HashMap<>();
+    private boolean training;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_products_list, container, false);
         ButterKnife.bind(this, view);
+
         colors = getResources().getStringArray(R.array.categorie_color);
         presenter = SelfBoxApplicationImpl.appComponent.productsListPresenter();
         presenter.setView(this);
         presenter.setup();
         if (getArguments() != null) {
-
+            training= getArguments().getBoolean("training", false);
         }
         String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
         Resources res = getResources();
@@ -229,9 +231,10 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         presenter.onSelectLegenda();
     }
 
-    public static ProductListFragment createInstance() {
+    public static ProductListFragment createInstance(boolean training) {
         ProductListFragment frag = new ProductListFragment();
         Bundle init = new Bundle();
+        init.putBoolean("training", training);
         frag.setArguments(init);
         return frag;
     }

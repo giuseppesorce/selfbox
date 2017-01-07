@@ -6,6 +6,7 @@ import com.docgenerici.selfbox.Presenter;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Filters;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,10 @@ public interface ContentListPresenter extends Presenter {
     void setContentViewed(int id);
 
     ContentBox getContentDataFromId(int id);
+
+    void addOrDeleteShare(ContentDoc contentSelectShare);
+
+    ArrayList<ItemShared> getItemsShared();
 
 
     interface ContentView extends BaseView {

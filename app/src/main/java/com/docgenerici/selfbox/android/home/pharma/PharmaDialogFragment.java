@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.adapters.ListPharmauserAdapter;
@@ -43,7 +44,7 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     public static PharmaDialogFragment createInstance(ArrayList<FarmaciaDto> pharmaList) {
         PharmaDialogFragment frag = new PharmaDialogFragment();
         Bundle init = new Bundle();
-       init.putParcelableArrayList("pharmaList", pharmaList);
+        init.putParcelableArrayList("pharmaList", pharmaList);
         frag.setArguments(init);
         return frag;
     }
@@ -58,7 +59,7 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        homeInterface= (HomeActivityInterface) getActivity();
+        homeInterface = (HomeActivityInterface) getActivity();
     }
 
     @Override
@@ -68,10 +69,10 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
                 false);
         ButterKnife.bind(this, root);
         getDialog().getWindow().addFlags(STYLE_NO_TITLE);
-            if(getArguments() !=null){
-            pharmaList= getArguments().getParcelableArrayList("pharmaList");
+        if (getArguments() != null) {
+            pharmaList = getArguments().getParcelableArrayList("pharmaList");
         }
-        if(pharmaList !=null && pharmaList.size() > 0){
+        if (pharmaList != null && pharmaList.size() > 0) {
             createPharmaList();
         }
 
@@ -80,12 +81,12 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     }
 
     @OnClick(R.id.btClose)
-    void closeDialog(){
+    void closeDialog() {
         dismiss();
     }
 
     private void createPharmaList() {
-        adapter= new ListPharmauserAdapter(new ArrayList<FarmaciaDto>(), this);
+        adapter = new ListPharmauserAdapter(new ArrayList<FarmaciaDto>(), this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvList.setLayoutManager(linearLayoutManager);
         rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), getResources().getDrawable(R.drawable.line_divider), getResources().getDimensionPixelSize(R.dimen.nomargin_divider_decotator)));
@@ -95,29 +96,45 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     }
 
     @OnClick(R.id.btNext)
-    void nextPharma(){
-        homeInterface.onSelectPharmaUser(lastPharmaUser);
-        dismiss();
+    void nextPharma() {
+        if (lastPharmaUser == null || !(checkSelectedOnePharma())) {
+            Toast.makeText(getActivity(), "Seleziona un farmacista", Toast.LENGTH_LONG).show();
+        } else {
+            homeInterface.onSelectPharmaUser(lastPharmaUser);
+            dismiss();
+        }
+    }
+
+    private boolean checkSelectedOnePharma() {
+        boolean isSelected = false;
+        ArrayList<FarmaciaDto> pharmaUsers = adapter.getPharmaUsers();
+        for (FarmaciaDto farmaciaDto : pharmaUsers) {
+            if (farmaciaDto.selected) {
+                isSelected = true;
+                break;
+            }
+        }
+        return isSelected;
     }
 
     @OnClick(R.id.btTraining)
-    void selectTraining(){
-        homeInterface.onSelectTrainingFamarcia(lastPharmaUser);
+    void selectTraining() {
+        homeInterface.onSelectTrainingFamarcia();
         dismiss();
     }
 
     @Override
     public void onItemClick(View view, int position) {
         FarmaciaDto pharmaSelect = adapter.getPharmaUser(position);
-        if (lastPharmaUser !=null && pharmaSelect.fullname.equalsIgnoreCase(lastPharmaUser.fullname)) {
-                pharmaSelect.selected= false;
-        }else{
-            pharmaSelect.selected= true;
+        if (lastPharmaUser != null && pharmaSelect.fullname.equalsIgnoreCase(lastPharmaUser.fullname)) {
+            pharmaSelect.selected = false;
+        } else {
+            pharmaSelect.selected = true;
         }
-        if (lastPharmaUser !=null) {
+        if (lastPharmaUser != null) {
             lastPharmaUser.selected = false;
         }
-        lastPharmaUser= pharmaSelect;
+        lastPharmaUser = pharmaSelect;
         adapter.notifyDataSetChanged();
     }
 
@@ -135,22 +152,18 @@ public class PharmaDialogFragment extends DialogFragment implements OnItemClickL
     private void filterList(String charText) {
 
         ArrayList<FarmaciaDto> worldpopulationlist = new ArrayList<>();
-            worldpopulationlist.clear();
-            if (charText.length() == 0) {
-                worldpopulationlist.addAll(pharmaList);
-            }
-            else
-            {
-                for (FarmaciaDto wp : pharmaList)
-                {
-                    if (wp.fullname.toLowerCase().startsWith(charText.toLowerCase()))
-                    {
-                        worldpopulationlist.add(wp);
+        worldpopulationlist.clear();
+        if (charText.length() == 0) {
+            worldpopulationlist.addAll(pharmaList);
+        } else {
+            for (FarmaciaDto wp : pharmaList) {
+                if (wp.fullname.toLowerCase().startsWith(charText.toLowerCase())) {
+                    worldpopulationlist.add(wp);
 
-                    }
                 }
             }
-            adapter.setPharmaList(worldpopulationlist);
+        }
+        adapter.setPharmaList(worldpopulationlist);
 
     }
 

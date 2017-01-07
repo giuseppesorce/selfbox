@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -37,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContentsActivity extends AppCompatActivity implements MainContentPresenter.MainContentView, ViewPager.OnPageChangeListener, ContentActivityInterface {
+public class ContentsActivity extends AppCompatActivity implements MainContentPresenter.MainContentView, ViewPager.OnPageChangeListener, ContentActivityInterface, ShareInterface{
 
     @BindColor(R.color.orange)
     int orange;
@@ -73,13 +74,12 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     int orangeColor;
     @BindColor(R.color.color_text_tab_button)
     int colorButtonSelect;
-    private ContentsListFragment contentsList;
-    private ProductListFragment productsListFragment;
     private ShareContentsDialogFragment shareDialog;
     private String category;
     private ContentsListFragment contentFrag;
     private MedicoDto medicoSelected;
     private FarmaciaDto lastPharmaUser;
+    private boolean training;
 
 
     @Override
@@ -93,10 +93,11 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         vPager.addOnPageChangeListener(this);
         if (getIntent() != null) {
             category = getIntent().getStringExtra("category");
+            training = getIntent().getBooleanExtra("training", false);
             medicoSelected = getIntent().getParcelableExtra("medico");
 
-            if(medicoSelected !=null){
-               }
+            if (medicoSelected != null) {
+            }
             lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
             presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }
@@ -172,15 +173,16 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     public void showShareContents(ArrayList<ContentDoc> contentsShared) {
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
-        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared, category, medicoSelected, lastPharmaUser);
-        shareDialog.setShare(new ShareInterface() {
-
-            @Override
-            public void onShareData(ShareData shareData) {
-                presenter.shareData(shareData);
-            }
-        });
+        shareDialog = ShareContentsDialogFragment.createInstance(contentsShared, category, medicoSelected, lastPharmaUser, training);
+        shareDialog.setShare(this);
         shareDialog.show(ft, "shareDialog");
+    }
+
+    @Override
+    public void refreshContentShare(int size) {
+        tvShare.setVisibility(size > 0 ? View.VISIBLE : View.GONE);
+        tvShare.setText("CONDIVIDI " +size + " CONTENUTI");
+
     }
 
     private void setNavigation(int nav) {
@@ -224,10 +226,20 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
 
     @Override
     public void setShared(ArrayList<ContentDoc> contentsShared) {
-        presenter.setShareContents(contentsShared);
-        tvShare.setVisibility(presenter.getContentsShared().size() > 0 ? View.VISIBLE : View.GONE);
-        tvShare.setText("CONDIVIDI " + presenter.getContentsShared().size() + " CONTENUTI");
+         presenter.refreshContents();
+    }
 
+    @Override
+    public void onShareData(ShareData shareData) {
+        presenter.shareData(shareData);
+    }
+
+    @Override
+    public void onChangeShareData() {
+        presenter.refreshContents();
+        if(contentFrag !=null){
+            contentFrag.refreshContents();
+        }
     }
 
 
@@ -242,10 +254,10 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    contentFrag = ContentsListFragment.createInstance(category);
+                    contentFrag = ContentsListFragment.createInstance(category, training);
                     return contentFrag;
                 case 1:
-                    return ProductListFragment.createInstance();
+                    return ProductListFragment.createInstance(training);
 
                 default:
                     return new Fragment();
@@ -273,6 +285,14 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if(contentFrag !=null){
+            contentFrag.refreshContents();
+        }
+        super.onResume();
     }
 
     private void changeStatusBar(int color) {

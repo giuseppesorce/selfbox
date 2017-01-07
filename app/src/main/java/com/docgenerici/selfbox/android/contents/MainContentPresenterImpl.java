@@ -11,11 +11,14 @@ import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
+import com.docgenerici.selfbox.models.persistence.ItemShared;
 import com.docgenerici.selfbox.models.shares.ShareData;
 import com.docgenerici.selfbox.models.shares.ShareDataSend;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -170,6 +173,23 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
                     }
                 });
+    }
+
+    @Override
+    public void refreshContents() {
+        ArrayList<ItemShared> sharedItems= getContentShared();
+        Dbg.p("sharedItem: "+sharedItems.size());
+        if(sharedItems !=null){
+            view.refreshContentShare(sharedItems.size());
+        }else{
+            view.refreshContentShare(0);
+        }
+    }
+
+    private ArrayList<ItemShared> getContentShared(){
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        RealmResults<ItemShared> sharedItem = realm.where(ItemShared.class).findAll();
+        return new ArrayList<>(sharedItem);
     }
 
 

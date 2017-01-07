@@ -184,6 +184,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return contentDocs.get(position);
     }
 
+    public ArrayList<ContentDoc> getItems() {
+        return (ArrayList<ContentDoc>) contentDocs;
+    }
+
     public void changeItems(List<ContentDoc> filtered) {
         contentDocs = filtered;
         notifyDataSetChanged();

@@ -18,10 +18,10 @@ import java.util.ArrayList;
 public class ListMedicalUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnItemClickListener onClickListener;
-    ArrayList<MedicoDto> pharmaUserArrayList = new ArrayList<>();
+    ArrayList<MedicoDto> medicoUserArrayList = new ArrayList<>();
 
     public ListMedicalUserAdapter(ArrayList<MedicoDto> contentDocList, OnItemClickListener listener) {
-        this.pharmaUserArrayList = contentDocList;
+        this.medicoUserArrayList = contentDocList;
         this.onClickListener= listener;
     }
 
@@ -38,7 +38,7 @@ public class ListMedicalUserAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        MedicoDto contentDoc= pharmaUserArrayList.get(position);
+        MedicoDto contentDoc= medicoUserArrayList.get(position);
         ((MyItemHolder)holder).tvPharmaName.setText(contentDoc.fullname);
         if(contentDoc.selected){
             ((MyItemHolder)holder).tvPharmaName.setBackgroundResource(R.color.green_transparent);
@@ -49,16 +49,20 @@ public class ListMedicalUserAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return pharmaUserArrayList.size();
+        return medicoUserArrayList.size();
     }
 
-    public MedicoDto getPharmaUser(int position) {
-        return pharmaUserArrayList.get(position);
+    public MedicoDto getMedicoUser(int position) {
+        return medicoUserArrayList.get(position);
+    }
+
+    public ArrayList<MedicoDto> getMedicoUsers() {
+        return medicoUserArrayList;
     }
 
     public void setPharmaList(ArrayList<MedicoDto> newlist) {
-        pharmaUserArrayList.clear();
-        pharmaUserArrayList.addAll(newlist);
+        medicoUserArrayList.clear();
+        medicoUserArrayList.addAll(newlist);
         notifyDataSetChanged();
 
     }

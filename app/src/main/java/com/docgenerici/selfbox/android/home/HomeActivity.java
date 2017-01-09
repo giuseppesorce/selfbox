@@ -21,9 +21,12 @@ import com.docgenerici.selfbox.android.home.info.InfoDialogFragment;
 import com.docgenerici.selfbox.android.home.medical.MedicalDialogFragment;
 import com.docgenerici.selfbox.android.home.pharma.PharmaDialogFragment;
 import com.docgenerici.selfbox.android.sync.SyncActivity;
+import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncDataCheck;
+import com.docgenerici.selfbox.models.contents.Folder;
 import com.docgenerici.selfbox.models.farmacia.FarmaciaDto;
 import com.docgenerici.selfbox.models.medico.MedicoDto;
+import com.docgenerici.selfbox.models.persistence.ShareContentReminder;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity implements HomePresenter.HomeView, HomeActivityInterface {
 
@@ -54,9 +58,35 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         ButterKnife.bind(this);
         presenter = SelfBoxApplicationImpl.appComponent.homePresenter();
         presenter.setView(this);
+
+        //
+//        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+//        try {
+//
+//            final RealmResults<ShareContentReminder> reminderDelelte = realm.where(ShareContentReminder.class).findAll();
+//            if (reminderDelelte != null) {
+//                realm.executeTransaction(new Realm.Transaction() {
+//                    @Override
+//                    public void execute(Realm realm) {
+//                        Dbg.p("ELIMINO");
+//                        reminderDelelte.deleteAllFromRealm();
+//
+//                    }
+//                });
+//            }
+//        } catch (Exception ex) {
+//            Dbg.p("ERRORE: "+ex);
+//        } finally {
+//
+//        }
+
+
         presenter.checkNotification();
+
         changeStatusBar(grey);
         checkWritePermission();
+
+
     }
 
     @OnClick(R.id.rlISF)
@@ -235,6 +265,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Hom
         super.onResume();
         presenter.checkNotification();
         presenter.deleteShareContent();
+        presenter.checkReminder();
     }
 
     @Override

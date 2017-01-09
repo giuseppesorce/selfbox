@@ -57,8 +57,15 @@ public class GridSyncAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         SyncContent syncContent = syncContents.get(position);
 
         ((MyItemHolder) holder).tvLabel.setText(syncContent.getTitle());
-        ((MyItemHolder) holder).tvPercentage.setText(syncContent.getPercentage() + "%");
+        int percentageInt = syncContent.getPercentage();
+        if(percentageInt >100){
+            percentageInt=100;
+        }
+        ((MyItemHolder) holder).tvPercentage.setText(percentageInt + "%");
         float percentage = (float) ((float) syncContent.getPercentage() / 100.0f);
+        if(percentage >100){
+            percentage=100;
+        }
         ((MyItemHolder) holder).vRectPercentage.setScaleX(percentage);
         ((MyItemHolder) holder).vRectPercentage.setPivotX(0);
 

@@ -3,6 +3,7 @@ package com.docgenerici.selfbox.comm;
 
 
 
+import com.docgenerici.selfbox.android.home.ServerResponse;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
@@ -33,7 +34,7 @@ public interface ApiInteractor {
   Single<List<Folder>> getAllContents(String isf);
   Single<ResponseBody> getProduct(String date);
   Single<EmailText> getEmailText();
-  Single<ResponseBody> shareData(ShareDataSend shareDataSend);
+  Single<ServerResponse> shareData(ShareDataSend shareDataSend);
   Single<SessionCounterResponse> sendStatistic(SessionCounter sessionCounter);
 
 

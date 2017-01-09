@@ -1,21 +1,27 @@
 package com.docgenerici.selfbox.android.evisual;
 
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.custom.buttons.CButton;
 import com.docgenerici.selfbox.android.utils.MathUtils;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.ContentShared;
 import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.io.File;
@@ -37,28 +43,40 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
     Button btShare;
     @BindView(R.id.btHelp)
     Button btHelp;
+    @BindView(R.id.ivType)
+    ImageView ivType;
     private String pathVisual;
     private ArrayList<File> filesContent= new ArrayList<>();
     private Button buttonCliked;
     private boolean canShare;
     private String typeContent;
-    private ContentDoc contentDoc;
+    private ContentShared contentDoc;
+    private boolean training;
+    private String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evisual);
         ButterKnife.bind(this);
-
+        MainContentPresenter presenter = SelfBoxApplicationImpl.appComponent.mainContentPresenter();
+        changeStatusBar(presenter.getContentDarkColor());
+        rlToolbar.setBackgroundColor(presenter.getContentColor());
+        btHelp.setBackground(presenter.getBackGroundhelp());
+        category= presenter.getCategory();
         if (getIntent() != null) {
             pathVisual = getIntent().getStringExtra("path");
             canShare = getIntent().getBooleanExtra("canShare", false);
             typeContent = getIntent().getStringExtra("type");
-            contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+            contentDoc = (ContentShared) getIntent().getParcelableExtra("contentSelect");
+            training = getIntent().getBooleanExtra("training", false);
             setupShare();
             Dbg.p("pathVisual: "+pathVisual);
             if(pathVisual.startsWith("file://")){
                 pathVisual= pathVisual.replace("file://", "");
+            }
+            if(!canShare){
+                btShare.setVisibility(View.GONE);
             }
             File file= new File(pathVisual);
             if(file.exists()){
@@ -82,6 +100,40 @@ public class EvisualActivity extends AppCompatActivity implements View.OnClickLi
                 loadContentHtml(filesContent.get(0));
             }
 
+        }
+        setTypeIcon(category);
+
+    }
+
+    private void changeStatusBar(int color) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
+    }
+
+    private void setTypeIcon(String category) {
+        switch (category){
+            case "isf":
+                ivType.setImageResource(R.drawable.isf_white);
+                break;
+
+            case "medico":
+                if(training){
+                    ivType.setImageResource(R.drawable.medico_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.medico_white);
+                }
+                break;
+            case "pharma":
+                if(training){
+                    ivType.setImageResource(R.drawable.pharma_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.pharma_white);
+                }
+                break;
         }
     }
 

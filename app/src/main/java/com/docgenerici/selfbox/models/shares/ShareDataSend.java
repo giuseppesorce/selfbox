@@ -1,5 +1,7 @@
 package com.docgenerici.selfbox.models.shares;
 
+import com.docgenerici.selfbox.models.products.ProductShare;
+
 import java.util.ArrayList;
 
 import io.realm.RealmObject;
@@ -21,6 +23,7 @@ public class ShareDataSend {
     public String emailCustomText;
     public long requestDate;
     public ArrayList<Integer> contentIds;
+    public ArrayList<ProductShare> products;
 
 
 }

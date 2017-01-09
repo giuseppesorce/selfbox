@@ -1,6 +1,7 @@
 package com.docgenerici.selfbox.comm;
 
 
+import com.docgenerici.selfbox.android.home.ServerResponse;
 import com.docgenerici.selfbox.comm.storage.Environment;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.EmailText;
@@ -63,7 +64,7 @@ class SelfApiImpl implements SelfApi {
     }
 
     @Override
-    public Single<ResponseBody> shareData(ShareDataSend shareDataSend) {
+    public Single<ServerResponse> shareData(ShareDataSend shareDataSend) {
         return selfBoxUserApi.shareData(shareDataSend);
     }
 }

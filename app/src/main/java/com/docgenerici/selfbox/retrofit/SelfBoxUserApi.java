@@ -1,5 +1,6 @@
 package com.docgenerici.selfbox.retrofit;
 
+import com.docgenerici.selfbox.android.home.ServerResponse;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
@@ -50,7 +51,7 @@ public interface SelfBoxUserApi {
 
 
     @POST("/share-contents/")
-    Single<ResponseBody> shareData(@Body ShareDataSend shareDataSend);
+    Single<ServerResponse> shareData(@Body ShareDataSend shareDataSend);
 
 
 

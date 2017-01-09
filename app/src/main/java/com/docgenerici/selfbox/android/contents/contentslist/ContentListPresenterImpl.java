@@ -123,10 +123,6 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                     contentDoc.lastUpdate = folderRoot.contents.get(j).lastUpdate;
                     contentDoc.keywords = folderRoot.contents.get(j).keywords;
                     contentDoc.viewed = folderRoot.contents.get(j).isViewed();
-                    if(folderRoot.contents.get(j).name.contains("Demo")){
-                        Dbg.p("folderRoot.contents.get(j).isNewcontent(): "+folderRoot.contents.get(j).isNewcontent());
-                        Dbg.p("ontentDoc.viewed: "+contentDoc.viewed);
-                    }
                     if (folderRoot.contents.get(j).isNewcontent() && !contentDoc.viewed) {
                         if (folderRoot.contents.get(j).alertHighlight) {
                             contentDoc.typeview = SelfBoxConstants.TypeViewContent.IMPORTANT_NEW;
@@ -157,6 +153,7 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                         if (uriCover.contains("file://")) {
                             uriCover = uriCover.replace("file://", "");
                         }
+                        Dbg.p("uriCover id["+contentDoc.id+"]="+uriCover);
                         contentDoc.cover = uriCover;
                     }
                     contentDoc.name = folderRoot.contents.get(j).name;

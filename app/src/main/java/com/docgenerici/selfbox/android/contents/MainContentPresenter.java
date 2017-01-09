@@ -46,6 +46,8 @@ public interface MainContentPresenter extends Presenter {
 
     void refreshContents();
 
+    void deleteShareContent();
+
 
     interface MainContentView extends BaseView {
 
@@ -58,5 +60,9 @@ public interface MainContentPresenter extends Presenter {
         void showShareContents(ArrayList<ContentDoc> contentsShared);
 
         void refreshContentShare(int size);
+
+        void onSuccessContentShare();
+
+        void showReminder();
     }
 }

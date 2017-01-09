@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +69,8 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
     RelativeLayout rlToolbar;
     @BindView(R.id.btHelp)
     Button btHelp;
+    @BindView(R.id.ivType)
+    ImageView ivType;
 
     private MainContentPresenter presenter;
     private final int NAVIGATION_CONTENT = 0;
@@ -102,6 +107,30 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
             presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }
         presenter.setup(category);
+        setTypeIcon(category);
+    }
+
+    private void setTypeIcon(String category) {
+        switch (category){
+            case "isf":
+                ivType.setImageResource(R.drawable.isf_white);
+                break;
+
+            case "medico":
+                if(training){
+                    ivType.setImageResource(R.drawable.medico_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.medico_white);
+                }
+                break;
+            case "pharma":
+                if(training){
+                    ivType.setImageResource(R.drawable.pharma_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.pharma_white);
+                }
+                break;
+        }
     }
 
     @OnClick(R.id.ivLogo)
@@ -183,6 +212,43 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
         tvShare.setVisibility(size > 0 ? View.VISIBLE : View.GONE);
         tvShare.setText("CONDIVIDI " +size + " CONTENUTI");
 
+    }
+
+    @Override
+    public void onSuccessContentShare() {
+        presenter.deleteShareContent();
+        onChangeShareData();
+
+    }
+
+    @Override
+    public void showReminder() {
+        presenter.deleteShareContent();
+        onChangeShareData();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title
+        alertDialogBuilder.setTitle("Condivisione contenuti");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Non è stato possibile effettuare l'invio del materiale selezionato. Il materiale è stato accodato per u succesivo invio")
+                .setCancelable(false)
+                .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+
+                    }
+                })
+        ;
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     private void setNavigation(int nav) {

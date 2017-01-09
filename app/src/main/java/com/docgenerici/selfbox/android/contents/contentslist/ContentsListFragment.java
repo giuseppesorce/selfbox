@@ -35,6 +35,7 @@ import com.docgenerici.selfbox.android.video.VideoDescriptionActivity;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
+import com.docgenerici.selfbox.models.ContentShared;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Filters;
 import com.docgenerici.selfbox.models.persistence.ItemShared;
@@ -260,16 +261,17 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                     intentVideo.putExtra("id", contentBox.id);
                     intentVideo.putExtra("path", contentSelect.content);
                     intentVideo.putExtra("type", "content");
-                    intentVideo.putExtra("contentSelect", contentSelect);
+                    intentVideo.putExtra("contentSelect", new ContentShared(String.valueOf(contentBox.id),  contentSelect.name,"content", ""));
                     intentVideo.putExtra("canShare", getCanShare());
+                    intentVideo.putExtra("training",training);
                 }else {
                      intentVideo = new Intent(getActivity(), VideoActivity.class);
                     intentVideo.putExtra("path", contentSelect.content);
                     intentVideo.putExtra("id", contentBox.id);
                     intentVideo.putExtra("type", "content");
-                    intentVideo.putExtra("contentSelect",contentSelect);
+                    intentVideo.putExtra("contentSelect",new ContentShared(String.valueOf(contentBox.id),  contentSelect.name,"content", ""));
                     intentVideo.putExtra("canShare", getCanShare());
-
+                      intentVideo.putExtra("training",training);
                 }
 
                 startActivity(intentVideo);
@@ -277,9 +279,11 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
-                intentVisual.putExtra("type", "content");
-                intentVisual.putExtra("contentSelect", contentSelect);
+
+                intentVisual.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id),  contentSelect.name,"content", ""));
                 intentVisual.putExtra("canShare", getCanShare());
+                intentVisual.putExtra("training",training);
+                intentVisual.putExtra("type", "content");
                 startActivity(intentVisual);
 
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
@@ -288,9 +292,9 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
                 Dbg.p("contentSelect.content: "+contentSelect.content);
                 intent.putExtra("path", contentSelect.content);
                 intent.putExtra("type", "content");
-                intent.putExtra("contentSelect", contentSelect);
+                intent.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id),  contentSelect.name,"content", ""));
                 intent.putExtra("canShare", getCanShare());
-
+                intent.putExtra("training",training);
                 if (contentSelect.content != null) {
                     startActivity(intent);
                 }

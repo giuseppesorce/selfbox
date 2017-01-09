@@ -64,7 +64,8 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
     EditText etText;
     @BindView(R.id.btSend)
     Button btSend;
-    String doctorCode = "6969";
+    String doctorCode ;
+    String drugStoreCode ;
     String doctorName = "";
     String category = "";
 
@@ -203,13 +204,13 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
             case "medico":
                 if (medicoSelected != null) {
                     email = medicoSelected.email;
-                    doctorCode = "" + medicoSelected.id;
+                    doctorCode =  medicoSelected.code;
                 }
                 break;
             case "pharma":
                 if (lastPharmaUser != null) {
                     email = lastPharmaUser.email;
-                    doctorCode = "" + lastPharmaUser.id;
+                    drugStoreCode =  lastPharmaUser.ente;
 
                 }
                 break;
@@ -235,7 +236,7 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
             case "medico":
                 if (medicoSelected != null) {
                     name = medicoSelected.fullname;
-                    doctorCode = "" + medicoSelected.code;
+                    doctorCode = medicoSelected.code;
 
                 }
 
@@ -244,7 +245,7 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
             case "pharma":
                 if (lastPharmaUser != null) {
                     name = lastPharmaUser.fullname;
-                    doctorCode = "" + lastPharmaUser.ente;
+                    drugStoreCode = "" + lastPharmaUser.ente;
 
                 }
                 break;
@@ -264,6 +265,7 @@ public class ShareContentsDialogFragment extends DialogFragment implements OnIte
         ShareData shareData = new ShareData();
         shareData.id = new Date().getTime();
         shareData.doctorCode = doctorCode;
+        shareData.drugStore= drugStoreCode;
         shareData.isfCode = infoApp.repCode;
         shareData.doctorEmail = email;
         shareData.emailCustomText = etText.getText().toString();

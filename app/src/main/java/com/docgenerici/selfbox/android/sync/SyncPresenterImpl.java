@@ -146,7 +146,12 @@ public class SyncPresenterImpl implements SyncPresenter {
             syncContent.setPercentage(percentage);
             if (message.equalsIgnoreCase("end")) {
                 allDownloads.put(type, true);
-                checkEndSync();
+                if(type== SelfBoxConstants.ContentSyncType.CONTENTS){
+                    getProduct();
+                }else{
+                    checkEndSync();
+                }
+
             }
         }
         view.updatePercentage();
@@ -327,6 +332,7 @@ public class SyncPresenterImpl implements SyncPresenter {
     }
 
     private void getAllMedicalData() {
+        Dbg.p("getAllMedicalData");
         SyncContent syncContent = getContentByType(SelfBoxConstants.ContentSyncType.ANAGRAFICHE);
 
         if (syncContent != null) {
@@ -361,7 +367,6 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     private void nextContents() {
         sendLogs();
-       getProduct();
         getAllContents();
     }
 
@@ -465,7 +470,7 @@ public class SyncPresenterImpl implements SyncPresenter {
     }
 
     private void getAllContents() {
-
+        Dbg.p("getAllContents");
         String isf = getRepcode();
         if (!isf.isEmpty()) {
             apiInteractor.getAllContents(isf)
@@ -474,7 +479,7 @@ public class SyncPresenterImpl implements SyncPresenter {
                     .subscribe(new Action1<List<Folder>>() {
                         @Override
                         public void call(List<Folder> folders) {
-
+                            Dbg.p("getAllContents OK");
                             persistenceContentList(folders);
 
                         }

@@ -31,15 +31,11 @@ public class MyRealmMigration implements RealmMigration {
         }
         if(oldVersion == 1){
             schema.create("ItemShared").addField("id", String.class, FieldAttribute.PRIMARY_KEY).addField("name", String.class).addField("path", String.class).addField("type", String.class);
+            schema.create("ShareContentReminder").addField("id", Long.class, FieldAttribute.PRIMARY_KEY).addField("reminderShare", String.class);
+            schema.get("ShareData").addField("drugStore", String.class);
 
-//
-//            public class ItemShared extends RealmObject {
-//
-//                @PrimaryKey
-//                private String id;
-//                private String name;
-//                private String path;
-//                private String type;
+
+
 //            }
         }
 

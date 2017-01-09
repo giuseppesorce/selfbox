@@ -30,6 +30,8 @@ import com.docgenerici.selfbox.android.contents.productlist.legenda.LegendaDialo
 import com.docgenerici.selfbox.android.pdf.PdfActivity;
 import com.docgenerici.selfbox.android.utils.SelfBoxUtils;
 import com.docgenerici.selfbox.debug.Dbg;
+import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.ContentShared;
 import com.docgenerici.selfbox.models.FilterProduct;
 import com.docgenerici.selfbox.models.ProductDoc;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
@@ -88,7 +90,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         presenter.setView(this);
         presenter.setup();
         if (getArguments() != null) {
-            training= getArguments().getBoolean("training", false);
+            training = getArguments().getBoolean("training", false);
         }
         String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
         Resources res = getResources();
@@ -119,16 +121,17 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     }
 
     @OnClick(R.id.rlPrice)
-    void onSelectMenuPrice(){
-        File file= new File(getActivity().getExternalFilesDir("contents"),  "listinoprezzi.pdf");
-        if(file.exists()) {
+    void onSelectMenuPrice() {
+        File file = new File(getActivity().getExternalFilesDir("contents"), "listinoprezzi.pdf");
+        if (file.exists()) {
             String path = file.getAbsolutePath();
-            Dbg.p(" file.getAbsoluteFile(): "+file.getAbsoluteFile());
+            Dbg.p(" file.getAbsoluteFile(): " + file.getAbsoluteFile());
 //            if (path.contains("file://")) {
 //                path = path.replace("file://", "");
 //            }
             Intent intent = new Intent(getActivity(), PdfActivity.class);
             intent.putExtra("path", path);
+            intent.putExtra("canShare", false);
             getActivity().startActivity(intent);
         }
     }
@@ -190,7 +193,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         for (int j = 0; j < products.size(); j++) {
             Product product = products.get(j);
 
-            productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(categorieColors.get(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+            productDocArrayList.add(new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(categorieColors.get(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
         }
 
         adapter.notifyDataSetChanged();
@@ -215,9 +218,9 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
             RealmResults<Product> products = realm.where(Product.class).equalTo("categoria_farmacologica", categoria).findAll();
             for (int j = 0; j < products.size(); j++) {
 
-                    Product product = products.get(j);
+                Product product = products.get(j);
 
-                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                productDocArrayList.add(new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
 
             }
         }
@@ -241,19 +244,29 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
 
     @Override
     public void onSelectScheda(ProductDoc product) {
-        String url =product.getUriSchedaPdf();
-        Dbg.p("onSelectScheda: "+url);
+        String url = product.getUriSchedaPdf();
+        Dbg.p("onSelectScheda: " + url);
         Intent intent = new Intent(getActivity(), PdfActivity.class);
+        intent.putExtra("type", "product");
+        intent.putExtra("contentSelect", new ContentDoc());
+        intent.putExtra("canShare", getCanShare());
+        intent.putExtra("contentSelect", new ContentShared(String.valueOf("scheda_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getUriSchedaPdf()));
         intent.putExtra("path", url);
         getActivity().startActivity(intent);
+    }
 
+    private boolean getCanShare() {
+        return !training;
     }
 
     @Override
     public void onSelectRpc(ProductDoc product) {
         String url = product.getUriPdf();
-        Dbg.p("onSelectRpc: "+url);
+        Dbg.p("onSelectRpc: " + url);
         Intent intent = new Intent(getActivity(), PdfActivity.class);
+        intent.putExtra("type", "product");
+        intent.putExtra("canShare", getCanShare());
+        intent.putExtra("contentSelect", new ContentShared(String.valueOf("rpc_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getUriPdf()));
         intent.putExtra("path", url);
         getActivity().startActivity(intent);
 
@@ -270,14 +283,13 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
                 RealmResults<Product> products = realm.where(Product.class).equalTo("categoria_farmacologica", categoria).findAll();
                 for (int j = 0; j < products.size(); j++) {
                     Product product = products.get(j);
-                    Dbg.p("PRODOTTO: "+product.getUriPdf());
+                    Dbg.p("PRODOTTO: " + product.getUriPdf());
 
-                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                    productDocArrayList.add(new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
                 }
             }
         }
         adapter.notifyDataSetChanged();
-
 
     }
 
@@ -294,21 +306,22 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     }
 
     private void searchText(String filterText) {
-        if(filterText.length() > 2){
+        if (filterText.length() > 2) {
             final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-             productDocArrayList.clear();
+            productDocArrayList.clear();
 
 
             RealmResults<Product> products = realm.where(Product.class).findAll();
             for (int j = 0; j < products.size(); j++) {
                 Product product = products.get(j);
-                if(product.getNome().toLowerCase().contains(filterText.toLowerCase())) {
-                    productDocArrayList.add(new ProductDoc(SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                if (product.getNome().toLowerCase().contains(filterText.toLowerCase())) {
+                    productDocArrayList.add(new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
 
-                }}
+                }
+            }
 
             adapter.notifyDataSetChanged();
-        }else{
+        } else {
             presenter.selectLastFilter();
         }
     }

@@ -89,7 +89,6 @@ public class ContentsService extends IntentService {
         downloaderCover = DownloaderDoc.newInstance(listenerDownloadContentCover);
         downloaderFolderCover = DownloaderDoc.newInstance(listenerDownloadFolderCover);
         Dbg.p("CONTENUTI: " + contentsEasy.size());
-
         downloadContent();
     }
 
@@ -114,7 +113,7 @@ public class ContentsService extends IntentService {
                 String pathContent = normalizePath(contentEasy.resourcePath) + contentEasy.filename;
 
                 Uri uriContents = Uri.parse(pathContent.replace(" ", "%20"));
-                String filenameContent = contentEasy.lastUpdate + "___" + contentEasy.filename;
+                String filenameContent = normalizename( contentEasy.lastUpdate + "___" + contentEasy.filename);
                 if (contentEasy.name.startsWith("Nuovo1")) {
                     Dbg.p("NUOVO uriContents : " + contentEasy.name + " u:" + uriContents.toString());
                     Dbg.p("NUOVO filenameContent:" + contentEasy.name + " f:" + filenameContent);
@@ -150,20 +149,6 @@ public class ContentsService extends IntentService {
         }
     }
 
-    public void donwloadFolderCover() {
-        // bContentCoverDownload = false;
-//        String pathCover =  normalizePath(contentEasy.thumbnailPath)+  contentEasy.thumbnailCover;
-//        Uri uriContentCover = Uri.parse(pathCover.replace(" ", "%20"));
-//        String filenameContentCover = contentEasy.lastUpdate + "___" + contentEasy.thumbnailCover;
-//        File fileCover = new File(getExternalFilesDir("contents"), filenameContentCover);
-//        if (fileCover.exists()) {
-//            bContentCoverDownload = true;
-//            checkContentDownload();
-//        } else {
-//            downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
-//        }
-    }
-
 
     private void unzipFile(File file) {
 
@@ -193,7 +178,7 @@ public class ContentsService extends IntentService {
     }
 
     private void startDownloadFoldersCover() {
-        Dbg.p("startDownloadFoldersCover");
+        Dbg.p("FOLDER startDownloadFoldersCover");
         folderEasy = new ArrayList<>();
         Realm realm = null;
         try {
@@ -225,9 +210,9 @@ public class ContentsService extends IntentService {
     }
 
     private void downloadFolderCover() {
-
+        Dbg.p("FOLDER downloadFolderCover");
         if (counterFolders < folderEasy.size()) {
-            Dbg.p("CONTENUTI: DONWLOAD FOLDERCOVER");
+            Dbg.p("FOLDER CONTENUTI: DONWLOAD FOLDERCOVER");
             if (counterFolders > 0) {
                 sendUpdate((counterContents + (totalPercentage/3)) * 100 / totalPercentage);
             }
@@ -236,17 +221,21 @@ public class ContentsService extends IntentService {
             String pathContentCover = normalizePath(contentEasy.thumbnailPath) + contentEasy.filename;
             Uri uriContentsFolderCover = Uri.parse(pathContentCover.replace(" ", "%20"));
             String filenameContent = contentEasy.lastUpdate + "___" + contentEasy.filename;
+            filenameContent= normalizename(filenameContent);
+
+
+
             File file = new File(getExternalFilesDir("contents"), filenameContent);
             Dbg.p("FOLDER: pathContentCover: " + pathContentCover);
             Dbg.p("FOLDER: filenameContent: " + filenameContent);
 
             if (file.exists()) {
                 Dbg.p("FOLDER: esiste");
-                updateContentCover(file.getAbsolutePath(), contentEasy.id);
+                updateFolderCover(file.getAbsolutePath(), contentEasy.id);
                 counterFolders++;
                 downloadFolderCover();
             } else {
-                Dbg.p("FOLDER: scarico");
+                Dbg.p("FOLDER: scarico: uriContentsFolderCover: "+uriContentsFolderCover+ " filenameContent: "+filenameContent);
                 downloaderFolderCover.download(uriContentsFolderCover, "contents", filenameContent, contentEasy.id);
             }
 
@@ -258,6 +247,11 @@ public class ContentsService extends IntentService {
             startDownloadCover();
         }
 
+    }
+
+    private String normalizename(String filenameContent) {
+        String newname= filenameContent.replace(".JPG", ".jpg").replace(" ", "").toLowerCase();
+        return  newname;
     }
 
     private void startDownloadCover() {
@@ -278,12 +272,18 @@ public class ContentsService extends IntentService {
                         contentEasy.lastUpdate = realmResultsContentsBox.get(i).creationDate;
                         contentEasy.thumbnailCover = realmResultsContentsBox.get(i).thumbnailCover;
                         contentEasy.thumbnailPath = realmResultsContentsBox.get(i).thumbnailPath;
+                        if( contentEasy.id==9){
+                            Dbg.p("PRINTDATA: contentEasy.thumbnailCover: "+contentEasy.thumbnailCover);
+                            Dbg.p("PRINTDATA: contentEasy.thumbnailCover: "+contentEasy.thumbnailPath);
+                        }
                         coverEasy.add(contentEasy);
 
                     }
                 }
             });
-        } finally {
+        } catch (Exception ex){
+            Dbg.p("PRINTDATA ERRORE startDownloadCover");
+        }finally {
             if (realm != null) {
                 realm.close();
             }
@@ -301,12 +301,25 @@ public class ContentsService extends IntentService {
             ContentEasy contentEasy = coverEasy.get(counterCovers);
             String pathCover = normalizePath(contentEasy.thumbnailPath) + contentEasy.thumbnailCover;
             Uri uriContentCover = Uri.parse(pathCover.replace(" ", "%20"));
-            String filenameContentCover = contentEasy.lastUpdate + "___" + contentEasy.thumbnailCover;
+
+            String filenameContentCover =  normalizename(contentEasy.lastUpdate + "___" + contentEasy.thumbnailCover);
             File fileCover = new File(getExternalFilesDir("contents"), filenameContentCover);
+            if(contentEasy.id==9) {
+                Dbg.p("PRINTDATA: COVER: id: " + contentEasy.id);
+                Dbg.p("PRINTDATA: COVER: pathCover: " + pathCover);
+                Dbg.p("PRINTDATA: COVER: uriContentCover: " + uriContentCover);
+                Dbg.p("PRINTDATA: COVER: filenameContentCover: " + filenameContentCover);
+                Dbg.p("PRINTDATA: COVER: fileCover: " + fileCover.toString());
+            }
+
             if (fileCover.exists()) {
+                updateContentCover(fileCover.getAbsolutePath(), contentEasy.id);
                 counterCovers++;
                 downloadCovers();
             } else {
+                if(contentEasy.id==9) {
+                    Dbg.p("PRINTDATA: COVER scarico l' id 9");
+                }
                 downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
             }
         } else {
@@ -374,10 +387,6 @@ public class ContentsService extends IntentService {
     private ListenerDowloadDoc listenerDownloadContent = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
-            if (id == 217) {
-                Dbg.p("NUOVO FILE SCARICATO: " + uri + "ID: " + id);
-            }
-
             updateContent(uri.toString(), id);
             bContentDownload = true;
             if (uri.toString().contains(".zip")) {
@@ -388,10 +397,7 @@ public class ContentsService extends IntentService {
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            if (id == 217) {
-                Dbg.p("NUOVO FILE ERRROR: " + id);
-            }
-
+            Dbg.p("ERROR CONTENTS DOWNLOAD: " + id+ "errortype "+errortype+ " error: "+error);
             updateContent("error_" + error, id);
             bContentDownload = true;
             checkContentDownload();
@@ -413,8 +419,12 @@ public class ContentsService extends IntentService {
     private ListenerDowloadDoc listenerDownloadContentCover = new ListenerDowloadDoc() {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
-            Dbg.p("FILE SCARICATO: " + uri + "ID: " + id);
+          //  Dbg.p("COVER FILE SCARICATO: " + uri + " ID: " + id);
             updateContentCover(uri.toString(), id);
+            if(id==9){
+                Dbg.p("PRINTDATA: COVER ID9  SCARICATO : "+uri+ " id: "+id);
+
+            }
             counterCovers++;
             downloadCovers();
 
@@ -422,7 +432,7 @@ public class ContentsService extends IntentService {
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            Dbg.p("FILE ERRROR: " + id);
+            Dbg.p("COVER ERRROR: " + id);
             updateContentCover("error_" + error, id);
             counterCovers++;
             downloadCovers();
@@ -448,7 +458,8 @@ public class ContentsService extends IntentService {
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            Dbg.p("FILE ERRROR: " + id);
+
+            Dbg.p("ERROR CONTENTS FOLDERDOWNLOAD: " + id+ "errortype "+errortype+ " error: "+error);
             updateFolderCover("error_" + errortype, id);
             counterFolders++;
             downloadFolderCover();
@@ -475,7 +486,9 @@ public class ContentsService extends IntentService {
                     }
                 }
             });
-        } finally {
+        } catch (Exception error){
+            Dbg.p("ERROR UPDATE COVER IMAGE FOLDER");
+        } finally{
             if (realm != null) {
                 realm.close();
             }
@@ -484,6 +497,9 @@ public class ContentsService extends IntentService {
 
     private void updateContentCover(final String uri, final int id) {
         Realm realm = null;
+        if(uri==null){
+            Dbg.p("PRINTDATA: errore uri è null");
+        }
         try {
             realm = Realm.getDefaultInstance();
             realm.executeTransaction(new Realm.Transaction() {
@@ -491,12 +507,18 @@ public class ContentsService extends IntentService {
                 public void execute(Realm realm) {
 
                     ContentBox model = realm.where(ContentBox.class).equalTo("id", id).findFirst();
+                    if(id==9){
+                        Dbg.p("PRINTDATA:  UPDATE ID 9: "+uri);
+                    }
                     if (model != null) {
                         model.setLocalthumbnailPath(uri);
                     }
                 }
             });
-        } finally {
+        }catch (Exception ex){
+            Dbg.p("COVER ERRORE updateContentCover");
+        }
+        finally {
             if (realm != null) {
                 realm.close();
             }
@@ -518,9 +540,9 @@ public class ContentsService extends IntentService {
                 }
             });
         } catch (Exception ex) {
-            if (id == 217) {
-                Dbg.p("NUOVO errire update");
-            }
+
+                Dbg.p("ERRORE updateContent uri "+uri+ " id: "+id);
+
         } finally {
             if (realm != null) {
                 realm.close();

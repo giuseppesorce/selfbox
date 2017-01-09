@@ -15,12 +15,14 @@ import com.docgenerici.selfbox.models.farmacia.Farmacia;
 import com.docgenerici.selfbox.models.medico.Medico;
 import com.docgenerici.selfbox.models.persistence.ConfigurationApp;
 import com.docgenerici.selfbox.models.persistence.InfoApp;
+import com.docgenerici.selfbox.models.persistence.ShareContentReminder;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.IOException;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -48,6 +50,8 @@ public class StartPresenterImpl implements StartPresenter {
 
     @Override
     public void chekActivation() {
+
+
 
         Hawk.init(SelfBoxApplicationImpl.appComponent.context())
                 .build();

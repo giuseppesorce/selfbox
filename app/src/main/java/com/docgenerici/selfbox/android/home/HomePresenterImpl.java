@@ -2,6 +2,7 @@ package com.docgenerici.selfbox.android.home;
 
 import com.docgenerici.selfbox.BaseView;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
+import com.docgenerici.selfbox.comm.ApiInteractor;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.contents.Target;
@@ -13,19 +14,32 @@ import com.docgenerici.selfbox.models.persistence.InfoApp;
 import com.docgenerici.selfbox.models.persistence.ItemShared;
 import com.docgenerici.selfbox.models.persistence.MedicalView;
 import com.docgenerici.selfbox.models.persistence.PharmaView;
+import com.docgenerici.selfbox.models.persistence.ShareContentReminder;
+import com.docgenerici.selfbox.models.shares.ShareDataSend;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.ResponseBody;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * @author Giuseppe Sorce
  */
 
 public class HomePresenterImpl implements HomePresenter {
+    private final ApiInteractor apiInteractor;
     private HomeView view;
+
+
+    public HomePresenterImpl(ApiInteractor apiInteractor) {
+        this.apiInteractor = apiInteractor;
+    }
 
     @Override
     public void setView(BaseView view) {
@@ -216,5 +230,76 @@ public class HomePresenterImpl implements HomePresenter {
                 }
             });
         }
+    }
+
+    @Override
+    public void checkReminder() {
+        final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        ShareContentReminder reminder = realm.where(ShareContentReminder.class).findFirst();
+        Dbg.p("checkReminder");
+        if (reminder != null) {
+            final long idReminder = reminder.getId();
+            if (!reminder.getReminderShare().isEmpty()) {
+                ShareDataSend shareDataSend = null;
+                try {
+                    shareDataSend = new Gson().fromJson(reminder.getReminderShare(), ShareDataSend.class);
+                } catch (Exception ex) {
+                }
+                if (shareDataSend != null) {
+                    Dbg.p("checkReminder invio");
+                    apiInteractor.shareData(shareDataSend)
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<ServerResponse>() {
+                                @Override
+                                public void call(ServerResponse resp) {
+                                    if(resp.success) {
+                                        try {
+
+
+                                            final ShareContentReminder reminderDelelte = realm.where(ShareContentReminder.class).equalTo("id", idReminder).findFirst();
+                                            if (reminderDelelte != null) {
+                                                realm.executeTransaction(new Realm.Transaction() {
+                                                    @Override
+                                                    public void execute(Realm realm) {
+                                                        reminderDelelte.deleteFromRealm();
+                                                        Dbg.p("checkReminder cancello");
+                                                        checkReminder();
+                                                    }
+                                                });
+                                            }
+                                        } catch (Exception ex) {
+
+                                        }
+                                    }
+
+
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Dbg.p("checkReminder INVIO ERRORE");
+
+                                }
+                            });
+                }
+
+            }
+        }
+        /*
+        String jsonReminder= new Gson().toJson(shareDataSend);
+        Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+        try{
+            realm.beginTransaction();
+            ShareContentReminder shareReminder= new ShareContentReminder();
+            shareReminder.setId(new Date().getTime());
+            shareReminder.setReminderShare(jsonReminder);
+            realm.copyToRealmOrUpdate(shareReminder);
+        }catch (Exception ex){
+
+        }finally {
+            realm.commitTransaction();
+        }
+         */
     }
 }

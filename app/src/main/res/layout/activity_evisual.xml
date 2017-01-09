@@ -31,6 +31,16 @@
             android:orientation="horizontal"></LinearLayout>
 
 
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ivType"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/btShare"
+            android:src="@drawable/isf_white" />
         <Button
             android:id="@+id/btHelp"
             android:layout_width="38dp"

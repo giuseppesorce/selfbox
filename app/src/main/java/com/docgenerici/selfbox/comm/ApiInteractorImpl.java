@@ -1,6 +1,7 @@
 package com.docgenerici.selfbox.comm;
 
 
+import com.docgenerici.selfbox.android.home.ServerResponse;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
@@ -51,7 +52,7 @@ class ApiInteractorImpl implements ApiInteractor {
     }
 
     @Override
-    public Single<ResponseBody> shareData(ShareDataSend shareDataSend) {
+    public Single<ServerResponse> shareData(ShareDataSend shareDataSend) {
         return api.shareData(shareDataSend);
     }
 

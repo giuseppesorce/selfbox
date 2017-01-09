@@ -23,6 +23,7 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.ContentShared;
 import com.docgenerici.selfbox.models.contents.ContentBox;
 import com.docgenerici.selfbox.models.persistence.ItemShared;
 
@@ -53,13 +54,14 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
     TextView tvTitle;
     @BindView(R.id.tvDescription)
     TextView tvDescription;
-
     @BindView(R.id.btShare)
     Button btShare;
     @BindView(R.id.rlToolbar)
     RelativeLayout rlToolbar;
     @BindView(R.id.btHelp)
     Button btHelp;
+    @BindView(R.id.ivType)
+    ImageView ivType;
     private MediaController ctlr;
     private Handler mHandler = new Handler();
     private Timer timer = new Timer();
@@ -73,7 +75,9 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
     private boolean hasVolume=true;
     private boolean canShare;
     private String typeContent;
-    private ContentDoc contentDoc;
+    private ContentShared contentDoc;
+    private boolean training;
+    private String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
         changeStatusBar(presenter.getContentDarkColor());
         rlToolbar.setBackgroundColor(presenter.getContentColor());
         btHelp.setBackground(presenter.getBackGroundhelp());
+        category= presenter.getCategory();
         showHideController(true);
 
         if (getIntent() != null) {
@@ -94,10 +99,14 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
                pathVideo= contentBox.getLocalfilePath();
                pathVideo= pathVideo.replace("file://", "");
                canShare = getIntent().getBooleanExtra("canShare", false);
+               training = getIntent().getBooleanExtra("training", false);
                typeContent = getIntent().getStringExtra("type");
-               contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+               contentDoc = (ContentShared) getIntent().getParcelableExtra("contentSelect");
                if(pathVideo.startsWith("file://")){
-
+                   pathVideo= pathVideo.replace("file://", "");
+               }
+               if(!canShare){
+                   btShare.setVisibility(View.GONE);
                }
                tvTitle.setText(contentBox.name);
                tvDescription.setText(contentBox.descrFull);
@@ -141,6 +150,32 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
 
                 btPlayPause.setBackgroundResource(R.drawable.ic_pause);
             }
+        }
+        setTypeIcon(category);
+
+    }
+
+
+    private void setTypeIcon(String category) {
+        switch (category){
+            case "isf":
+                ivType.setImageResource(R.drawable.isf_white);
+                break;
+
+            case "medico":
+                if(training){
+                    ivType.setImageResource(R.drawable.medico_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.medico_white);
+                }
+                break;
+            case "pharma":
+                if(training){
+                    ivType.setImageResource(R.drawable.pharma_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.pharma_white);
+                }
+                break;
         }
     }
     @OnClick(R.id.btPlayPause)

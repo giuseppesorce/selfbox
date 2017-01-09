@@ -39,6 +39,8 @@ public interface HomePresenter extends Presenter {
 
     void deleteShareContent();
 
+    void checkReminder();
+
     interface HomeView extends BaseView {
 
         void showISF();

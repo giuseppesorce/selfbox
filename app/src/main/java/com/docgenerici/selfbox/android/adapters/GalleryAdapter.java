@@ -93,7 +93,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
 
         ((MyHolder) holder).tvTitle.setText(contentDoc.name);
-
+        Dbg.p("COVER["+contentDoc.id+"] : "+contentDoc.cover);
 
         if (contentDoc.cover != null && !contentDoc.cover.isEmpty()) {
             Picasso.with(context).load(new File(contentDoc.cover)).resize(700, 450).centerCrop().into(((MyHolder) holder).ivCover);

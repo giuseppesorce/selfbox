@@ -1,6 +1,7 @@
 package com.docgenerici.selfbox.comm;
 
 
+import com.docgenerici.selfbox.android.home.ServerResponse;
 import com.docgenerici.selfbox.models.EmailText;
 import com.docgenerici.selfbox.models.LoginResponse;
 import com.docgenerici.selfbox.models.MedicalList;
@@ -39,5 +40,5 @@ public interface CommApi {
 
     Single<EmailText> getEmailText();
 
-    Single<ResponseBody> shareData(ShareDataSend shareDataSend);
+    Single<ServerResponse> shareData(ShareDataSend shareDataSend);
 }

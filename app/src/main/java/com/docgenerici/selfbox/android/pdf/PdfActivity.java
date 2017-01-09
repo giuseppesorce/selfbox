@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
 import com.docgenerici.selfbox.android.contents.MainContentPresenter;
 import com.docgenerici.selfbox.android.home.help.HelpDialogFragment;
 import com.docgenerici.selfbox.debug.Dbg;
-import com.docgenerici.selfbox.models.ContentDoc;
+import com.docgenerici.selfbox.models.ContentShared;
 import com.docgenerici.selfbox.models.persistence.ItemShared;
 
 import java.io.File;
@@ -52,7 +53,8 @@ public class PdfActivity extends AppCompatActivity {
     Button btHelp;
     @BindView(R.id.progress)
     ProgressBar progress;
-
+    @BindView(R.id.ivType)
+    ImageView ivType;
     String SAMPLE_FILE = "sample.pdf";
     private String pathPdf;
     private RelativeLayout mainLayout;
@@ -68,8 +70,10 @@ public class PdfActivity extends AppCompatActivity {
     private String downloadCompleteIntentName = DownloadManager.ACTION_DOWNLOAD_COMPLETE;
     private IntentFilter downloadCompleteIntentFilter = new IntentFilter(downloadCompleteIntentName);
     private String typeContent;
-    private ContentDoc contentDoc;
+    private ContentShared contentShared;
     private boolean canShare;
+    private boolean training;
+    private String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,29 +87,64 @@ public class PdfActivity extends AppCompatActivity {
         changeStatusBar(presenter.getContentDarkColor());
         rlToolbar.setBackgroundColor(presenter.getContentColor());
         btHelp.setBackground(presenter.getBackGroundhelp());
+        category= presenter.getCategory();
         registerReceiver(downloadCompleteReceiver, downloadCompleteIntentFilter);
 
         if (getIntent() != null) {
             pathPdf = getIntent().getStringExtra("path");
+            training = getIntent().getBooleanExtra("training", false);
             canShare = getIntent().getBooleanExtra("canShare", false);
             typeContent = getIntent().getStringExtra("type");
-            contentDoc = (ContentDoc) getIntent().getParcelableExtra("contentSelect");
+            contentShared = (ContentShared) getIntent().getParcelableExtra("contentSelect");
             if (pathPdf.startsWith("file://")) {
                 pathPdf = pathPdf.replace("file://", "");
             }
-            setupShare();
+            if(pathPdf.contains("%20")){
+                pathPdf= pathPdf.replace("%20", " ");
+            }
+            if(contentShared !=null) {
+                setupShare();
+            }
+            if(!canShare){
+                btShare.setVisibility(View.GONE);
+            }
         }
         if (new File(pathPdf).exists()) {
             openPdf(pathPdf);
         } else {
             Toast.makeText(this, "Risorsa non disponibile. Prova a rifare la sincronizzazione", Toast.LENGTH_SHORT).show();
         }
+        setTypeIcon(category);
 
     }
 
+
+    private void setTypeIcon(String category) {
+        switch (category){
+            case "isf":
+                ivType.setImageResource(R.drawable.isf_white);
+                break;
+
+            case "medico":
+                if(training){
+                    ivType.setImageResource(R.drawable.medico_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.medico_white);
+                }
+                break;
+            case "pharma":
+                if(training){
+                    ivType.setImageResource(R.drawable.pharma_grey);
+                }else{
+                    ivType.setImageResource(R.drawable.pharma_white);
+                }
+                break;
+        }
+    }
+
     private void setupShare() {
-        if(contentDoc !=null){
-            String id= String.valueOf(contentDoc.id);
+        if(contentShared !=null){
+            String id= String.valueOf(contentShared.id);
             Realm realm= SelfBoxApplicationImpl.appComponent.realm();
             ItemShared itemShared = realm.where(ItemShared.class).equalTo("id", id).findFirst();
             if(itemShared !=null){
@@ -120,8 +159,8 @@ public class PdfActivity extends AppCompatActivity {
     @OnClick(R.id.btShare)
     void addOrDeleteShare(){
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        if(contentDoc !=null) {
-            String id = String.valueOf(contentDoc.id);
+        if(contentShared !=null) {
+            String id = String.valueOf(contentShared.id);
 
             final ItemShared sharedItem = realm.where(ItemShared.class).equalTo("id", id).findFirst();
             if (sharedItem != null) {
@@ -138,8 +177,9 @@ public class PdfActivity extends AppCompatActivity {
 
                     ItemShared newSharedItem = new ItemShared();
                     newSharedItem.setId(id);
-                    newSharedItem.setName(contentDoc.name);
-                    newSharedItem.setType("content");
+                    newSharedItem.setName(contentShared.name);
+                    newSharedItem.setType(contentShared.getType());
+                    newSharedItem.setPath(contentShared.getPath());
                     realm.copyToRealmOrUpdate(newSharedItem);
                 } catch (Exception ex) {
 

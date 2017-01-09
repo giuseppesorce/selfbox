@@ -28,14 +28,13 @@ import io.realm.RealmResults;
 public class ProductSyncService extends IntentService {
 
     private RealmResults<Product> realmResultsProdduct;
-    private int counterProducts;
+    private int counterScheda;
+    private int counterProduct;
 
     private DownloaderDoc downloaderScheda;
     private DownloaderDoc downloaderProduct;
     private boolean downLoadScheda;
     private boolean donwloadedProduct;
-    private boolean bSchedaDownload;
-    private boolean bProductDownload;
     private Realm realm;
 
     private String aicCode;
@@ -73,42 +72,36 @@ public class ProductSyncService extends IntentService {
             }
         }
 
-        counterProducts = 0;
+        counterScheda = 0;
         downloaderScheda = DownloaderDoc.newInstance(listenerDownloadScheda);
         downloaderProduct = DownloaderDoc.newInstance(listenerDownloadProduct);
-        downloadContent();
+        downloadScheda();
     }
 
-    private void downloadContent() {
-        if (counterProducts < allaicCodes.size()) {
-            float percentage = counterProducts * 100 / allaicCodes.size();
+    private void downloadScheda() {
+        if (counterScheda < allaicCodes.size()) {
+            float percentage = counterScheda * 100 / allaicCodes.size() * 2;
             sendUpdate(percentage);
-            aicCode = allaicCodes.get(counterProducts);
+            aicCode = allaicCodes.get(counterScheda);
             pathSchedaDownload = "";
-            pathProductDownload = "";
+
             Realm realm = null;
             try {
                 realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-
+                        //TODO prendere la url da qui
                         Product nowProduct = realm.where(Product.class).equalTo("aic", aicCode).findFirst();
                         if (nowProduct.getScheda() != null && nowProduct.getScheda().getUri() != null && !nowProduct.getScheda().getUri().isEmpty() && nowProduct.getScheda().getUri().length() > 5) {
                             pathSchedaDownload = SelfBoxConstants.pathProduct + nowProduct.getScheda().getUri();
                         }
-                        if (nowProduct.rcp != null && !nowProduct.getFilename().isEmpty()) {
-                            pathProductDownload = SelfBoxConstants.pathProduct + nowProduct.rcp;
-                        }
 
                         schedaPublished = nowProduct.getScheda().published;
                         schedaFilename = nowProduct.getScheda().filename;
-                        productPublished = nowProduct.risorsa.published;
-                        productFilename = nowProduct.getFilename();
                         Dbg.p("pathSchedaDownload: " + pathSchedaDownload);
                         Dbg.p("schedaFilename: " + schedaFilename);
-                        Dbg.p("pathProductDownload: " + pathProductDownload);
-                        Dbg.p("productFilename: " + productFilename);
+
 
                     }
                 });
@@ -117,52 +110,99 @@ public class ProductSyncService extends IntentService {
                     realm.close();
                 }
             }
-            bSchedaDownload = false;
-            bProductDownload = false;
+
+
             if (pathSchedaDownload.length() > 5) {
                 Uri uriScheda = Uri.parse(pathSchedaDownload.replace(" ", "%20"));
-                String filenameScheda = SelfBoxUtils.dateConvertNumber(schedaPublished) + "___" + "scheda___" + schedaFilename;
+                String filenameScheda = SelfBoxUtils.dateConvertNumber(schedaPublished) + "___" + "scheda___" + schedaFilename.replace("%20", "");
                 File file = new File(getExternalFilesDir("products"), filenameScheda);
                 if (file.exists()) {
-                    bSchedaDownload = true;
                     Dbg.p("FILE ESISTE");
                     updateScheda(file.getAbsolutePath());
+                    counterScheda++;
+                    Dbg.p("Vado al prossimo: " + counterScheda);
+                    downloadScheda();
                 } else {
                     downloaderScheda.download(uriScheda, "products", filenameScheda);
                 }
-
-
             } else {
-                bSchedaDownload = true;
+                counterScheda++;
+                downloadScheda();
             }
+
+        } else {
+            counterProduct = 0;
+            donwloadProductPdf();
+        }
+    }
+
+
+    private void donwloadProductPdf() {
+
+        if (counterProduct < allaicCodes.size()) {
+
+
+            float percentage = (counterScheda + counterProduct) * 100 / (allaicCodes.size() * 2);
+            sendUpdate(percentage);
+            aicCode = allaicCodes.get(counterProduct);
+            pathProductDownload = "";
+            Realm realm = null;
+            try {
+                realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        //TODO prendere la url da qui
+                        Product nowProduct = realm.where(Product.class).equalTo("aic", aicCode).findFirst();
+                        if (nowProduct.rcp != null && !nowProduct.getFilename().isEmpty()) {
+                            pathProductDownload = SelfBoxConstants.pathProduct + nowProduct.rcp;
+                        }
+                        productPublished = nowProduct.risorsa.published;
+                        productFilename = nowProduct.getFilename();
+                        Dbg.p("pathProductDownload: " + pathProductDownload);
+                        Dbg.p("productFilename: " + productFilename);
+
+                    }
+                });
+            } catch (Exception ex) {
+
+            } finally {
+                if (realm != null) {
+                    realm.close();
+                }
+            }
+
+
             if (pathProductDownload.length() > 5) {
 
                 Uri uriProduct = Uri.parse(pathProductDownload.replace(" ", "%20"));
-                String filenameProduct = SelfBoxUtils.dateConvertNumber(productPublished) + "___" + "prod___" + productFilename;
+                String filenameProduct = SelfBoxUtils.dateConvertNumber(productPublished) + "___" + "prod___" + productFilename.replace("%20", "");
                 File file = new File(getExternalFilesDir("products"), filenameProduct);
 
                 if (file.exists()) {
-                    bProductDownload = true;
+                    counterProduct++;
                     updateProductUri(file.getAbsolutePath());
+                    donwloadProductPdf();
                 } else {
                     downloaderProduct.download(uriProduct, "products", filenameProduct);
                 }
 
             } else {
-                bProductDownload = true;
+                counterProduct++;
+                updateProductUri("error_not_found");
+                donwloadProductPdf();
             }
-            if (bSchedaDownload && bProductDownload) {
-                Dbg.p("Salto al prossimo: senza dati");
-                counterProducts++;
-                downloadContent();
-            }
-        } else {
+
+        } else
+
+        {
             updateProducSyncData();
             Dbg.p("FINITO");
             stopSelf();
             sendUpdate(100);
             sendUpdate("end");
         }
+
     }
 
     private void updateProducSyncData() {
@@ -252,17 +292,19 @@ public class ProductSyncService extends IntentService {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
             Dbg.p("FILE SCHEDA SCARICATO: " + uri);
-            bSchedaDownload = true;
             updateScheda(uri.toString());
-            checkUpdated();
+            counterScheda++;
+            Dbg.p("Vado al prossimo: " + counterScheda);
+            downloadScheda();
+
 
         }
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            bSchedaDownload = true;
             updateScheda("error_" + errortype);
-            checkUpdated();
+            counterScheda++;
+           downloadScheda();
         }
 
         @Override
@@ -276,17 +318,16 @@ public class ProductSyncService extends IntentService {
         @Override
         public void fileDownloaded(Uri uri, String mimeType, int id) {
             Dbg.p("FILE PRODOTTO SCARICATO: " + uri);
-
-            bProductDownload = true;
             updateProductUri(uri.toString());
-            checkUpdated();
+            counterProduct++;
+            donwloadProductPdf();
         }
 
         @Override
         public void downloadError(String error, int errortype, int id) {
-            bProductDownload = true;
             updateProductUri("error_" + errortype);
-            checkUpdated();
+            counterProduct++;
+            donwloadProductPdf();
         }
 
         @Override
@@ -295,13 +336,5 @@ public class ProductSyncService extends IntentService {
         }
     };
 
-    private void checkUpdated() {
-        if (bSchedaDownload && bProductDownload) {
-            counterProducts++;
-            Dbg.p("Vado al prossimo: " + counterProducts);
-            downloadContent();
-
-        }
-    }
 
 }

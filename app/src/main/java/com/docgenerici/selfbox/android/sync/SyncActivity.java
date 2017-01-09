@@ -32,6 +32,8 @@ import com.docgenerici.selfbox.android.synservices.ProductSyncService;
 import com.docgenerici.selfbox.config.SelfBoxConstants;
 import com.docgenerici.selfbox.debug.Dbg;
 import com.docgenerici.selfbox.models.SyncContent;
+import com.docgenerici.selfbox.models.contents.ContentBox;
+import com.docgenerici.selfbox.models.contents.Folder;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -74,6 +78,19 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         presenter.setView(this);
         presenter.setup();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+//
+//        Realm realm= SelfBoxApplicationImpl.appComponent.realm();
+//        Folder folderRoot = realm.where(Folder.class).equalTo("name", "Root").findFirst();
+//        for(ContentBox contentBox : folderRoot.contents){
+//            Dbg.p("contentBox*******************");
+//            Dbg.p("contentBox id: "+contentBox.id);
+//            Dbg.p("contentBox name: "+contentBox.name);
+//            Dbg.p("contentBox: getLocalthumbnailPath: "+contentBox.getLocalthumbnailPath());
+//            Dbg.p("contentBox thumbnailCover: "+contentBox.thumbnailCover);
+//            Dbg.p("contentBox thumbnailPath: "+contentBox.thumbnailPath);
+//
+//        }
 
     }
 
@@ -236,6 +253,7 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         }
         Uri uri = Uri.parse(SelfBoxConstants.PATH_LISTINO);
         downloaderPrice.download(uri, "contents", "listinoprezzi.pdf", 12234);
+
 
         // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
     }

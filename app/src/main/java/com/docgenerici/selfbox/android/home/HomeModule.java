@@ -1,6 +1,8 @@
 package com.docgenerici.selfbox.android.home;
 
 
+import com.docgenerici.selfbox.comm.ApiInteractor;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +16,7 @@ public class HomeModule {
 
   @Provides
   @Singleton
-  HomePresenter provideHomePresenter() {
-    return new HomePresenterImpl();
+  HomePresenter provideHomePresenter(ApiInteractor apiInteractor) {
+    return new HomePresenterImpl(apiInteractor);
   }
 }

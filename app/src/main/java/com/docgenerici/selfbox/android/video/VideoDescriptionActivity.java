@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -109,7 +111,8 @@ public class VideoDescriptionActivity extends AppCompatActivity implements View.
                    btShare.setVisibility(View.GONE);
                }
                tvTitle.setText(contentBox.name);
-               tvDescription.setText(contentBox.descrFull);
+               Spanned htmlAsSpanned = Html.fromHtml(contentBox.descrFull);
+               tvDescription.setText(htmlAsSpanned);
                setupShare();
            }
         }

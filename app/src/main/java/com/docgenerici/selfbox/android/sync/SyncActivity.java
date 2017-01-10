@@ -57,6 +57,8 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
     ProgressBar progress;
     @BindView(R.id.tvSend)
     TextView tvSend;
+    @BindView(R.id.progressCenter)
+    ProgressBar progressCenter;
     private SyncPresenter presenter;
     private GridSyncAdapter gridSyncAdapter;
     private ArrayList<SyncContent> syncContents;
@@ -234,11 +236,20 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
             @Override
             public void fileDownloaded(Uri uri, String mimeType, int id) {
                 Dbg.p("LISTINO CARICATO: " + uri.toString());
+                File backup = new File(getExternalFilesDir("contents"), "delete_listinoprezzi.pdf");
+                if(backup.exists()){
+                    backup.delete();
+                }
             }
 
             @Override
             public void downloadError(String error, int errortype, int id) {
                 Dbg.p("LISTINO ERRORE");
+                File backup = new File(getExternalFilesDir("contents"), "delete_listinoprezzi.pdf");
+                File file = new File(getExternalFilesDir("contents"), "listinoprezzi.pdf");
+                if(backup.exists()){
+                    backup.renameTo(file);
+                }
             }
 
             @Override
@@ -248,14 +259,28 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
         });
         File file = new File(getExternalFilesDir("contents"), "listinoprezzi.pdf");
         File backup = new File(getExternalFilesDir("contents"), "delete_listinoprezzi.pdf");
+        if(backup.exists()){
+            backup.delete();
+        }
         if (file.exists()) {
             file.renameTo(backup);
         }
         Uri uri = Uri.parse(SelfBoxConstants.PATH_LISTINO);
         downloaderPrice.download(uri, "contents", "listinoprezzi.pdf", 12234);
+    }
 
+    @Override
+    public void showProgressCenter() {
+        progressCenter.setVisibility(View.VISIBLE);
+        tvSend.setEnabled(false);
+        tvSend.setAlpha(0.6f);
+    }
 
-        // downloaderCover.download(uriContentCover, "contents", filenameContentCover, contentEasy.id);
+    @Override
+    public void hideProgressCenter() {
+        progressCenter.setVisibility(View.GONE);
+        tvSend.setEnabled(true);
+        tvSend.setAlpha(1.0f);
     }
 
     @Override

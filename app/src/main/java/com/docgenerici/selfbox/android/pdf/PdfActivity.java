@@ -103,6 +103,7 @@ public class PdfActivity extends AppCompatActivity {
                 pathPdf= pathPdf.replace("%20", " ");
             }
             if(contentShared !=null) {
+                Dbg.p("PdfActivity contentShared: "+contentShared.getPath());
                 setupShare();
             }
             if(!canShare){
@@ -180,6 +181,7 @@ public class PdfActivity extends AppCompatActivity {
                     newSharedItem.setName(contentShared.name);
                     newSharedItem.setType(contentShared.getType());
                     newSharedItem.setPath(contentShared.getPath());
+                    Dbg.p("addOrDeleteShare: "+contentShared.getPath());
                     realm.copyToRealmOrUpdate(newSharedItem);
                 } catch (Exception ex) {
 

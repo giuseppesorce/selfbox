@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="grey_toolbar">#dddddd</color>
+    <color name="grey_toolbar_training">#979696</color>
+    <color name="grey_toolbar_training_dark">#696868</color>
     <color name="white">#ffffff</color>
     <color name="black">#ff000000</color>
     <color name="color_text_home">#777777</color>

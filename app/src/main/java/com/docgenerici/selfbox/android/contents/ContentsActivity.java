@@ -106,6 +106,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
             lastPharmaUser = getIntent().getParcelableExtra("lastPharmaUser");
             presenter.setCategories(category, medicoSelected, lastPharmaUser);
         }
+        presenter.setTraining(training);
         presenter.setup(category);
         setTypeIcon(category);
     }

@@ -64,14 +64,14 @@ public class ContentShared implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(type);
-        dest.writeString(type);
+        dest.writeString(path);
     }
 
     protected ContentShared(Parcel in) {
         id = in.readString();
         name = in.readString();
         type = in.readString();
-        type = in.readString();
+        path = in.readString();
 
     }
 

@@ -41,6 +41,7 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     private MainContentView view;
     private ArrayList<ContentDoc> contentsShared;
     private String category_content;
+    private boolean training;
 
     public MainContentPresenterImpl(ApiInteractor apiInteractor) {
         this.apiInteractor = apiInteractor;
@@ -100,14 +101,19 @@ public class MainContentPresenterImpl implements MainContentPresenter {
 
         int color = 0;
         Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch (category_content) {
 
-            case "isf":
-                return res.getColor(R.color.orange);
-            case "medico":
-                return res.getColor(R.color.blu);
-            case "pharma":
-                return res.getColor(R.color.green);
+        if(!training) {
+            switch (category_content) {
+
+                case "isf":
+                    return res.getColor(R.color.orange);
+                case "medico":
+                    return res.getColor(R.color.blu);
+                case "pharma":
+                    return res.getColor(R.color.green);
+            }
+        }else{
+            return  res.getColor(R.color.grey_toolbar_training);
         }
         return color;
 
@@ -119,14 +125,18 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     public int getContentDarkColor() {
         int color = 0;
         Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch ((category_content)) {
+        if(!training) {
+            switch ((category_content)) {
 
-            case "isf":
-                return res.getColor(R.color.orange_dark);
-            case "medico":
-                return res.getColor(R.color.blu_dark);
-            case "pharma":
-                return res.getColor(R.color.green_dark);
+                case "isf":
+                    return res.getColor(R.color.orange_dark);
+                case "medico":
+                    return res.getColor(R.color.blu_dark);
+                case "pharma":
+                    return res.getColor(R.color.green_dark);
+            }
+        }else{
+            return  res.getColor(R.color.grey_toolbar_training_dark);
         }
         return color;
     }
@@ -140,16 +150,17 @@ public class MainContentPresenterImpl implements MainContentPresenter {
     public Drawable getBackGroundhelp() {
 
         Resources res = SelfBoxApplicationImpl.appComponent.context().getResources();
-        switch ((category_content)) {
-
-            case "isf":
-                return res.getDrawable(R.drawable.ic_help_contents_orange);
-            case "medico":
-                return res.getDrawable(R.drawable.ic_help_blu);
-            case "pharma":
-                return res.getDrawable(R.drawable.ic_help_contents);
-        }
-        return null;
+        return res.getDrawable(R.drawable.ic_help_contents_transparent);
+//        switch ((category_content)) {
+//
+//            case "isf":
+//                return res.getDrawable(R.drawable.ic_help_contents_orange);
+//            case "medico":
+//                return res.getDrawable(R.drawable.ic_help_blu);
+//            case "pharma":
+//                return res.getDrawable(R.drawable.ic_help_contents);
+//        }
+        //return null;
     }
 
     @Override
@@ -258,6 +269,11 @@ public class MainContentPresenterImpl implements MainContentPresenter {
                 }
             });
         }
+    }
+
+    @Override
+    public void setTraining(boolean training) {
+        this.training= training;
     }
 
     private ArrayList<ItemShared> getContentShared() {

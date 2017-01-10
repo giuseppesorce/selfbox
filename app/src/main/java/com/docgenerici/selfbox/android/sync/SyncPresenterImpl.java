@@ -1,5 +1,6 @@
 package com.docgenerici.selfbox.android.sync;
 
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.docgenerici.selfbox.BaseView;
@@ -31,6 +32,7 @@ import com.docgenerici.selfbox.models.products.RisorsaDb;
 import com.docgenerici.selfbox.models.products.Scheda;
 import com.orhanobut.hawk.Hawk;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +77,8 @@ public class SyncPresenterImpl implements SyncPresenter {
     @Override
     public void setup() {
         view.setup();
+//        view.showProgressCenter();
+//        deleteOldFiles();
     }
 
     @Override
@@ -126,9 +130,7 @@ public class SyncPresenterImpl implements SyncPresenter {
 
     private void donwloadListinoPrezzi() {
         view.loadPricelist();
-
     }
-
 
     @Override
     public void stopSync() {
@@ -142,13 +144,16 @@ public class SyncPresenterImpl implements SyncPresenter {
 
 
         SyncContent syncContent = getContentByType(type);
+
         if (syncContent != null) {
             syncContent.setPercentage(percentage);
             if (message.equalsIgnoreCase("end")) {
+                Dbg.p("onSyncMessage fine");
                 allDownloads.put(type, true);
-                if(type== SelfBoxConstants.ContentSyncType.CONTENTS){
+                if (type == SelfBoxConstants.ContentSyncType.CONTENTS) {
+                    Dbg.p("onSyncMessage fine contenuti");
                     getProduct();
-                }else{
+                } else {
                     checkEndSync();
                 }
 
@@ -205,14 +210,12 @@ public class SyncPresenterImpl implements SyncPresenter {
             syncContents.add(new SyncContent("Informazioni personali", 0, SelfBoxConstants.ContentSyncType.PERSONAL));
             syncContents.add(new SyncContent("Catalogo prodotti", 0, SelfBoxConstants.ContentSyncType.PRODUCTS));
         }
-
         return syncContents;
     }
 
     @Override
     public void checkSyncData() {
         Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-
         SyncDataCheck syncData = realm.where(SyncDataCheck.class).findFirst();
         if (syncData.fromhome) {
             realm.beginTransaction();
@@ -231,16 +234,97 @@ public class SyncPresenterImpl implements SyncPresenter {
                     realm.commitTransaction();
                     syncContents = null;
                     getContents();
+                    deleteOldFiles();
                     view.gotoHome();
                 }
             }
         }
     }
 
+    private void deleteOldFiles() {
+        new DeleteFiles().execute();
+
+    }
+
+    private class DeleteFiles extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
+            RealmResults<ContentBox> contents = realm.where(ContentBox.class).findAll();
+            File folder = new File(SelfBoxApplicationImpl.appComponent.context().getExternalFilesDir(null), "contents");
+            if (folder.exists() && folder.isDirectory()) {
+                File[] filesContents = folder.listFiles();
+                for (File file : filesContents) {
+                    boolean presents = false;
+                    for (ContentBox contentBox : contents) {
+                        if(contentBox.getLocalfilePath() !=null && !contentBox.getLocalfilePath().isEmpty() && contentBox.getLocalfilePath().length() >20 && file !=null && file.getAbsolutePath() != null) {
+                            if (contentBox.getLocalfilePath().equalsIgnoreCase(file.getAbsolutePath())) {
+                                presents = true;
+                            }
+                        }else{
+                            presents = true;
+                        }
+                    }
+                    if (!presents) {
+                        String fileName = file.getAbsolutePath();
+                        String estensione = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+                        if (estensione.equalsIgnoreCase(".pdf") || estensione.equalsIgnoreCase(".mp4")) {
+
+                            if (!fileName.contains("listinoprezzi.pdf")) {
+                                Dbg.p("Cancello: "+file.getAbsolutePath());
+                                if (file.exists()) {
+                                    file.delete();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+//            RealmResults<Product> products = realm.where(Product.class).findAll();
+//            File folderProd = new File(SelfBoxApplicationImpl.appComponent.context().getExternalFilesDir(null), "products");
+//            if(folderProd.exists()){
+//                File[] prodFiles = folderProd.listFiles();
+//                for(File file : prodFiles){
+//                    boolean presents = false;
+//                    for (Product prodotto: products ) {
+//
+//                        if(file.getAbsolutePath().equalsIgnoreCase(prodotto.getUriPdf()) || file.getAbsolutePath().equalsIgnoreCase(prodotto.getScheda().uriPdf)){
+//                                     presents= true;
+//                        }
+//                    }
+//                    if(!presents){
+//
+//
+//                        if(file.exists()){
+//                            file.delete();
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Dbg.p("FINITO DELETE");
+            view.hideProgressCenter();
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
 
     private void getProduct() {
-        Environment environment = SelfBoxApplicationImpl.appComponent.environment();
-        environment.setBaseUrl(SelfBoxConstants.pathProduct);
+        Dbg.p("onSyncMessage fine contenuti");
         apiInteractor.getProduct("")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -267,6 +351,7 @@ public class SyncPresenterImpl implements SyncPresenter {
     }
 
     private void parseXML(String xmlString) {
+        Dbg.p("parseXML");
         XmlTaskParse parseTask = new XmlTaskParse(onSyncData);
         parseTask.execute(xmlString);
 
@@ -442,16 +527,42 @@ public class SyncPresenterImpl implements SyncPresenter {
         }
         view.updatePercentage();
         final Realm realm = SelfBoxApplicationImpl.appComponent.realm();
-        realm.beginTransaction();
-        List<Medico> medici = medicalList.medici;
-        for (int i = 0; i < medici.size(); i++) {
-            realm.copyToRealmOrUpdate(medici.get(i));
+        final RealmResults<Medico> allMedici = realm.where(Medico.class).findAll();
+        if (allMedici != null && allMedici.size() > 0) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    allMedici.deleteAllFromRealm();
+                }
+            });
         }
-        List<Farmacia> farmacie = medicalList.farmacie;
-        for (int i = 0; i < farmacie.size(); i++) {
-            realm.copyToRealmOrUpdate(farmacie.get(i));
+        final RealmResults<Farmacia> allFarmacie = realm.where(Farmacia.class).findAll();
+        if (allFarmacie != null && allFarmacie.size() > 0) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    allFarmacie.deleteAllFromRealm();
+                }
+            });
         }
-        realm.commitTransaction();
+        try {
+
+
+            realm.beginTransaction();
+            List<Medico> medici = medicalList.medici;
+            for (int i = 0; i < medici.size(); i++) {
+                realm.copyToRealmOrUpdate(medici.get(i));
+            }
+            List<Farmacia> farmacie = medicalList.farmacie;
+            for (int i = 0; i < farmacie.size(); i++) {
+                realm.copyToRealmOrUpdate(farmacie.get(i));
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            realm.commitTransaction();
+        }
+
         allDownloads.put(SelfBoxConstants.ContentSyncType.ANAGRAFICHE, true);
         checkEndSync();
     }

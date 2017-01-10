@@ -44,5 +44,9 @@ public interface SyncPresenter extends Presenter {
         void gotoHome();
 
         void loadPricelist();
+
+        void showProgressCenter();
+
+        void hideProgressCenter();
     }
 }

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.docgenerici.selfbox.R;
 import com.docgenerici.selfbox.android.SelfBoxApplicationImpl;
@@ -194,7 +195,7 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         FragmentTransaction ft = getFragmentManager()
                 .beginTransaction();
         filtersDialog = FilterDialog.createInstance(presenter.getLastFilter());
-        filtersDialog.setListener(new FilterListener(){
+        filtersDialog.setListener(new FilterListener() {
 
             @Override
             public void onSelectFilter(Filters filterList) {
@@ -208,12 +209,12 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
     public void refreshContents() {
 
         ArrayList<ItemShared> shared = presenter.getItemsShared();
-        ArrayList<ContentDoc> contentDocs= galleryAdapter.getItems();
-        for(ContentDoc conentDoc : contentDocs){
-            conentDoc.shared= false;
-            for (int i=0; i< shared.size(); i++){
-                if(shared.get(i).getId().equalsIgnoreCase(String.valueOf(conentDoc.id))){
-                    conentDoc.shared= true;
+        ArrayList<ContentDoc> contentDocs = galleryAdapter.getItems();
+        for (ContentDoc conentDoc : contentDocs) {
+            conentDoc.shared = false;
+            for (int i = 0; i < shared.size(); i++) {
+                if (shared.get(i).getId().equalsIgnoreCase(String.valueOf(conentDoc.id))) {
+                    conentDoc.shared = true;
                 }
             }
         }
@@ -254,49 +255,66 @@ public class ContentsListFragment extends Fragment implements ContentListPresent
         } else {
             if (contentSelect.type == SelfBoxConstants.TypeContent.VIDEO) {
                 presenter.setContentViewed(contentSelect.id);
-                Intent intentVideo=null;
+                Intent intentVideo = null;
                 ContentBox contentBox = presenter.getContentDataFromId(contentSelect.id);
-                  if(contentBox.descrFull !=null && !contentBox.descrFull.isEmpty() && contentBox.descrFull.length() > 2) {
+                if (contentBox.descrFull != null && !contentBox.descrFull.isEmpty() && contentBox.descrFull.length() > 2) {
                     intentVideo = new Intent(getActivity(), VideoDescriptionActivity.class);
                     intentVideo.putExtra("id", contentBox.id);
                     intentVideo.putExtra("path", contentSelect.content);
                     intentVideo.putExtra("type", "content");
-                    intentVideo.putExtra("contentSelect", new ContentShared(String.valueOf(contentBox.id),  contentSelect.name,"content", ""));
+                    intentVideo.putExtra("contentSelect", new ContentShared(String.valueOf(contentBox.id), contentSelect.name, "content", ""));
                     intentVideo.putExtra("canShare", getCanShare());
-                    intentVideo.putExtra("training",training);
-                }else {
-                     intentVideo = new Intent(getActivity(), VideoActivity.class);
+                    intentVideo.putExtra("training", training);
+
+                    if (contentSelect.content != null) {
+                        startActivity(intentVideo);
+                    } else {
+                        Toast.makeText(getActivity(), "Il contenuto ha qualche problema, prova a rifare e completare il sync", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    intentVideo = new Intent(getActivity(), VideoActivity.class);
                     intentVideo.putExtra("path", contentSelect.content);
                     intentVideo.putExtra("id", contentBox.id);
                     intentVideo.putExtra("type", "content");
-                    intentVideo.putExtra("contentSelect",new ContentShared(String.valueOf(contentBox.id),  contentSelect.name,"content", ""));
+                    intentVideo.putExtra("contentSelect", new ContentShared(String.valueOf(contentBox.id), contentSelect.name, "content", ""));
                     intentVideo.putExtra("canShare", getCanShare());
-                      intentVideo.putExtra("training",training);
+                    intentVideo.putExtra("training", training);
+                    if (contentSelect.content != null) {
+                        startActivity(intentVideo);
+                    } else {
+                        Toast.makeText(getActivity(), "Il contenuto ha qualche problema, prova a rifare e completare il sync", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                startActivity(intentVideo);
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.VISUAL) {
                 presenter.setContentViewed(contentSelect.id);
                 Intent intentVisual = new Intent(getActivity(), EvisualActivity.class);
                 intentVisual.putExtra("path", contentSelect.content);
 
-                intentVisual.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id),  contentSelect.name,"content", ""));
+                intentVisual.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id), contentSelect.name, "content", ""));
                 intentVisual.putExtra("canShare", getCanShare());
-                intentVisual.putExtra("training",training);
+                intentVisual.putExtra("training", training);
                 intentVisual.putExtra("type", "content");
-                startActivity(intentVisual);
+                if (contentSelect.content != null) {
+                    startActivity(intentVisual);
+                } else {
+                    Toast.makeText(getActivity(), "Il contenuto ha qualche problema, prova a rifare e completare il sync", Toast.LENGTH_SHORT).show();
+                }
+
 
             } else if (contentSelect.type == SelfBoxConstants.TypeContent.PDF) {
                 presenter.setContentViewed(contentSelect.id);
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
-                Dbg.p("contentSelect.content: "+contentSelect.content);
+                Dbg.p("contentSelect.content: " + contentSelect.content);
                 intent.putExtra("path", contentSelect.content);
                 intent.putExtra("type", "content");
-                intent.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id),  contentSelect.name,"content", ""));
+                intent.putExtra("contentSelect", new ContentShared(String.valueOf(contentSelect.id), contentSelect.name, "content", ""));
                 intent.putExtra("canShare", getCanShare());
-                intent.putExtra("training",training);
+                intent.putExtra("training", training);
                 if (contentSelect.content != null) {
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), "Il contenuto ha qualche problema, prova a rifare e completare il sync", Toast.LENGTH_SHORT).show();
                 }
             }
         }

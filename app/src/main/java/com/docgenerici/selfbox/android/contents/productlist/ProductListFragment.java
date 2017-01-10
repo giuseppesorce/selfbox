@@ -219,8 +219,10 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
             for (int j = 0; j < products.size(); j++) {
 
                 Product product = products.get(j);
-
-                productDocArrayList.add(new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf));
+                Dbg.p("showSelectTerapeutica product.rcp : "+product.rcp);
+                Dbg.p("showSelectTerapeutica product.getScheda().getUri(): "+product.getScheda().getUri());
+                ProductDoc productDoc=  new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf);
+                productDocArrayList.add(productDoc);
 
             }
         }
@@ -250,7 +252,8 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         intent.putExtra("type", "product");
         intent.putExtra("contentSelect", new ContentDoc());
         intent.putExtra("canShare", getCanShare());
-        intent.putExtra("contentSelect", new ContentShared(String.valueOf("scheda_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getUriSchedaPdf()));
+
+        intent.putExtra("contentSelect", new ContentShared(String.valueOf("scheda_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getScheda()));
         intent.putExtra("path", url);
         getActivity().startActivity(intent);
     }
@@ -266,7 +269,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         Intent intent = new Intent(getActivity(), PdfActivity.class);
         intent.putExtra("type", "product");
         intent.putExtra("canShare", getCanShare());
-        intent.putExtra("contentSelect", new ContentShared(String.valueOf("rpc_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getUriPdf()));
+        intent.putExtra("contentSelect", new ContentShared(String.valueOf("rpc_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getRpc()));
         intent.putExtra("path", url);
         getActivity().startActivity(intent);
 

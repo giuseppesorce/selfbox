@@ -48,6 +48,8 @@ public interface MainContentPresenter extends Presenter {
 
     void deleteShareContent();
 
+    void setTraining(boolean training);
+
 
     interface MainContentView extends BaseView {
 

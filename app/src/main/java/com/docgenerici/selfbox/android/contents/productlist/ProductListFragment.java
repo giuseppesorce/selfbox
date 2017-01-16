@@ -49,6 +49,8 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
+import static android.R.attr.category;
+
 /**
  * @author Giuseppe Sorce
  */
@@ -78,6 +80,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     private String[] colors;
     private HashMap<String, String> categorieColors = new HashMap<>();
     private boolean training;
+    private String categorySelect;
 
     @Nullable
     @Override
@@ -91,6 +94,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         presenter.setup();
         if (getArguments() != null) {
             training = getArguments().getBoolean("training", false);
+            categorySelect = getArguments().getString("category");
         }
         String category = SelfBoxApplicationImpl.appComponent.mainContentPresenter().getCategory();
         Resources res = getResources();
@@ -219,8 +223,6 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
             for (int j = 0; j < products.size(); j++) {
 
                 Product product = products.get(j);
-                Dbg.p("showSelectTerapeutica product.rcp : "+product.rcp);
-                Dbg.p("showSelectTerapeutica product.getScheda().getUri(): "+product.getScheda().getUri());
                 ProductDoc productDoc=  new ProductDoc(product.getAic(), SelfBoxConstants.TypeProductRow.PRODUCT, product.getNome().toUpperCase(), product.denominazione_it, product.classeSnn, product.noFCDL, Color.parseColor(SelfBoxUtils.getCategoryColor(product.categoria_farmacologica)), product.getScheda().getUri(), product.rcp, product.getUriPdf(), product.getScheda().uriPdf);
                 productDocArrayList.add(productDoc);
 
@@ -236,10 +238,11 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         presenter.onSelectLegenda();
     }
 
-    public static ProductListFragment createInstance(boolean training) {
+    public static ProductListFragment createInstance(boolean training, String category) {
         ProductListFragment frag = new ProductListFragment();
         Bundle init = new Bundle();
         init.putBoolean("training", training);
+        init.putString("category", category);
         frag.setArguments(init);
         return frag;
     }
@@ -259,7 +262,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
     }
 
     private boolean getCanShare() {
-        return !training;
+        return !training && !categorySelect.equalsIgnoreCase("isf");
     }
 
     @Override

@@ -324,7 +324,7 @@ public class ContentsActivity extends AppCompatActivity implements MainContentPr
                     contentFrag = ContentsListFragment.createInstance(category, training);
                     return contentFrag;
                 case 1:
-                    return ProductListFragment.createInstance(training);
+                    return ProductListFragment.createInstance(training, category);
 
                 default:
                     return new Fragment();

@@ -53,7 +53,7 @@ public class Dbg {
     public static void p(String m) {
 
         try {
-            //Log.i(Dbg.TAG, m);
+            Log.i(Dbg.TAG, m);
 
         } catch (Exception e) {
 

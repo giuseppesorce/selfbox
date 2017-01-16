@@ -616,6 +616,7 @@ public class SyncPresenterImpl implements SyncPresenter {
             realm.copyToRealmOrUpdate(folders.get(i));
         }
         realm.commitTransaction();
+
         ArrayList<Integer> ids = new ArrayList<>();
         long dateNow = new Date().getTime();
         realm.beginTransaction();
@@ -658,8 +659,8 @@ public class SyncPresenterImpl implements SyncPresenter {
                 result.deleteAllFromRealm();
             }
         });
-
-
+//
+//
         if (lastUpdate > 0) {
             Dbg.p("persistenceContentList lastUpdate cerco quello che è maggiore: " + lastUpdate);
             RealmResults<ContentBox> allContentBoxNew = realm.where(ContentBox.class).greaterThan("lastUpdate", lastUpdate).findAll();
@@ -681,10 +682,12 @@ public class SyncPresenterImpl implements SyncPresenter {
         }
         RealmResults<ContentBox> allContentBox = realm.where(ContentBox.class).findAllSorted("lastUpdate", Sort.DESCENDING);
         InfoApp info = realm.where(InfoApp.class).findFirst();
-        realm.beginTransaction();
-        info.lastUpdate = allContentBox.get(0).lastUpdate;
-        realm.copyToRealmOrUpdate(info);
-        realm.commitTransaction();
+        if(allContentBox !=null && allContentBox.size() >0) {
+            realm.beginTransaction();
+            info.lastUpdate = allContentBox.get(0).lastUpdate;
+            realm.copyToRealmOrUpdate(info);
+            realm.commitTransaction();
+        }
         view.startContentsService();
     }
 

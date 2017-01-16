@@ -99,6 +99,8 @@ public class ContentsService extends IntentService {
             Dbg.p("serviceDetroyed non vado oltre");
             stopSelf();
         } else {
+            Dbg.p("counterContents: "+counterContents);
+            Dbg.p("< contentsEasy.size(: "+contentsEasy.size());
             if (counterContents < contentsEasy.size()) {
                 if (counterContents > 0) {
                     sendUpdate((counterContents) * 100 / totalPercentage);

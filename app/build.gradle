@@ -28,8 +28,8 @@ android {
         applicationId "com.docgenerici.selfbox"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 12
-        versionName "0.7.3"
+        versionCode 13
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,13 +47,13 @@ android {
             signingConfig signingConfigs.release
             buildConfigField "boolean", "debug", "false"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BASE_URL', '"http://docportal-staging.docgenerici.it"'
+            buildConfigField 'String', 'BASE_URL', '"http://docportal.docgenerici.it"'
         }
 
         debug {
             minifyEnabled false
             buildConfigField "boolean", "debug", "true"
-            buildConfigField 'String', 'BASE_URL', '"http://docportal-staging.docgenerici.it"'
+            buildConfigField 'String', 'BASE_URL', '"http://docportal.docgenerici.it"'
             signingConfig signingConfigs.release
             shrinkResources false
         }

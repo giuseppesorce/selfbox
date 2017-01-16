@@ -318,6 +318,9 @@ public class SyncActivity extends AppCompatActivity implements SyncPresenter.Syn
             String message = intent.getStringExtra("message");
             int type = intent.getIntExtra("type", 0);
             int percentage = intent.getIntExtra("percentage", 0);
+            if(percentage >100){
+                percentage=100;
+            }
             presenter.onSyncMessage(type, percentage, message);
 
         }

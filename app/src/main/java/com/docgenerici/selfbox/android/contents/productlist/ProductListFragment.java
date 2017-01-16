@@ -255,7 +255,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         intent.putExtra("type", "product");
         intent.putExtra("contentSelect", new ContentDoc());
         intent.putExtra("canShare", getCanShare());
-
+        intent.putExtra("training",training);
         intent.putExtra("contentSelect", new ContentShared(String.valueOf("scheda_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getScheda()));
         intent.putExtra("path", url);
         getActivity().startActivity(intent);
@@ -271,6 +271,7 @@ public class ProductListFragment extends Fragment implements ProductsListPresent
         Dbg.p("onSelectRpc: " + url);
         Intent intent = new Intent(getActivity(), PdfActivity.class);
         intent.putExtra("type", "product");
+        intent.putExtra("training",training);
         intent.putExtra("canShare", getCanShare());
         intent.putExtra("contentSelect", new ContentShared(String.valueOf("rpc_" + product.getAic()), product.getTitle(), "product", SelfBoxConstants.pathProduct + product.getRpc()));
         intent.putExtra("path", url);

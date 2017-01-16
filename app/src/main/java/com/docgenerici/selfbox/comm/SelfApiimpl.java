@@ -60,7 +60,7 @@ class SelfApiImpl implements SelfApi {
 
     @Override
     public Single<EmailText> getEmailText() {
-        return selfBoxUserApi.getEmailText("http://docportal-staging.docgenerici.it/mail-template/");
+        return selfBoxUserApi.getEmailText("http://docportal.docgenerici.it/mail-template/");
     }
 
     @Override

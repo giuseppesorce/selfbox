@@ -45,6 +45,7 @@ public class ProductSyncService extends IntentService {
     private String productPublished;
     private String productFilename;
     private String pathProductDownload;
+    private int totalPercentage;
 
     public ProductSyncService() {
         super("ProductSyncService");
@@ -71,7 +72,7 @@ public class ProductSyncService extends IntentService {
                 realm.close();
             }
         }
-
+        totalPercentage= allaicCodes.size() *2;
         counterScheda = 0;
         downloaderScheda = DownloaderDoc.newInstance(listenerDownloadScheda);
         downloaderProduct = DownloaderDoc.newInstance(listenerDownloadProduct);
@@ -80,7 +81,7 @@ public class ProductSyncService extends IntentService {
 
     private void downloadScheda() {
         if (counterScheda < allaicCodes.size()) {
-            float percentage = counterScheda * 100 / allaicCodes.size() * 2;
+            float percentage = counterScheda * 100 / totalPercentage;
             sendUpdate(percentage);
             aicCode = allaicCodes.get(counterScheda);
             pathSchedaDownload = "";
@@ -131,6 +132,7 @@ public class ProductSyncService extends IntentService {
             }
 
         } else {
+            counterScheda= allaicCodes.size();
             counterProduct = 0;
             donwloadProductPdf();
         }
@@ -142,7 +144,7 @@ public class ProductSyncService extends IntentService {
         if (counterProduct < allaicCodes.size()) {
 
 
-            float percentage = (counterScheda + counterProduct) * 100 / (allaicCodes.size() * 2);
+            float percentage = (counterScheda + counterProduct) * 100 / (totalPercentage);
             sendUpdate(percentage);
             aicCode = allaicCodes.get(counterProduct);
             pathProductDownload = "";

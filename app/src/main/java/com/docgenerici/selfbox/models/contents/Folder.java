@@ -32,3 +32,5 @@ public class Folder extends RealmObject{
         this.coverUri = coverUri;
     }
 }
+
+

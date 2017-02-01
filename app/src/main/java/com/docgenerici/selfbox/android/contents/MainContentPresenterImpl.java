@@ -128,12 +128,13 @@ public class MainContentPresenterImpl implements MainContentPresenter {
         if(!training) {
             switch ((category_content)) {
 
-                case "isf":
-                    return res.getColor(R.color.orange_dark);
-                case "medico":
-                    return res.getColor(R.color.blu_dark);
-                case "pharma":
-                    return res.getColor(R.color.green_dark);
+                    case "isf":
+                        return res.getColor(R.color.orange_dark);
+                    case "medico":
+                        return res.getColor(R.color.blu_dark);
+                    case "pharma":
+                        return res.getColor(R.color.green_dark);
+                }
             }
         }else{
             return  res.getColor(R.color.grey_toolbar_training_dark);

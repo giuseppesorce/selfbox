@@ -351,9 +351,11 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                         if (contents.get(i).name.toLowerCase().contains(filterText.toLowerCase())) {
                             filtered.add(contents.get(i));
                         } else {
-                            ArrayList<String> keyword = new ArrayList<>(Arrays.asList(contents.get(i).keywords.split(",")));
-                            if (keyword.contains(filterText)) {
-                                filtered.add(contents.get(i));
+                            if(contents.get(i).keywords !=null && !contents.get(i).keywords.isEmpty()) {
+                                ArrayList<String> keyword = new ArrayList<>(Arrays.asList(contents.get(i).keywords.split(",")));
+                                if (keyword !=null && keyword.size() >0 && keyword.contains(filterText)) {
+                                    filtered.add(contents.get(i));
+                                }
                             }
                         }
                     }
@@ -366,9 +368,11 @@ public class ContentListPresenterImpl implements ContentListPresenter {
                         if (folderContentFolderList.get(i).name.toLowerCase().contains(filterText.toLowerCase())) {
                             filtered.add(folderContentFolderList.get(i));
                         } else {
-                            ArrayList<String> keyword = new ArrayList<>(Arrays.asList(folderContentFolderList.get(i).keywords.split(",")));
-                            if (keyword.contains(filterText)) {
-                                filtered.add(folderContentFolderList.get(i));
+                            if(contents.get(i).keywords !=null && !contents.get(i).keywords.isEmpty()) {
+                                ArrayList<String> keyword = new ArrayList<>(Arrays.asList(folderContentFolderList.get(i).keywords.split(",")));
+                                if (keyword !=null && keyword.size() >0 && keyword.contains(filterText)) {
+                                    filtered.add(folderContentFolderList.get(i));
+                                }
                             }
                         }
                     }
